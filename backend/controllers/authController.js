@@ -186,7 +186,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
     }
 
     // Create reset URL
-    const resetUrl = `http://localhost:3000/auth/reset-password/${resetToken}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const resetUrl = `${frontendUrl}/auth/reset-password/${resetToken}`;
     console.log(`Attempting to send email to ${user.email}...`);
 
     const message = `
