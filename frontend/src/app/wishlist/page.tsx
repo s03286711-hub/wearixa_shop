@@ -15,7 +15,9 @@ export default function WishlistPage() {
       price: item.price,
       image: item.image,
       qty: 1,
-      stock: 99, // Fallback for mock
+      stock: 99,
+      shippingCharges: 0,
+      applyShippingCharges: false,
     });
     removeFromWishlist(item._id);
   };
