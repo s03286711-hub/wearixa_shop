@@ -41,9 +41,9 @@ export default function LoginPage() {
       <div style={{ 
         flex: '1.2', 
         position: 'relative', 
-        display: 'none', // Hide on mobile
-        '@media (min-width: 1024px)': { display: 'block' } 
-      } as any}>
+        display: 'flex', // Fallback for simple flex
+        background: '#0d0d0d',
+      }} className="auth-visual-side">
         <div style={{ 
           position: 'absolute', inset: 0, 
           backgroundImage: "url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop')",
@@ -56,7 +56,7 @@ export default function LoginPage() {
         }} />
         
         {/* Floating Quote or Branding */}
-        <div style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '400px' }}>
+        <div style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '400px', zIndex: 2 }}>
           <p style={{ fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>The Collection</p>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', fontWeight: '600', color: 'white', lineHeight: '1.2' }}>
             Where <span className="text-gold">Luxury</span> Meets Everyday Elegance.
@@ -72,7 +72,8 @@ export default function LoginPage() {
         justifyContent: 'center', 
         padding: '2rem',
         position: 'relative',
-        zIndex: 1
+        zIndex: 5,
+        background: '#0d0d0d',
       }}>
         {/* Background glow */}
         <div style={{ position: 'absolute', top: '20%', right: '10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%)', borderRadius: '50%', zIndex: -1 }} />
@@ -102,11 +103,11 @@ export default function LoginPage() {
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.7rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Email Address</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                  <Mail size={16} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
                   <input 
                     className="input-field" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 0 0.75rem 2rem', width: '100%' }} autoComplete="email" 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 0 0.75rem 2.25rem', width: '100%', color: 'white' }} autoComplete="email" 
                   />
                 </div>
               </div>
@@ -117,14 +118,14 @@ export default function LoginPage() {
                   <Link href="/auth/forgot" style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>Forgot?</Link>
                 </div>
                 <div style={{ position: 'relative' }}>
-                  <Lock size={16} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                  <Lock size={16} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
                   <input 
                     className="input-field" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                     placeholder="Enter password" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 2rem 0.75rem 2rem', width: '100%' }} autoComplete="current-password" 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 2.25rem 0.75rem 2.25rem', width: '100%', color: 'white' }} autoComplete="current-password" 
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)}
-                    style={{ position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer' }}>
+                    style={{ position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10 }}>
                     {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>

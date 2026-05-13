@@ -40,9 +40,9 @@ export default function RegisterPage() {
       <div style={{ 
         flex: '1.2', 
         position: 'relative', 
-        display: 'none', 
-        '@media (min-width: 1024px)': { display: 'block' } 
-      } as any}>
+        display: 'flex',
+        background: '#0d0d0d',
+      }} className="auth-visual-side">
         <div style={{ 
           position: 'absolute', inset: 0, 
           backgroundImage: "url('https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop')",
@@ -54,7 +54,7 @@ export default function RegisterPage() {
           background: 'linear-gradient(to right, rgba(13,13,13,0.1), rgba(13,13,13,0.9))' 
         }} />
         
-        <div style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '400px' }}>
+        <div style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '400px', zIndex: 2 }}>
           <p style={{ fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>Join the house</p>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', fontWeight: '600', color: 'white', lineHeight: '1.2' }}>
             Elevate Your <span className="text-gold">Wardrobe</span> with Wearixa.
@@ -70,7 +70,8 @@ export default function RegisterPage() {
         justifyContent: 'center', 
         padding: '2rem',
         position: 'relative',
-        zIndex: 1
+        zIndex: 5,
+        background: '#0d0d0d',
       }}>
         <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)', borderRadius: '50%', zIndex: -1 }} />
 
@@ -98,11 +99,11 @@ export default function RegisterPage() {
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Full Name</label>
                 <div style={{ position: 'relative' }}>
-                  <User size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                  <User size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
                   <input 
                     className="input-field" type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                     placeholder="Enter your name" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem', color: 'white' }} 
                   />
                 </div>
               </div>
@@ -110,11 +111,11 @@ export default function RegisterPage() {
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Email Address</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                  <Mail size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
                   <input 
                     className="input-field" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem', color: 'white' }} 
                   />
                 </div>
               </div>
@@ -123,14 +124,14 @@ export default function RegisterPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Password</label>
                   <div style={{ position: 'relative' }}>
-                    <Lock size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                    <Lock size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
                     <input 
                       className="input-field" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 1.5rem 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 1.5rem 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem', color: 'white' }} 
                     />
                     <button type="button" onClick={() => setShowPass(!showPass)}
-                      style={{ position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer' }}>
+                      style={{ position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10 }}>
                       {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
                     </button>
                   </div>
@@ -138,11 +139,11 @@ export default function RegisterPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Confirm</label>
                   <div style={{ position: 'relative' }}>
-                    <Lock size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                    <Lock size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
                     <input 
                       className="input-field" type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem', color: 'white' }} 
                     />
                   </div>
                 </div>
