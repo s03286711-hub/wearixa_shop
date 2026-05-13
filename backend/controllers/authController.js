@@ -46,6 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
 
     if (user) {
+        console.log(`NEW USER CREATED: ${user.email}`);
         res.status(201).json({
             _id: user._id,
             name: user.name,
