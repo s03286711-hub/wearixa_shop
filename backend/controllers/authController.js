@@ -223,4 +223,39 @@ const forgotPassword = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { loginUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, forgotPassword };
+// @desc    Reset password
+// @route   PUT /api/auth/reset-password/:token
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+    // Get hashed token
+    const resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(req.params.token)
+        .digest('hex');
+
+    const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+        res.status(400);
+        throw new Error('Invalid or expired token');
+    }
+
+    // Set new password
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.role === 'admin',
+        token: generateToken(user._id),
+    });
+});
+
+module.exports = { loginUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, forgotPassword, resetPassword };
