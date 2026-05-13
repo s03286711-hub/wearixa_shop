@@ -29,6 +29,8 @@ const userSchema = mongoose.Schema(
         phone: String,
         cardLast4: String,
         cardBrand: String,
+        resetPasswordToken: String,
+        resetPasswordExpire: Date,
     },
     {
         timestamps: true,
