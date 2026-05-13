@@ -106,17 +106,17 @@ export default function LoginPage() {
                   position: 'relative', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  background: 'rgba(255,255,255,0.03)', 
+                  background: 'rgba(255,255,255,0.02)', 
                   border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: '12px',
-                  padding: '0.2rem 1rem',
+                  padding: '0 1rem',
                   transition: 'all 0.3s ease'
-                }} className="input-group-focus">
+                }}>
                   <Mail size={18} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8 }} />
                   <input 
                     type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'none', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.8rem 0' }} autoComplete="email" 
+                    style={{ background: 'transparent', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.9rem 0' }} autoComplete="email" 
                   />
                 </div>
               </div>
@@ -130,17 +130,17 @@ export default function LoginPage() {
                   position: 'relative', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  background: 'rgba(255,255,255,0.03)', 
+                  background: 'rgba(255,255,255,0.02)', 
                   border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: '12px',
-                  padding: '0.2rem 1rem',
+                  padding: '0 1rem',
                   transition: 'all 0.3s ease'
-                }} className="input-group-focus">
+                }}>
                   <Lock size={18} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8 }} />
                   <input 
                     type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                     placeholder="Enter password" required 
-                    style={{ background: 'none', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.8rem 0' }} autoComplete="current-password" 
+                    style={{ background: 'transparent', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.9rem 0' }} autoComplete="current-password" 
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)}
                     style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center' }}>

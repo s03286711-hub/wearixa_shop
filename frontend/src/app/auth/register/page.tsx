@@ -93,8 +93,6 @@ export default function RegisterPage() {
               <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1.25rem', color: '#f87171', fontSize: '0.8rem' }}>
                 {error}
               </div>
-            )}
-
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Full Name</label>
@@ -102,17 +100,17 @@ export default function RegisterPage() {
                   position: 'relative', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  background: 'rgba(255,255,255,0.03)', 
+                  background: 'rgba(255,255,255,0.02)', 
                   border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: '12px',
-                  padding: '0.1rem 1rem',
+                  padding: '0 1rem',
                   transition: 'all 0.3s ease'
                 }}>
                   <User size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
                   <input 
                     type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                     placeholder="Enter your name" required 
-                    style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.7rem 0' }} 
+                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
                   />
                 </div>
               </div>
@@ -123,17 +121,17 @@ export default function RegisterPage() {
                   position: 'relative', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  background: 'rgba(255,255,255,0.03)', 
+                  background: 'rgba(255,255,255,0.02)', 
                   border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: '12px',
-                  padding: '0.1rem 1rem',
+                  padding: '0 1rem',
                   transition: 'all 0.3s ease'
                 }}>
                   <Mail size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
                   <input 
                     type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.7rem 0' }} 
+                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
                   />
                 </div>
               </div>
@@ -145,17 +143,17 @@ export default function RegisterPage() {
                     position: 'relative', 
                     display: 'flex', 
                     alignItems: 'center', 
-                    background: 'rgba(255,255,255,0.03)', 
+                    background: 'rgba(255,255,255,0.02)', 
                     border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: '12px',
-                    padding: '0.1rem 1rem',
+                    padding: '0 1rem',
                     transition: 'all 0.3s ease'
                   }}>
                     <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
                     <input 
                       type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.7rem 0' }} 
+                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
                     />
                     <button type="button" onClick={() => setShowPass(!showPass)}
                       style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center' }}>
@@ -169,20 +167,21 @@ export default function RegisterPage() {
                     position: 'relative', 
                     display: 'flex', 
                     alignItems: 'center', 
-                    background: 'rgba(255,255,255,0.03)', 
+                    background: 'rgba(255,255,255,0.02)', 
                     border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: '12px',
-                    padding: '0.1rem 1rem',
+                    padding: '0 1rem',
                     transition: 'all 0.3s ease'
                   }}>
                     <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
                     <input 
                       type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.7rem 0' }} 
+                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
                     />
                   </div>
                 </div>
+              </div>             </div>
               </div>
 
               <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '0.9rem', fontWeight: '700', marginTop: '1.5rem', letterSpacing: '0.1em' }}>
