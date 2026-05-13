@@ -85,15 +85,6 @@ export default function LoginPage() {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
-          <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(201,168,76,0.05)', borderRadius: '8px', fontSize: '0.78rem', color: 'var(--color-muted)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-              <Sparkles size={12} style={{ color: 'var(--color-accent)' }} />
-              <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>Demo Credentials</span>
-            </div>
-            <p>Admin: admin@wearixa.com / admin123</p>
-            <p>User: user@wearixa.com / user123</p>
-          </div>
         </div>
       </div>
     </div>
