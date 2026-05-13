@@ -93,6 +93,8 @@ export default function RegisterPage() {
               <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1.25rem', color: '#f87171', fontSize: '0.8rem' }}>
                 {error}
               </div>
+            )}
+
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Full Name</label>
