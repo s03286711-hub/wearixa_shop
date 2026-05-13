@@ -26,6 +26,7 @@ const HERO_SLIDES = [
 export default function HomePage() {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [seasonalData, setSeasonalData] = useState<{ [key: string]: any[] }>({});
   const [loading, setLoading] = useState(true);
   const [slide, setSlide] = useState(0);
 
@@ -38,6 +39,21 @@ export default function HomePage() {
         ]);
         setProducts(pData.products || []);
         setCategories(cData || []);
+
+        // Fetch seasonal products
+        const seasons = ['Summer Collection', 'Winter Collection', 'Eid Special', 'Christmas Offer'];
+        const seasonalResults = await Promise.all(
+          seasons.map(s => productService.getAll({ dealType: s, pageSize: 4 }))
+        );
+        
+        const seasonalMap: { [key: string]: any[] } = {};
+        seasons.forEach((s, i) => {
+          if (seasonalResults[i].products && seasonalResults[i].products.length > 0) {
+            seasonalMap[s] = seasonalResults[i].products;
+          }
+        });
+        setSeasonalData(seasonalMap);
+
       } catch (err) {
         console.error(err);
       } finally {
@@ -205,6 +221,31 @@ export default function HomePage() {
           </div>
         </section>
       )}
+
+      {/* ── Seasonal Deal Sections ── */}
+      {!loading && Object.keys(seasonalData).map((season, idx) => (
+        <section key={season} className="section" style={{ 
+          background: idx % 2 === 0 ? 'rgba(201,168,76,0.02)' : 'transparent',
+          borderTop: '1px solid var(--color-border)'
+        }}>
+          <div className="container">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <p style={{ fontSize: '0.75rem', letterSpacing: '0.25em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Limited Collection</p>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600' }}>
+                  {season.split(' ')[0]} <span className="text-gold">{season.split(' ').slice(1).join(' ')}</span>
+                </h2>
+              </div>
+              <Link href={`/shop?dealType=${season}`} className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                View All <ArrowRight size={15} />
+              </Link>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+              {seasonalData[season].map((p) => <ProductCard key={p._id} product={p} />)}
+            </div>
+          </div>
+        </section>
+      ))}
 
       {/* ── Featured Products ── */}
       <section className="section" style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}>

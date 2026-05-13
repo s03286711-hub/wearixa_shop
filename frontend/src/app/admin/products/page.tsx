@@ -26,6 +26,7 @@ export default function AdminProductsPage() {
     images: [] as File[],
     sizes: [] as string[],
     colors: [] as string[],
+    dealType: '',
   });
 
   const fetchProducts = async () => {
@@ -53,7 +54,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [] });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '' });
   };
 
   const handleEdit = (p: any) => {
@@ -71,6 +72,7 @@ export default function AdminProductsPage() {
       images: [],
       sizes: p.sizes || [],
       colors: p.colors || [],
+      dealType: p.dealType || '',
     });
     setShowModal(true);
   };
@@ -91,6 +93,7 @@ export default function AdminProductsPage() {
     formData.append('stock', form.stock);
     form.sizes.forEach(s => formData.append('sizes', s));
     form.colors.forEach(c => formData.append('colors', c));
+    formData.append('dealType', form.dealType);
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -234,7 +237,7 @@ export default function AdminProductsPage() {
                   <input className="input-field" type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required disabled={submitting} />
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Category</label>
                   <select className="input-field" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required disabled={submitting}>
@@ -245,6 +248,19 @@ export default function AdminProductsPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Brand</label>
                   <input className="input-field" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} required disabled={submitting} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Deal / Season</label>
+                  <select className="input-field" value={form.dealType} onChange={e => setForm(f => ({ ...f, dealType: e.target.value }))} disabled={submitting}>
+                    <option value="">None</option>
+                    <option value="Summer Collection">Summer Collection</option>
+                    <option value="Winter Collection">Winter Collection</option>
+                    <option value="Eid Special">Eid Special</option>
+                    <option value="Independence Day">Independence Day</option>
+                    <option value="Holiday Deal">Holiday Deal</option>
+                    <option value="Christmas Offer">Christmas Offer</option>
+                    <option value="Holi Special">Holi Special</option>
+                  </select>
                 </div>
               </div>
               <div>

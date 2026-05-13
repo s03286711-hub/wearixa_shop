@@ -31,7 +31,9 @@ const getProducts = async (req, res) => {
         ? { price: { $gte: Number(req.query.minPrice) || 0, $lte: Number(req.query.maxPrice) || 99999 } }
         : {};
 
-    const filter = { ...keyword, ...categoryFilter, ...priceFilter };
+    const dealFilter = req.query.dealType ? { dealType: req.query.dealType } : {};
+
+    const filter = { ...keyword, ...categoryFilter, ...priceFilter, ...dealFilter };
 
     const count = await Product.countDocuments(filter);
     const products = await Product.find(filter)
@@ -61,7 +63,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, sizes, colors } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType } = req.body;
 
     let imageUrls = [];
 
@@ -94,6 +96,7 @@ const createProduct = asyncHandler(async (req, res) => {
         stock,
         sizes: parsedSizes,
         colors: parsedColors,
+        dealType: dealType || '',
         user: req.user._id,
     });
 
@@ -105,7 +108,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -117,6 +120,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.brand = brand || product.brand;
         product.category = category || product.category;
         product.stock = stock !== undefined ? stock : product.stock;
+        product.dealType = dealType !== undefined ? dealType : product.dealType;
 
         if (sizes !== undefined) {
             product.sizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);

@@ -30,6 +30,7 @@ function ShopPageContent() {
     minPrice: '',
     maxPrice: '',
     sort: '',
+    dealType: searchParams.get('dealType') || '',
   });
 
   const fetchProducts = useCallback(async () => {
@@ -40,6 +41,7 @@ function ShopPageContent() {
       if (filters.category) params.category = filters.category;
       if (filters.minPrice) params.minPrice = filters.minPrice;
       if (filters.maxPrice) params.maxPrice = filters.maxPrice;
+      if (filters.dealType) params.dealType = filters.dealType;
 
       const data = await productService.getAll(params);
       setProducts(data.products || []);
@@ -56,11 +58,11 @@ function ShopPageContent() {
   useEffect(() => { categoryService.getAll().then(setCategories); }, []);
 
   const clearFilters = () => {
-    setFilters({ keyword: '', category: '', minPrice: '', maxPrice: '', sort: '' });
+    setFilters({ keyword: '', category: '', minPrice: '', maxPrice: '', sort: '', dealType: '' });
     setPage(1);
   };
 
-  const hasFilters = filters.keyword || filters.category || filters.minPrice || filters.maxPrice;
+  const hasFilters = filters.keyword || filters.category || filters.minPrice || filters.maxPrice || filters.dealType;
 
   return (
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
@@ -71,7 +73,7 @@ function ShopPageContent() {
         </p>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600' }}>
-            {filters.keyword ? `Search: "${filters.keyword}"` : 'All Collections'}
+            {filters.keyword ? `Search: "${filters.keyword}"` : filters.dealType ? filters.dealType : 'All Collections'}
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <span style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>{total} products</span>
