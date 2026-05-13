@@ -45,7 +45,7 @@ export default function LoginPage() {
           <Link href="/">
             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: '700', letterSpacing: '0.15em' }} className="text-gold">WEARIXA</span>
           </Link>
-          <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', marginTop: '0.5rem' }}>Welcome back</p>
+          <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', marginTop: '0.5rem' }}>Secure Member Sign In</p>
         </div>
 
         <div className="glass" style={{ borderRadius: '16px', padding: '2.5rem' }}>
