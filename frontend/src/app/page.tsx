@@ -99,7 +99,35 @@ export default function HomePage() {
         }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="hero-grid">
+          <div className="hero-grid-inline">
+            <style dangerouslySetInnerHTML={{__html: `
+              .hero-grid-inline {
+                display: grid;
+                grid-template-columns: 1.2fr 0.8fr;
+                gap: 4rem;
+                align-items: center;
+              }
+              @media (max-width: 960px) {
+                .hero-grid-inline {
+                  grid-template-columns: 1fr;
+                  gap: 3rem;
+                }
+                .hero-grid-inline > div:first-child {
+                  text-align: center;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                }
+                .hero-grid-inline > div:first-child p {
+                  text-align: center;
+                }
+                .hero-grid-inline > div:last-child {
+                  max-width: 350px !important;
+                  margin: 0 auto;
+                  width: 100%;
+                }
+              }
+            `}} />
             {/* Left Content */}
             <div className="reveal">
               <div style={{
