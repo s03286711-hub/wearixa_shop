@@ -98,24 +98,24 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Full Name</label>
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                  <User size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem' }} />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.4rem' }}>
+                  <User size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', flexShrink: 0 }} />
                   <input 
-                    className="input-field" type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                     placeholder="Enter your name" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0', width: '100%', fontSize: '0.9rem', color: 'white' }} 
+                    style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: 0 }} 
                   />
                 </div>
               </div>
 
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Email Address</label>
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                  <Mail size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem' }} />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.4rem' }}>
+                  <Mail size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', flexShrink: 0 }} />
                   <input 
-                    className="input-field" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0', width: '100%', fontSize: '0.9rem', color: 'white' }} 
+                    style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: 0 }} 
                   />
                 </div>
               </div>
@@ -123,27 +123,27 @@ export default function RegisterPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Password</label>
-                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                    <Lock size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem' }} />
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.4rem' }}>
+                    <Lock size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', flexShrink: 0 }} />
                     <input 
-                      className="input-field" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                      type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0', width: '100%', fontSize: '0.9rem', color: 'white' }} 
+                      style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: 0 }} 
                     />
                     <button type="button" onClick={() => setShowPass(!showPass)}
-                      style={{ position: 'absolute', right: '0', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10 }}>
+                      style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center', padding: '0 0.2rem' }}>
                       {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
                     </button>
                   </div>
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Confirm</label>
-                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                    <Lock size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem' }} />
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.4rem' }}>
+                    <Lock size={14} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', flexShrink: 0 }} />
                     <input 
-                      className="input-field" type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
+                      type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0', width: '100%', fontSize: '0.9rem', color: 'white' }} 
+                      style={{ background: 'none', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: 0 }} 
                     />
                   </div>
                 </div>
