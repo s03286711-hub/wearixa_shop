@@ -11,7 +11,7 @@ connectDB();
 const app = express();
 
 app.use(cors({
-    origin: ['https://wearixa.store', 'https://wearixa-shop-production.up.railway.app'],
+    origin: true,
     credentials: true
 }));
 app.use(express.json());
