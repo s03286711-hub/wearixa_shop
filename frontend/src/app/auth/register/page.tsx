@@ -34,66 +34,129 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem', background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%)' }}>
-      <div style={{ position: 'fixed', top: '30%', left: '50%', transform: 'translate(-50%,-50%)', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
-
-      <div style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <Link href="/"><span style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', fontWeight: '700', letterSpacing: '0.15em' }} className="text-gold">WEARIXA</span></Link>
-          <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', marginTop: '0.5rem' }}>Create your account</p>
-        </div>
-
-        <div className="glass" style={{ borderRadius: '16px', padding: '2.5rem' }}>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600', marginBottom: '0.5rem' }}>Register</h1>
-          <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginBottom: '2rem' }}>
-            Already have an account? <Link href="/auth/login" style={{ color: 'var(--color-accent)' }}>Login</Link>
-          </p>
-
-          {error && (
-            <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '0.875rem 1rem', marginBottom: '1.5rem', color: '#f87171', fontSize: '0.875rem' }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-            {[
-              { key: 'name', label: 'Full Name', type: 'text', icon: User, placeholder: 'John Doe' },
-              { key: 'email', label: 'Email', type: 'email', icon: Mail, placeholder: 'hello@example.com' },
-            ].map(({ key, label, type, icon: Icon, placeholder }) => (
-              <div key={key}>
-                <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>{label}</label>
-                <div style={{ position: 'relative' }}>
-                  <Icon size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)' }} />
-                  <input className="input-field" type={type} value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
-                    placeholder={placeholder} required style={{ paddingLeft: '40px' }} autoComplete={key === 'email' ? 'email' : 'name'} />
-                </div>
-              </div>
-            ))}
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Password</label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)' }} />
-                <input className="input-field" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                  placeholder="Min 6 characters" required style={{ paddingLeft: '40px', paddingRight: '44px' }} autoComplete="new-password" />
-                <button type="button" onClick={() => setShowPass(!showPass)} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer' }}>
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Confirm Password</label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)' }} />
-                <input className="input-field" type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
-                  placeholder="••••••••" required style={{ paddingLeft: '40px' }} autoComplete="new-password" />
-              </div>
-            </div>
-            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '0.9rem', fontSize: '0.9rem', marginTop: '0.5rem' }}>
-              {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
-          </form>
+    <div style={{ minHeight: '100vh', display: 'flex', background: '#0d0d0d', overflow: 'hidden' }}>
+      
+      {/* ── Left Side: Immersive Visuals ── */}
+      <div style={{ 
+        flex: '1.2', 
+        position: 'relative', 
+        display: 'none', 
+        '@media (min-width: 1024px)': { display: 'block' } 
+      } as any}>
+        <div style={{ 
+          position: 'absolute', inset: 0, 
+          backgroundImage: "url('https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }} />
+        <div style={{ 
+          position: 'absolute', inset: 0, 
+          background: 'linear-gradient(to right, rgba(13,13,13,0.1), rgba(13,13,13,0.9))' 
+        }} />
+        
+        <div style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '400px' }}>
+          <p style={{ fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>Join the house</p>
+          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', fontWeight: '600', color: 'white', lineHeight: '1.2' }}>
+            Elevate Your <span className="text-gold">Wardrobe</span> with Wearixa.
+          </h2>
         </div>
       </div>
+
+      {/* ── Right Side: Form ── */}
+      <div style={{ 
+        flex: '1', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        padding: '2rem',
+        position: 'relative',
+        zIndex: 1
+      }}>
+        <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)', borderRadius: '50%', zIndex: -1 }} />
+
+        <div style={{ width: '100%', maxWidth: '400px' }} className="reveal">
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <Link href="/">
+              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '2.25rem', fontWeight: '800', letterSpacing: '0.2em' }} className="text-gold">WEARIXA</span>
+            </Link>
+            <div style={{ width: '40px', height: '2px', background: 'var(--color-accent)', margin: '1rem auto' }} />
+          </div>
+
+          <div className="glass" style={{ borderRadius: '20px', padding: '2rem 2.5rem', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>Create Account</h1>
+            <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', marginBottom: '1.5rem' }}>
+              Already a member? <Link href="/auth/login" style={{ color: 'var(--color-accent)', fontWeight: '600' }}>Sign In</Link>
+            </p>
+
+            {error && (
+              <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '8px', padding: '0.75rem 1rem', marginBottom: '1.25rem', color: '#f87171', fontSize: '0.8rem' }}>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ position: 'relative' }}>
+                <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Full Name</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                  <input 
+                    className="input-field" type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                    placeholder="Enter your name" required 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                  />
+                </div>
+              </div>
+
+              <div style={{ position: 'relative' }}>
+                <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Email Address</label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                  <input 
+                    className="input-field" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                    placeholder="Enter your email" required 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Password</label>
+                  <div style={{ position: 'relative' }}>
+                    <Lock size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                    <input 
+                      className="input-field" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                      placeholder="••••••" required 
+                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 1.5rem 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                    />
+                    <button type="button" onClick={() => setShowPass(!showPass)}
+                      style={{ position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer' }}>
+                      {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Confirm</label>
+                  <div style={{ position: 'relative' }}>
+                    <Lock size={14} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)' }} />
+                    <input 
+                      className="input-field" type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
+                      placeholder="••••••" required 
+                      style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.6rem 0 0.6rem 1.75rem', width: '100%', fontSize: '0.9rem' }} 
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '0.9rem', fontWeight: '700', marginTop: '1.5rem', letterSpacing: '0.1em' }}>
+                {loading ? 'CREATING ACCOUNT...' : 'REGISTER NOW'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );/div>
     </div>
   );
 }
