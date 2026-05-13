@@ -149,14 +149,18 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/forgot-password
 // @access  Public
 const forgotPassword = asyncHandler(async (req, res) => {
+    console.log(`FORGOT PASSWORD REQUEST: ${req.body.email}`);
     const user = await User.findOne({ 
         email: { $regex: new RegExp(`^${req.body.email}$`, 'i') } 
     });
 
     if (!user) {
+        console.log(`FORGOT PASSWORD: User not found (${req.body.email})`);
         res.status(404);
         throw new Error('User not found with this email');
     }
+
+    console.log(`FORGOT PASSWORD: User found, generating token for ${user.email}`);
 
     // Get reset token
     const resetToken = crypto.randomBytes(20).toString('hex');

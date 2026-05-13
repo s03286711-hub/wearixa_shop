@@ -17,12 +17,15 @@ export default function ForgotPassword() {
     
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://wearixa-cryptic-nexus-01.up.railway.app/api';
+      console.log(`Sending reset request to: ${baseUrl}/auth/forgot-password`);
+      
       const response = await fetch(`${baseUrl}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
+      console.log(`Response Status: ${response.status}`);
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || 'Failed to send reset email');
