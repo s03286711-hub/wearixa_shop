@@ -29,6 +29,11 @@ export default function HomePage() {
   const [seasonalData, setSeasonalData] = useState<{ [key: string]: any[] }>({});
   const [loading, setLoading] = useState(true);
   const [slide, setSlide] = useState(0);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,88 +75,150 @@ export default function HomePage() {
 
   const current = HERO_SLIDES[slide];
 
+  if (!hasMounted) return <LoadingSpinner />;
+
   return (
     <>
-      {/* ── Hero Section ── */}
+      {/* ── Luxury Hero Section ── */}
       <section style={{
         minHeight: '100vh',
-        background: current.bg,
+        backgroundImage: `linear-gradient(rgba(13,13,13,0.8), rgba(13,13,13,0.8)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         display: 'flex',
         alignItems: 'center',
         position: 'relative',
         overflow: 'hidden',
-        transition: 'background 1s ease',
       }}>
-        {/* Animated circles */}
+        {/* Decorative elements */}
         <div style={{
-          position: 'absolute', top: '20%', right: '10%',
-          width: '400px', height: '400px',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%)',
-          borderRadius: '50%',
-        }} className="animate-float" />
-        <div style={{
-          position: 'absolute', bottom: '10%', left: '5%',
-          width: '300px', height: '300px',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%)',
-          borderRadius: '50%',
+          position: 'absolute', top: '0', right: '0', width: '40%', height: '100%',
+          background: 'linear-gradient(270deg, rgba(201,168,76,0.05) 0%, transparent 100%)',
+          zIndex: 0
         }} />
 
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ maxWidth: '680px' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)',
-              borderRadius: '20px', padding: '6px 16px', marginBottom: '2rem',
-            }}>
-              <Sparkles size={14} style={{ color: 'var(--color-accent)' }} />
-              <span style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: 'var(--color-accent)', textTransform: 'uppercase' }}>
-                {current.subtitle}
-              </span>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '4rem', alignItems: 'center' }}>
+            {/* Left Content */}
+            <div className="reveal">
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                background: 'rgba(201,168,76,0.15)', backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(201,168,76,0.3)',
+                borderRadius: '30px', padding: '8px 20px', marginBottom: '2.5rem',
+              }}>
+                <Sparkles size={16} style={{ color: 'var(--color-accent)' }} />
+                <span style={{ fontSize: '0.8rem', letterSpacing: '0.2em', color: 'var(--color-accent)', textTransform: 'uppercase', fontWeight: '700' }}>
+                  {current.subtitle}
+                </span>
+              </div>
+
+              <h1 style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
+                fontWeight: '800',
+                lineHeight: '1',
+                marginBottom: '2rem',
+                textShadow: '0 10px 30px rgba(0,0,0,0.5)',
+              }}>
+                <span className="text-gold" style={{ filter: 'drop-shadow(0 0 10px rgba(201,168,76,0.3))' }}>
+                  {current.title.split('\n')[0]}
+                </span>
+                <br />
+                <span style={{ color: 'white' }}>{current.title.split('\n')[1]}</span>
+              </h1>
+
+              <p style={{ 
+                color: 'rgba(255,255,255,0.7)', fontSize: '1.2rem', marginBottom: '3.5rem', 
+                maxWidth: '520px', lineHeight: '1.8', letterSpacing: '0.01em' 
+              }}>
+                Experience the pinnacle of fashion with our meticulously curated collection of modern essentials.
+              </p>
+
+              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+                <Link href="/shop" className="btn-primary" style={{ 
+                  display: 'inline-flex', alignItems: 'center', gap: '12px',
+                  padding: '1.2rem 2.8rem', fontSize: '1rem', boxShadow: '0 20px 40px rgba(201,168,76,0.2)'
+                }}>
+                  {current.cta} <ArrowRight size={20} />
+                </Link>
+                <Link href="/shop" className="btn-outline" style={{ 
+                  display: 'inline-flex', alignItems: 'center', gap: '12px',
+                  padding: '1.2rem 2.8rem', fontSize: '1rem', borderColor: 'rgba(255,255,255,0.2)'
+                }}>
+                  New Arrivals
+                </Link>
+              </div>
             </div>
 
-            <h1 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(3rem, 7vw, 5.5rem)',
-              fontWeight: '700',
-              lineHeight: '1.1',
-              marginBottom: '1.5rem',
-              whiteSpace: 'pre-line',
-            }}>
-              <span className="text-gold">{current.title.split('\n')[0]}</span>
-              <br />
-              <span style={{ color: 'var(--color-text)' }}>{current.title.split('\n')[1]}</span>
-            </h1>
+            {/* Right Visual Element */}
+            <div className="reveal" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+              <div style={{ 
+                position: 'relative', width: '100%', maxWidth: '450px', aspectRatio: '3/4',
+                borderRadius: '20px', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
+                border: '1px solid rgba(255,255,255,0.1)'
+              }}>
+                <img 
+                  src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1974&auto=format&fit=crop" 
+                  alt="Fashion Luxury" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.05)' }} 
+                />
+                
+                {/* Floating Glass Tag */}
+                <div style={{
+                  position: 'absolute', bottom: '2rem', right: '-2rem',
+                  background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px',
+                  padding: '1.5rem', width: '220px',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+                }}>
+                  <p style={{ color: 'var(--color-accent)', fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: '700', marginBottom: '0.5rem' }}>Trending Now</p>
+                  <p style={{ color: 'white', fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>Summer Silk Series</p>
+                  <Link href="/shop" style={{ color: 'white', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none' }}>
+                    Shop Collection <ArrowRight size={14} />
+                  </Link>
+                </div>
+              </div>
 
-            <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', marginBottom: '2.5rem', maxWidth: '480px', lineHeight: '1.7' }}>
-              Discover handpicked pieces that merge contemporary design with timeless sophistication.
-            </p>
-
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <Link href="/shop" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                {current.cta} <ArrowRight size={16} />
-              </Link>
-              <Link href="/shop" className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                New Arrivals
-              </Link>
+              {/* Decorative background glow */}
+              <div style={{
+                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                width: '120%', height: '120%',
+                background: 'radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%)',
+                zIndex: -1
+              }} />
             </div>
           </div>
         </div>
 
-        {/* Slide dots */}
-        <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
+        {/* Slide navigation / Progress indicators */}
+        <div style={{ position: 'absolute', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '12px' }}>
           {HERO_SLIDES.map((_, i) => (
             <button key={i} onClick={() => setSlide(i)} style={{
-              width: i === slide ? '24px' : '8px', height: '8px',
-              borderRadius: '4px', background: i === slide ? 'var(--color-accent)' : 'rgba(255,255,255,0.3)',
-              border: 'none', cursor: 'pointer', transition: 'all 0.3s',
+              width: i === slide ? '40px' : '10px', height: '4px',
+              borderRadius: '2px', background: i === slide ? 'var(--color-accent)' : 'rgba(255,255,255,0.2)',
+              border: 'none', cursor: 'pointer', transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }} />
           ))}
         </div>
 
-        {/* Scroll indicator */}
-        <div style={{ position: 'absolute', bottom: '2rem', right: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <div style={{ width: '1px', height: '60px', background: 'linear-gradient(to bottom, transparent, var(--color-accent))' }} />
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: 'var(--color-muted)', textTransform: 'uppercase', writingMode: 'vertical-rl' }}>Scroll</span>
+        {/* Vertical Scroll Label */}
+        <div style={{ position: 'absolute', bottom: '3rem', right: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+          <span style={{ 
+            fontSize: '0.7rem', letterSpacing: '0.4em', color: 'rgba(255,255,255,0.3)', 
+            textTransform: 'uppercase', writingMode: 'vertical-rl', fontWeight: '500' 
+          }}>Discover</span>
+          <div style={{ 
+            width: '1px', height: '80px', 
+            background: 'linear-gradient(to bottom, var(--color-accent), transparent)',
+            position: 'relative'
+          }}>
+            <div style={{
+              position: 'absolute', top: 0, left: 0, width: '100%', height: '40%',
+              background: 'white', animation: 'scrollDown 2s infinite ease-in-out'
+            }} />
+          </div>
         </div>
       </section>
 
