@@ -11,6 +11,7 @@ export interface CartItem {
   qty: number;
   stock: number;
   shippingCharges: number;
+  applyShippingCharges: boolean;
   size?: string;
   color?: string;
 }
@@ -103,9 +104,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       city: user?.city || '', 
       country: user?.country || '' 
     };
-    // We need to pass the applyShippingCharges toggle as well
+    // Use the values from the cart item
     const charge = calculateShippingCharge(userAddress, { 
-      applyShippingCharges: (i as any).applyShippingCharges, 
+      applyShippingCharges: i.applyShippingCharges, 
       shippingCharges: i.shippingCharges 
     });
     return sum + (charge * i.qty);
