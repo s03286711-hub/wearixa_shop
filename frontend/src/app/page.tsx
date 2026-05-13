@@ -156,9 +156,9 @@ export default function HomePage() {
       </section>
 
       {/* ── Feature Badges ── */}
-      <section style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+      <section className="reveal" style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container" style={{ padding: '2rem 1.5rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+          <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
             {[
               { Icon: Truck, title: 'Free Shipping', desc: 'On orders over $100' },
               { Icon: RefreshCw, title: 'Easy Returns', desc: '30-day return policy' },
@@ -185,7 +185,7 @@ export default function HomePage() {
 
       {/* ── Categories ── */}
       {categories.length > 0 && (
-        <section className="section">
+        <section className="section reveal">
           <div className="container">
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
               <p style={{ fontSize: '0.75rem', letterSpacing: '0.25em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Browse by</p>
@@ -193,7 +193,7 @@ export default function HomePage() {
                 Shop <span className="text-gold">Categories</span>
               </h2>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+            <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
               {categories.map((cat: any) => (
                 <Link key={cat._id} href={`/shop?category=${cat.name.toLowerCase()}`} style={{ display: 'block' }}>
                   <div style={{
@@ -248,7 +248,7 @@ export default function HomePage() {
       ))}
 
       {/* ── Featured Products ── */}
-      <section className="section" style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}>
+      <section className="section reveal" style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}>
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
@@ -269,7 +269,7 @@ export default function HomePage() {
               <p>No products yet. Check back soon!</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+            <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
               {products.map((p) => <ProductCard key={p._id} product={p} />)}
             </div>
           )}

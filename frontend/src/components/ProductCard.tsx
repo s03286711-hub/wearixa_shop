@@ -57,7 +57,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/product/${product._id}`} style={{ display: 'block', textDecoration: 'none' }}>
       <div
-        className="card"
+        className="card reveal"
         style={{ position: 'relative', cursor: 'pointer' }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
