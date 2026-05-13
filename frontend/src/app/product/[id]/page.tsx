@@ -5,7 +5,8 @@ import { productService } from '@/services';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { ShoppingBag, Heart, Star, ChevronLeft, ChevronRight, Truck, Shield, RefreshCw } from 'lucide-react';
+import { ShoppingBag, Heart, Star, ChevronLeft, ChevronRight, Truck, Shield, RefreshCw, CheckCircle } from 'lucide-react';
+import { calculateShippingCharge } from '@/utils/shippingUtils';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
