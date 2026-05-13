@@ -183,7 +183,6 @@ export default function RegisterPage() {
                     />
                   </div>
                 </div>
-              </div>             </div>
               </div>
 
               <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '0.9rem', fontWeight: '700', marginTop: '1.5rem', letterSpacing: '0.1em' }}>
