@@ -112,7 +112,7 @@ export default function RegisterPage() {
                   <input 
                     type="text" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                     placeholder="Enter your name" required 
-                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
+                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
                   />
                 </div>
               </div>
@@ -133,7 +133,7 @@ export default function RegisterPage() {
                   <input 
                     type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
+                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
                   />
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function RegisterPage() {
                     <input 
                       type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
+                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
                     />
                     <button type="button" onClick={() => setShowPass(!showPass)}
                       style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center' }}>
@@ -179,7 +179,7 @@ export default function RegisterPage() {
                     <input 
                       type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
                       placeholder="••••••" required 
-                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0' }} 
+                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
                     />
                   </div>
                 </div>

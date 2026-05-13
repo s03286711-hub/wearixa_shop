@@ -116,7 +116,7 @@ export default function LoginPage() {
                   <input 
                     type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'transparent', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.9rem 0' }} autoComplete="email" 
+                    style={{ background: 'transparent', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.9rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} autoComplete="email" 
                   />
                 </div>
               </div>
@@ -140,7 +140,7 @@ export default function LoginPage() {
                   <input 
                     type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                     placeholder="Enter password" required 
-                    style={{ background: 'transparent', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.9rem 0' }} autoComplete="current-password" 
+                    style={{ background: 'transparent', border: 'none', width: '100%', color: 'white', fontSize: '0.9rem', outline: 'none', padding: '0.9rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} autoComplete="current-password" 
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)}
                     style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center' }}>
