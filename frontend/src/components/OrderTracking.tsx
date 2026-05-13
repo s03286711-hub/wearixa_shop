@@ -30,7 +30,10 @@ export default function OrderTracking({ currentStatus, timeline, expectedDeliver
   const isCancelled = normalizedStatus === 'Cancelled';
 
   return (
-    <div className="glass reveal" style={{ borderRadius: '16px', padding: '2rem', marginBottom: '2.5rem', border: '1px solid var(--color-border)' }}>
+    <div className="reveal" style={{ 
+      borderRadius: '16px', padding: '2rem', marginBottom: '2.5rem', 
+      border: '2px solid var(--color-accent)', background: 'var(--color-surface)' 
+    }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: '600' }}>Track Order</h2>

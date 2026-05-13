@@ -18,6 +18,9 @@ export default function AdminOrdersPage() {
   useEffect(() => { fetchOrders(); }, []);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      await orderService.updateStatus(id, newStatus);
+      fetchOrders();
     } catch (err) {
       console.error(err);
     }
@@ -96,38 +99,35 @@ export default function AdminOrdersPage() {
                         </div>
                       </td>
                       <td style={{ padding: '1.25rem' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', minWidth: '180px' }}>
                           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                             <select 
                               value={order.status || 'Processing'} 
                               onChange={(e) => handleStatusChange(order._id, e.target.value)}
                               style={{ 
                                 background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', 
-                                color: 'var(--color-text)', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px', outline: 'none', cursor: 'pointer', flex: 1 
+                                color: 'var(--color-text)', fontSize: '0.8rem', padding: '6px 10px', borderRadius: '6px', outline: 'none', cursor: 'pointer', flex: 1 
                               }}
                             >
                               {STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                             </select>
                             {!order.isPaid && (
-                              <button onClick={() => markPaid(order._id)} style={{ background: 'none', border: 'none', color: '#4ade80', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', textDecoration: 'underline', whiteSpace: 'nowrap' }}>
-                                Mark Paid
+                              <button onClick={() => markPaid(order._id)} style={{ background: 'none', border: 'none', color: '#4ade80', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', textDecoration: 'underline' }}>
+                                Paid
                               </button>
                             )}
                           </div>
                           
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid var(--color-border)' }}>
-                             <div style={{ flex: 1 }}>
-                               <label style={{ fontSize: '0.6rem', color: 'var(--color-accent)', textTransform: 'uppercase', display: 'block', marginBottom: '2px', fontWeight: '600' }}>Expected Delivery</label>
-                               <input 
-                                 type="date" 
-                                 value={order.expectedDelivery ? new Date(order.expectedDelivery).toISOString().split('T')[0] : ''}
-                                 onChange={(e) => handleDeliveryUpdate(order._id, e.target.value)}
-                                 style={{ 
-                                   background: 'none', border: 'none', 
-                                   color: 'var(--color-text)', fontSize: '0.75rem', padding: '0', outline: 'none', width: '100%' 
-                                 }} 
-                               />
-                             </div>
+                          <div style={{ padding: '8px 12px', background: 'rgba(201,168,76,0.05)', borderRadius: '8px', border: '1px solid rgba(201,168,76,0.2)' }}>
+                             <label style={{ fontSize: '0.65rem', color: 'var(--color-accent)', textTransform: 'uppercase', display: 'block', marginBottom: '4px', fontWeight: '700', letterSpacing: '0.05em' }}>Delivery Date</label>
+                             <input 
+                               type="date" 
+                               value={order.expectedDelivery ? new Date(order.expectedDelivery).toISOString().split('T')[0] : ''}
+                               onChange={(e) => handleDeliveryUpdate(order._id, e.target.value)}
+                               style={{ 
+                                 background: 'none', border: 'none', color: 'white', fontSize: '0.85rem', padding: '0', outline: 'none', width: '100%', cursor: 'pointer' 
+                               }} 
+                             />
                           </div>
                         </div>
                       </td>
