@@ -50,6 +50,7 @@ export default function ProductDetailPage() {
       qty, 
       stock: product.stock, 
       shippingCharges: product.shippingCharges || 0,
+      applyShippingCharges: product.applyShippingCharges || false,
       size: selectedSize || undefined,
       color: selectedColor || undefined
     });
@@ -155,12 +156,31 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Shipping Info */}
-          <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ padding: '4px 10px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: '600' }}>
-              Shipping: {product.shippingCharges > 0 ? `$${product.shippingCharges.toFixed(2)}` : 'FREE'}
-            </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>Estimated delivery: 3-5 business days</p>
-          </div>
+          {(() => {
+            const userAddress = { city: user?.city || '', country: user?.country || '' };
+            const shipping = calculateShippingCharge(userAddress, { 
+              applyShippingCharges: product.applyShippingCharges, 
+              shippingCharges: product.shippingCharges 
+            });
+
+            return (
+              <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ 
+                  padding: '4px 10px', 
+                  background: !product.applyShippingCharges ? 'rgba(34,197,94,0.1)' : 'rgba(201,168,76,0.1)', 
+                  border: `1px solid ${!product.applyShippingCharges ? 'rgba(34,197,94,0.2)' : 'rgba(201,168,76,0.2)'}`, 
+                  borderRadius: '4px', fontSize: '0.8rem', 
+                  color: !product.applyShippingCharges ? '#4ade80' : 'var(--color-accent)', 
+                  fontWeight: '600' 
+                }}>
+                  {!product.applyShippingCharges ? 'FREE SHIPPING' : `Shipping: $${shipping.toFixed(2)}`}
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>
+                  {product.applyShippingCharges && !user ? 'Final cost calculated at checkout' : 'Estimated delivery: 3-5 business days'}
+                </p>
+              </div>
+            );
+          })()}
 
           {/* Sizes */}
           {product.sizes && product.sizes.length > 0 && (

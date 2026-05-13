@@ -63,7 +63,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType, shippingCharges } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType, shippingCharges, applyShippingCharges } = req.body;
 
     let imageUrls = [];
 
@@ -98,6 +98,7 @@ const createProduct = asyncHandler(async (req, res) => {
         colors: parsedColors,
         dealType: dealType || '',
         shippingCharges: shippingCharges ? Number(shippingCharges) : 0,
+        applyShippingCharges: applyShippingCharges === 'true' || applyShippingCharges === true,
         user: req.user._id,
     });
 
@@ -109,7 +110,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType, shippingCharges } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType, shippingCharges, applyShippingCharges } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -123,6 +124,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.stock = stock !== undefined ? stock : product.stock;
         product.dealType = dealType !== undefined ? dealType : product.dealType;
         product.shippingCharges = shippingCharges !== undefined ? Number(shippingCharges) : product.shippingCharges;
+        product.applyShippingCharges = applyShippingCharges !== undefined ? (applyShippingCharges === 'true' || applyShippingCharges === true) : product.applyShippingCharges;
 
         if (sizes !== undefined) {
             product.sizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);

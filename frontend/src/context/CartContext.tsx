@@ -1,5 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { calculateShippingCharge } from '@/utils/shippingUtils';
+import { useAuth } from './AuthContext';
 
 export interface CartItem {
   _id: string;
@@ -92,8 +94,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('wearixaCart');
   };
 
+  const { user } = useAuth();
+
   const totalItems = cartItems.reduce((sum, i) => sum + i.qty, 0);
-  const totalShipping = cartItems.reduce((sum, i) => sum + (i.shippingCharges * i.qty), 0);
+  
+  const totalShipping = cartItems.reduce((sum, i) => {
+    const userAddress = { 
+      city: user?.city || '', 
+      country: user?.country || '' 
+    };
+    // We need to pass the applyShippingCharges toggle as well
+    const charge = calculateShippingCharge(userAddress, { 
+      applyShippingCharges: (i as any).applyShippingCharges, 
+      shippingCharges: i.shippingCharges 
+    });
+    return sum + (charge * i.qty);
+  }, 0);
+
   const totalPrice = cartItems.reduce((sum, i) => sum + (i.price * i.qty), 0) + totalShipping;
 
   return (

@@ -77,6 +77,10 @@ const productSchema = mongoose.Schema(
             type: Number,
             default: 0,
         },
+        applyShippingCharges: {
+            type: Boolean,
+            default: false,
+        },
         reviews: [reviewSchema],
         rating: {
             type: Number,

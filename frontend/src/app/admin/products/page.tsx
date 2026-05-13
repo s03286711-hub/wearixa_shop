@@ -28,6 +28,7 @@ export default function AdminProductsPage() {
     colors: [] as string[],
     dealType: '',
     shippingCharges: '',
+    applyShippingCharges: false,
   });
 
   const fetchProducts = async () => {
@@ -55,7 +56,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '' });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '', applyShippingCharges: false });
   };
 
   const handleEdit = (p: any) => {
@@ -75,6 +76,7 @@ export default function AdminProductsPage() {
       colors: p.colors || [],
       dealType: p.dealType || '',
       shippingCharges: p.shippingCharges ? p.shippingCharges.toString() : '0',
+      applyShippingCharges: p.applyShippingCharges || false,
     });
     setShowModal(true);
   };
@@ -97,6 +99,7 @@ export default function AdminProductsPage() {
     form.colors.forEach(c => formData.append('colors', c));
     formData.append('dealType', form.dealType);
     formData.append('shippingCharges', form.shippingCharges || '0');
+    formData.append('applyShippingCharges', form.applyShippingCharges.toString());
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -240,9 +243,26 @@ export default function AdminProductsPage() {
                   <input className="input-field" type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required disabled={submitting} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Shipping ($)</label>
-                  <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Shipping</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                    <input 
+                      type="checkbox" 
+                      id="ship-toggle"
+                      checked={form.applyShippingCharges} 
+                      onChange={e => setForm(f => ({ ...f, applyShippingCharges: e.target.checked }))} 
+                      style={{ width: '18px', height: '18px', accentColor: 'var(--color-accent)' }}
+                    />
+                    <label htmlFor="ship-toggle" style={{ fontSize: '0.85rem', cursor: 'pointer' }}>
+                      {form.applyShippingCharges ? 'Calculate by Distance' : 'Free Shipping'}
+                    </label>
+                  </div>
                 </div>
+                {form.applyShippingCharges && (
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Base Rate ($)</label>
+                    <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
+                  </div>
+                )}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                 <div>
