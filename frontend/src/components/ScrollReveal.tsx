@@ -11,27 +11,34 @@ export default function ScrollReveal() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('active');
-            // Once it's active, we can stop observing it
             observer.unobserve(entry.target);
           }
         });
       }, {
-        threshold: 0.1, // Trigger when 10% of element is visible
-        rootMargin: '0px 0px -50px 0px' // Slightly offset trigger point
+        threshold: 0.05, // Trigger earlier
+        rootMargin: '0px 0px 50px 0px' // Start animation slightly before it enters
       });
 
       const elements = document.querySelectorAll('.reveal, .reveal-stagger');
-      elements.forEach((el) => observer.observe(el));
+      elements.forEach((el) => {
+        // If it's already active, don't observe
+        if (el.classList.contains('active')) return;
+        observer.observe(el);
+      });
     };
 
-    // Run on initial load and whenever the path changes
+    // Run multiple times to catch dynamic data loading
     revealElements();
+    const t1 = setTimeout(revealElements, 500);
+    const t2 = setTimeout(revealElements, 1500);
+    const t3 = setTimeout(revealElements, 3000); // Final check for slow images
     
-    // Fallback for dynamic content changes
-    const timeout = setTimeout(revealElements, 1000);
-    
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
   }, [pathname]);
 
-  return null; // This component doesn't render anything
+  return null;
 }
