@@ -27,6 +27,7 @@ export default function AdminProductsPage() {
     sizes: [] as string[],
     colors: [] as string[],
     dealType: '',
+    shippingCharges: '',
   });
 
   const fetchProducts = async () => {
@@ -54,7 +55,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '' });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '' });
   };
 
   const handleEdit = (p: any) => {
@@ -73,6 +74,7 @@ export default function AdminProductsPage() {
       sizes: p.sizes || [],
       colors: p.colors || [],
       dealType: p.dealType || '',
+      shippingCharges: p.shippingCharges ? p.shippingCharges.toString() : '0',
     });
     setShowModal(true);
   };
@@ -94,6 +96,7 @@ export default function AdminProductsPage() {
     form.sizes.forEach(s => formData.append('sizes', s));
     form.colors.forEach(c => formData.append('colors', c));
     formData.append('dealType', form.dealType);
+    formData.append('shippingCharges', form.shippingCharges || '0');
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -223,7 +226,7 @@ export default function AdminProductsPage() {
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Description</label>
                 <textarea className="input-field" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4} required disabled={submitting} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price ($)</label>
                   <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required disabled={submitting} />
@@ -235,6 +238,10 @@ export default function AdminProductsPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Stock</label>
                   <input className="input-field" type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required disabled={submitting} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Shipping ($)</label>
+                  <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>

@@ -49,6 +49,7 @@ export default function ProductDetailPage() {
       image: product.images[0], 
       qty, 
       stock: product.stock, 
+      shippingCharges: product.shippingCharges || 0,
       size: selectedSize || undefined,
       color: selectedColor || undefined
     });
@@ -151,6 +152,14 @@ export default function ProductDetailPage() {
             }}>
               {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
             </span>
+          </div>
+
+          {/* Shipping Info */}
+          <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ padding: '4px 10px', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '4px', fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: '600' }}>
+              Shipping: {product.shippingCharges > 0 ? `$${product.shippingCharges.toFixed(2)}` : 'FREE'}
+            </div>
+            <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>Estimated delivery: 3-5 business days</p>
           </div>
 
           {/* Sizes */}

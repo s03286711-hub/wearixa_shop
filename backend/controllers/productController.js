@@ -63,7 +63,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType, shippingCharges } = req.body;
 
     let imageUrls = [];
 
@@ -97,6 +97,7 @@ const createProduct = asyncHandler(async (req, res) => {
         sizes: parsedSizes,
         colors: parsedColors,
         dealType: dealType || '',
+        shippingCharges: shippingCharges ? Number(shippingCharges) : 0,
         user: req.user._id,
     });
 
@@ -108,7 +109,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType, shippingCharges } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -121,6 +122,7 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.category = category || product.category;
         product.stock = stock !== undefined ? stock : product.stock;
         product.dealType = dealType !== undefined ? dealType : product.dealType;
+        product.shippingCharges = shippingCharges !== undefined ? Number(shippingCharges) : product.shippingCharges;
 
         if (sizes !== undefined) {
             product.sizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);

@@ -36,6 +36,7 @@ export default function ProductCard({ product }: { product: Product }) {
       image: product.images[0],
       qty: 1,
       stock: product.stock,
+      shippingCharges: (product as any).shippingCharges || 0,
     });
     setAdded(true);
     showToast(`${product.title} added to cart`, 'success', product.images[0]);

@@ -8,6 +8,7 @@ export interface CartItem {
   image: string;
   qty: number;
   stock: number;
+  shippingCharges: number;
   size?: string;
   color?: string;
 }
@@ -19,6 +20,7 @@ interface CartContextType {
   updateQty: (id: string, qty: number, size?: string, color?: string) => void;
   clearCart: () => void;
   totalItems: number;
+  totalShipping: number;
   totalPrice: number;
 }
 
@@ -29,6 +31,7 @@ const CartContext = createContext<CartContextType>({
   updateQty: () => {},
   clearCart: () => {},
   totalItems: 0,
+  totalShipping: 0,
   totalPrice: 0,
 });
 
@@ -90,10 +93,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const totalItems = cartItems.reduce((sum, i) => sum + i.qty, 0);
-  const totalPrice = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const totalShipping = cartItems.reduce((sum, i) => sum + (i.shippingCharges * i.qty), 0);
+  const totalPrice = cartItems.reduce((sum, i) => sum + (i.price * i.qty), 0) + totalShipping;
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQty, clearCart, totalItems, totalPrice }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQty, clearCart, totalItems, totalShipping, totalPrice }}>
       {children}
     </CartContext.Provider>
   );
