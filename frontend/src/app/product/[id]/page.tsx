@@ -20,6 +20,7 @@ export default function ProductDetailPage() {
   const [tab, setTab] = useState<'description' | 'reviews'>('description');
   const [added, setAdded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
   const [review, setReview] = useState({ rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
 
@@ -37,7 +38,20 @@ export default function ProductDetailPage() {
       alert('Please select a size before adding to cart.');
       return;
     }
-    addToCart({ _id: product._id, title: product.title, price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price, image: product.images[0], qty, stock: product.stock, size: selectedSize || undefined });
+    if (product.colors && product.colors.length > 0 && !selectedColor) {
+      alert('Please select a color before adding to cart.');
+      return;
+    }
+    addToCart({ 
+      _id: product._id, 
+      title: product.title, 
+      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price, 
+      image: product.images[0], 
+      qty, 
+      stock: product.stock, 
+      size: selectedSize || undefined,
+      color: selectedColor || undefined
+    });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   };
@@ -171,6 +185,53 @@ export default function ProductDetailPage() {
               </div>
               {!selectedSize && (
                 <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.5rem' }}>Please select a size</p>
+              )}
+            </div>
+          )}
+
+          {/* Colors */}
+          {product.colors && product.colors.length > 0 && (
+            <div style={{ marginBottom: '2rem' }}>
+              <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                Color <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{selectedColor && `— ${selectedColor}`}</span>
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                {product.colors.map((color: string) => {
+                  // Map color names to hex codes for the UI
+                  const colorMap: {[key: string]: string} = {
+                    'Black': '#000000', 'White': '#FFFFFF', 'Red': '#FF0000', 
+                    'Blue': '#0000FF', 'Green': '#008000', 'Gray': '#808080', 
+                    'Beige': '#F5F5DC', 'Gold': '#D4AF37'
+                  };
+                  const hex = colorMap[color] || '#333';
+                  
+                  return (
+                    <button
+                      key={color}
+                      type="button"
+                      title={color}
+                      onClick={() => setSelectedColor(color === selectedColor ? '' : color)}
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: hex,
+                        border: selectedColor === color ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: selectedColor === color ? '0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent)' : 'none',
+                      }}
+                    >
+                      {color === 'White' && !selectedColor && <div style={{ width: '100%', height: '100%', border: '1px solid #ddd', borderRadius: '50%' }} />}
+                    </button>
+                  );
+                })}
+              </div>
+              {!selectedColor && (
+                <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.5rem' }}>Please select a color</p>
               )}
             </div>
           )}

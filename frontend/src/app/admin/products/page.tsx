@@ -25,6 +25,7 @@ export default function AdminProductsPage() {
     stock: '',
     images: [] as File[],
     sizes: [] as string[],
+    colors: [] as string[],
   });
 
   const fetchProducts = async () => {
@@ -52,7 +53,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [] });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [] });
   };
 
   const handleEdit = (p: any) => {
@@ -69,6 +70,7 @@ export default function AdminProductsPage() {
       stock: p.stock.toString(),
       images: [],
       sizes: p.sizes || [],
+      colors: p.colors || [],
     });
     setShowModal(true);
   };
@@ -88,6 +90,7 @@ export default function AdminProductsPage() {
     formData.append('category', form.category);
     formData.append('stock', form.stock);
     form.sizes.forEach(s => formData.append('sizes', s));
+    form.colors.forEach(c => formData.append('colors', c));
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -281,6 +284,59 @@ export default function AdminProductsPage() {
                 </div>
                 {form.sizes.length === 0 && (
                   <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)', marginTop: '0.5rem' }}>No sizes selected — product will show without size options.</p>
+                )}
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                  Colors <span style={{ color: 'var(--color-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span>
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  {[
+                    { name: 'Black', hex: '#000000' },
+                    { name: 'White', hex: '#FFFFFF' },
+                    { name: 'Red', hex: '#FF0000' },
+                    { name: 'Blue', hex: '#0000FF' },
+                    { name: 'Green', hex: '#008000' },
+                    { name: 'Gray', hex: '#808080' },
+                    { name: 'Beige', hex: '#F5F5DC' },
+                    { name: 'Gold', hex: '#D4AF37' }
+                  ].map(color => {
+                    const selected = form.colors.includes(color.name);
+                    return (
+                      <button
+                        key={color.name}
+                        type="button"
+                        title={color.name}
+                        disabled={submitting}
+                        onClick={() => setForm(f => ({
+                          ...f,
+                          colors: selected
+                            ? f.colors.filter(c => c !== color.name)
+                            : [...f.colors, color.name]
+                        }))}
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '50%',
+                          background: color.hex,
+                          border: selected ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+                          cursor: submitting ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: selected ? '0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent)' : 'none',
+                        }}
+                      >
+                        {color.name === 'White' && !selected && <div style={{ width: '100%', height: '100%', border: '1px solid #ddd', borderRadius: '50%' }} />}
+                      </button>
+                    );
+                  })}
+                </div>
+                {form.colors.length > 0 && (
+                   <p style={{ fontSize: '0.75rem', color: 'var(--color-accent)', marginTop: '0.75rem' }}>
+                     Selected: {form.colors.join(', ')}
+                   </p>
                 )}
               </div>
               <div>

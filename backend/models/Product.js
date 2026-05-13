@@ -65,6 +65,10 @@ const productSchema = mongoose.Schema(
             type: [String],
             default: [],
         },
+        colors: {
+            type: [String],
+            default: [],
+        },
         reviews: [reviewSchema],
         rating: {
             type: Number,

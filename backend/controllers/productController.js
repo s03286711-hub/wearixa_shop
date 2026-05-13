@@ -61,7 +61,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, sizes } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, sizes, colors } = req.body;
 
     let imageUrls = [];
 
@@ -78,6 +78,11 @@ const createProduct = asyncHandler(async (req, res) => {
         parsedSizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);
     }
 
+    let parsedColors = [];
+    if (colors) {
+        parsedColors = Array.isArray(colors) ? colors : colors.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+
     const product = new Product({
         title,
         images: imageUrls,
@@ -88,6 +93,7 @@ const createProduct = asyncHandler(async (req, res) => {
         category,
         stock,
         sizes: parsedSizes,
+        colors: parsedColors,
         user: req.user._id,
     });
 
@@ -99,7 +105,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, images, sizes } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -114,6 +120,10 @@ const updateProduct = asyncHandler(async (req, res) => {
 
         if (sizes !== undefined) {
             product.sizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);
+        }
+
+        if (colors !== undefined) {
+            product.colors = Array.isArray(colors) ? colors : colors.split(',').map((s) => s.trim()).filter(Boolean);
         }
 
         if (images) {

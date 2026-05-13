@@ -8,13 +8,15 @@ export interface CartItem {
   image: string;
   qty: number;
   stock: number;
+  size?: string;
+  color?: string;
 }
 
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
-  updateQty: (id: string, qty: number) => void;
+  removeFromCart: (id: string, size?: string, color?: string) => void;
+  updateQty: (id: string, qty: number, size?: string, color?: string) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -46,11 +48,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (item: CartItem) => {
     setCartItems((prev) => {
-      const existing = prev.find((i) => i._id === item._id);
+      const existing = prev.find(
+        (i) => i._id === item._id && i.size === item.size && i.color === item.color
+      );
       let updated: CartItem[];
       if (existing) {
         updated = prev.map((i) =>
-          i._id === item._id
+          i._id === item._id && i.size === item.size && i.color === item.color
             ? { ...i, qty: Math.min(i.qty + item.qty, i.stock) }
             : i
         );
@@ -62,17 +66,19 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: string) => {
+  const removeFromCart = (id: string, size?: string, color?: string) => {
     setCartItems((prev) => {
-      const updated = prev.filter((i) => i._id !== id);
+      const updated = prev.filter((i) => !(i._id === id && i.size === size && i.color === color));
       saveToStorage(updated);
       return updated;
     });
   };
 
-  const updateQty = (id: string, qty: number) => {
+  const updateQty = (id: string, qty: number, size?: string, color?: string) => {
     setCartItems((prev) => {
-      const updated = prev.map((i) => (i._id === id ? { ...i, qty } : i));
+      const updated = prev.map((i) => 
+        (i._id === id && i.size === size && i.color === color ? { ...i, qty } : i)
+      );
       saveToStorage(updated);
       return updated;
     });
