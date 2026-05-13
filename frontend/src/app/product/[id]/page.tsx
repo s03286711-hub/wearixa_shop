@@ -4,6 +4,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { productService } from '@/services';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
+import { useWishlist } from '@/context/WishlistContext';
+import { useToast } from '@/context/ToastContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { ShoppingBag, Heart, Star, ChevronLeft, ChevronRight, Truck, Shield, RefreshCw, CheckCircle } from 'lucide-react';
 import { calculateShippingCharge } from '@/utils/shippingUtils';
@@ -13,6 +15,10 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const { addToCart } = useCart();
   const { user } = useAuth();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { showToast } = useToast();
+  
+  const wishlisted = product ? isInWishlist(product._id) : false;
 
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -57,6 +63,19 @@ export default function ProductDetailPage() {
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
+  };
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!product) return;
+    toggleWishlist({
+      _id: product._id,
+      title: product.title,
+      price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
+      image: product.images[0],
+      brand: product.brand || '',
+    });
+    showToast(wishlisted ? 'Removed from favorites' : 'Added to favorites', 'success', product.images[0]);
   };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
@@ -287,8 +306,17 @@ export default function ProductDetailPage() {
               <ShoppingBag size={18} />
               {added ? 'Added to Cart!' : 'Add to Cart'}
             </button>
-            <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem 1.25rem' }}>
-              <Heart size={18} />
+            <button 
+              onClick={handleWishlist}
+              className="btn-outline" 
+              style={{ 
+                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem 1.25rem',
+                color: wishlisted ? '#f87171' : undefined,
+                borderColor: wishlisted ? '#f87171' : undefined,
+                background: wishlisted ? 'rgba(239,68,68,0.05)' : undefined
+              }}
+            >
+              <Heart size={18} fill={wishlisted ? '#f87171' : 'none'} />
             </button>
           </div>
 
