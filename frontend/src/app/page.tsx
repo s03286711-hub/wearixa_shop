@@ -80,7 +80,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── Luxury Hero Section ── */}
-      <section style={{
+      <section className="hero-section-inline" style={{
         minHeight: '100vh',
         backgroundImage: `linear-gradient(rgba(13,13,13,0.8), rgba(13,13,13,0.8)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`,
         backgroundSize: 'cover',
@@ -101,6 +101,10 @@ export default function HomePage() {
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="hero-grid-inline">
             <style dangerouslySetInnerHTML={{__html: `
+              .hero-section-inline {
+                padding-top: 80px;
+                padding-bottom: 40px;
+              }
               .hero-grid-inline {
                 display: grid;
                 grid-template-columns: 1.2fr 0.8fr;
@@ -108,6 +112,9 @@ export default function HomePage() {
                 align-items: center;
               }
               @media (max-width: 960px) {
+                .hero-section-inline {
+                  padding-top: 120px;
+                }
                 .hero-grid-inline {
                   grid-template-columns: 1fr;
                   gap: 3rem;
