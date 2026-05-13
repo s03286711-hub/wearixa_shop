@@ -162,7 +162,12 @@ export default function HomePage() {
                 <img 
                   src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1974&auto=format&fit=crop" 
                   alt="Fashion Luxury" 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.05)' }} 
+                  style={{ 
+                    width: '100%', height: '100%', objectFit: 'cover', 
+                    transform: 'scale(1.05)', transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)' 
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
                 />
                 
                 {/* Floating Glass Tag */}
@@ -175,8 +180,25 @@ export default function HomePage() {
                 }}>
                   <p style={{ color: 'var(--color-accent)', fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: '700', marginBottom: '0.5rem' }}>Trending Now</p>
                   <p style={{ color: 'white', fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>Summer Silk Series</p>
-                  <Link href="/shop" style={{ color: 'white', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none' }}>
-                    Shop Collection <ArrowRight size={14} />
+                  <Link 
+                    href="/shop" 
+                    style={{ 
+                      color: 'white', fontSize: '0.8rem', display: 'flex', 
+                      alignItems: 'center', gap: '5px', textDecoration: 'none',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      const arrow = e.currentTarget.querySelector('svg');
+                      if (arrow) arrow.style.transform = 'translateX(5px)';
+                      e.currentTarget.style.color = 'var(--color-accent)';
+                    }}
+                    onMouseLeave={(e) => {
+                      const arrow = e.currentTarget.querySelector('svg');
+                      if (arrow) arrow.style.transform = 'translateX(0)';
+                      e.currentTarget.style.color = 'white';
+                    }}
+                  >
+                    Shop Collection <ArrowRight size={14} style={{ transition: 'transform 0.3s ease' }} />
                   </Link>
                 </div>
               </div>

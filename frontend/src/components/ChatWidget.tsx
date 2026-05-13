@@ -247,13 +247,21 @@ export default function ChatWidget() {
       {/* Toggle Button */}
       <button 
         onClick={() => setOpen(!open)}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = open ? 'scale(0.95)' : 'scale(1.1) translateY(-5px)';
+          e.currentTarget.style.boxShadow = '0 10px 25px rgba(201,168,76,0.5)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = open ? 'scale(0.9)' : 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 14px rgba(201,168,76,0.4)';
+        }}
         style={{ 
           width: '56px', height: '56px', borderRadius: '50%', 
           background: 'linear-gradient(135deg, #c9a84c, #e8c97a)',
           color: '#0d0d0d', border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 4px 14px rgba(201,168,76,0.4)',
-          transition: 'transform 0.2s',
+          transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
           transform: open ? 'scale(0.9)' : 'scale(1)',
           position: 'relative'
         }}
