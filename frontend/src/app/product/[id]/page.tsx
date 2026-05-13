@@ -19,6 +19,7 @@ export default function ProductDetailPage() {
   const [activeImg, setActiveImg] = useState(0);
   const [tab, setTab] = useState<'description' | 'reviews'>('description');
   const [added, setAdded] = useState(false);
+  const [selectedSize, setSelectedSize] = useState('');
   const [review, setReview] = useState({ rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,7 +33,11 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart({ _id: product._id, title: product.title, price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price, image: product.images[0], qty, stock: product.stock });
+    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+      alert('Please select a size before adding to cart.');
+      return;
+    }
+    addToCart({ _id: product._id, title: product.title, price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price, image: product.images[0], qty, stock: product.stock, size: selectedSize || undefined });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);
   };
@@ -133,6 +138,42 @@ export default function ProductDetailPage() {
               {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
             </span>
           </div>
+
+          {/* Sizes */}
+          {product.sizes && product.sizes.length > 0 && (
+            <div style={{ marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                Size <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{selectedSize && `— ${selectedSize}`}</span>
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {product.sizes.map((size: string) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => setSelectedSize(size === selectedSize ? '' : size)}
+                    style={{
+                      padding: '8px 20px',
+                      borderRadius: '6px',
+                      border: selectedSize === size ? '2px solid var(--color-accent)' : '2px solid var(--color-border)',
+                      background: selectedSize === size ? 'rgba(201,168,76,0.15)' : 'transparent',
+                      color: selectedSize === size ? 'var(--color-accent)' : 'var(--color-text)',
+                      fontWeight: selectedSize === size ? '700' : '400',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      transition: 'all 0.2s',
+                      minWidth: '52px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+              {!selectedSize && (
+                <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.5rem' }}>Please select a size</p>
+              )}
+            </div>
+          )}
 
           {/* Qty selector */}
           {product.stock > 0 && (
