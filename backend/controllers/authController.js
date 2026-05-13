@@ -164,6 +164,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     // Get reset token
     const resetToken = crypto.randomBytes(20).toString('hex');
+    console.log('Token generated');
 
     // Hash and set to resetPasswordToken field
     user.resetPasswordToken = crypto
@@ -173,11 +174,20 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     // Set expire (10 minutes)
     user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    console.log('Token hashed and expiration set');
 
-    await user.save({ validateBeforeSave: false });
+    try {
+        await user.save({ validateBeforeSave: false });
+        console.log('User model saved with reset token');
+    } catch (saveErr) {
+        console.error('DATABASE SAVE ERROR:', saveErr);
+        res.status(500);
+        throw new Error(`Database save failed: ${saveErr.message}`);
+    }
 
     // Create reset URL
     const resetUrl = `http://localhost:3000/auth/reset-password/${resetToken}`;
+    console.log(`Attempting to send email to ${user.email}...`);
 
     const message = `
         <div style="font-family: 'Playfair Display', serif; color: #1a1a2e; padding: 20px; border: 1px solid #c9a84c; border-radius: 10px;">
@@ -200,17 +210,15 @@ const forgotPassword = asyncHandler(async (req, res) => {
             subject: 'Password Reset Request - Wearixa',
             message,
         });
-
+        console.log('EMAIL SENT SUCCESSFULLY');
         res.status(200).json({ success: true, data: 'Email sent' });
     } catch (err) {
-        console.log(err);
+        console.error('EMAIL SENDING FAILED:', err);
         user.resetPasswordToken = undefined;
         user.resetPasswordExpire = undefined;
-
         await user.save({ validateBeforeSave: false });
-
         res.status(500);
-        throw new Error('Email could not be sent');
+        throw new Error(`Email could not be sent: ${err.message}`);
     }
 });
 
