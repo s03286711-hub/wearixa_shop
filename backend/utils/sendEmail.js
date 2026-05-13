@@ -5,10 +5,15 @@ const sendEmail = async (options) => {
         console.log('--- STARTING GMAIL API HTTP SEND ---');
         
         // 1. Get Access Token from Refresh Token
+        let rToken = process.env.OAUTH_REFRESH_TOKEN.trim();
+        if (!rToken.startsWith('1//')) {
+            rToken = `1//${rToken}`;
+        }
+        
         const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
-            client_id: process.env.OAUTH_CLIENT_ID,
-            client_secret: process.env.OAUTH_CLIENT_SECRET,
-            refresh_token: process.env.OAUTH_REFRESH_TOKEN.startsWith('1//') ? process.env.OAUTH_REFRESH_TOKEN : `1//${process.env.OAUTH_REFRESH_TOKEN}`,
+            client_id: process.env.OAUTH_CLIENT_ID.trim(),
+            client_secret: process.env.OAUTH_CLIENT_SECRET.trim(),
+            refresh_token: rToken,
             grant_type: 'refresh_token',
         });
 
