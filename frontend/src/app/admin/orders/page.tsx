@@ -18,8 +18,15 @@ export default function AdminOrdersPage() {
   useEffect(() => { fetchOrders(); }, []);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeliveryUpdate = async (id: string, date: string) => {
     try {
-      await orderService.updateStatus(id, newStatus);
+      const order = orders.find(o => o._id === id);
+      await orderService.updateStatus(id, order.status, date);
       fetchOrders();
     } catch (err) {
       console.error(err);
@@ -89,22 +96,37 @@ export default function AdminOrdersPage() {
                         </div>
                       </td>
                       <td style={{ padding: '1.25rem' }}>
-                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                          <select 
-                            value={order.status || 'Processing'} 
-                            onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                            style={{ 
-                              background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', 
-                              color: 'var(--color-text)', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px', outline: 'none', cursor: 'pointer' 
-                            }}
-                          >
-                            {STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                          </select>
-                          {!order.isPaid && (
-                            <button onClick={() => markPaid(order._id)} style={{ background: 'none', border: 'none', color: '#4ade80', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', textDecoration: 'underline' }}>
-                              Mark Paid
-                            </button>
-                          )}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                            <select 
+                              value={order.status || 'Processing'} 
+                              onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                              style={{ 
+                                background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', 
+                                color: 'var(--color-text)', fontSize: '0.75rem', padding: '4px 8px', borderRadius: '4px', outline: 'none', cursor: 'pointer', flex: 1 
+                              }}
+                            >
+                              {STATUS_OPTIONS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                            </select>
+                            {!order.isPaid && (
+                              <button onClick={() => markPaid(order._id)} style={{ background: 'none', border: 'none', color: '#4ade80', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', textDecoration: 'underline', whiteSpace: 'nowrap' }}>
+                                Mark Paid
+                              </button>
+                            )}
+                          </div>
+                          
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                             <label style={{ fontSize: '0.65rem', color: 'var(--color-muted)', textTransform: 'uppercase' }}>Delivery:</label>
+                             <input 
+                               type="date" 
+                               value={order.expectedDelivery ? new Date(order.expectedDelivery).toISOString().split('T')[0] : ''}
+                               onChange={(e) => handleDeliveryUpdate(order._id, e.target.value)}
+                               style={{ 
+                                 background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', 
+                                 color: 'var(--color-text)', fontSize: '0.75rem', padding: '2px 4px', borderRadius: '4px', outline: 'none' 
+                               }} 
+                             />
+                          </div>
                         </div>
                       </td>
                     </tr>

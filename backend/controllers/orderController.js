@@ -18,6 +18,13 @@ const addOrderItems = async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
+            statusTimeline: [
+                {
+                    status: 'Processing',
+                    message: 'Order placed successfully and is being processed.',
+                    timestamp: new Date(),
+                }
+            ],
         });
 
         const createdOrder = await order.save();
@@ -73,6 +80,13 @@ const updateOrderToDelivered = async (req, res) => {
         order.isDelivered = true;
         order.deliveredAt = Date.now();
         order.status = 'Delivered';
+        
+        order.statusTimeline.push({
+            status: 'Delivered',
+            message: 'Order has been delivered.',
+            timestamp: new Date(),
+        });
+
         const updatedOrder = await order.save();
         res.json(updatedOrder);
     } else {
@@ -88,7 +102,27 @@ const updateOrderStatus = async (req, res) => {
     const order = await Order.findById(req.params.id);
 
     if (order) {
+        const oldStatus = order.status;
         order.status = req.body.status || order.status;
+        order.expectedDelivery = req.body.expectedDelivery || order.expectedDelivery;
+
+        if (oldStatus !== order.status) {
+            let message = '';
+            switch (order.status) {
+                case 'Packing': message = 'Your order is being packed and prepared for shipment.'; break;
+                case 'Shipped': message = 'Your order has been shipped and is on its way.'; break;
+                case 'Delivered': message = 'Your order has been delivered.'; break;
+                case 'Cancelled': message = 'Your order has been cancelled.'; break;
+                default: message = `Order status updated to ${order.status}`;
+            }
+            
+            order.statusTimeline.push({
+                status: order.status,
+                message: message,
+                timestamp: new Date(),
+            });
+        }
+
         if (order.status === 'Delivered') {
             order.isDelivered = true;
             order.deliveredAt = Date.now();

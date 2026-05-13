@@ -6,6 +6,7 @@ import { orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import Link from 'next/link';
 import { ChevronLeft, Package, MapPin, CreditCard, CheckCircle, Clock } from 'lucide-react';
+import OrderTracking from '@/components/OrderTracking';
 
 export default function OrderDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -46,6 +47,12 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
           </span>
         </div>
       </div>
+
+      <OrderTracking 
+        currentStatus={order.status} 
+        timeline={order.statusTimeline || []} 
+        expectedDelivery={order.expectedDelivery}
+      />
 
       <div className="order-main-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2.5rem', alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>

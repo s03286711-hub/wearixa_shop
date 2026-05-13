@@ -108,8 +108,8 @@ export const orderService = {
     return data;
   },
 
-  updateStatus: async (id: string, status: string) => {
-    const { data } = await api.put(`/orders/${id}/status`, { status });
+  updateStatus: async (id: string, status: string, expectedDelivery?: string) => {
+    const { data } = await api.put(`/orders/${id}/status`, { status, expectedDelivery });
     return data;
   },
 };
