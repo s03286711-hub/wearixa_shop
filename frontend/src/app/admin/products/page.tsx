@@ -24,6 +24,7 @@ export default function AdminProductsPage() {
     category: '',
     stock: '',
     images: [] as File[],
+    sizes: [] as string[],
   });
 
   const fetchProducts = async () => {
@@ -51,7 +52,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [] });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [] });
   };
 
   const handleEdit = (p: any) => {
@@ -67,6 +68,7 @@ export default function AdminProductsPage() {
       category: p.category?._id || p.category,
       stock: p.stock.toString(),
       images: [],
+      sizes: p.sizes || [],
     });
     setShowModal(true);
   };
@@ -85,6 +87,7 @@ export default function AdminProductsPage() {
     formData.append('brand', form.brand);
     formData.append('category', form.category);
     formData.append('stock', form.stock);
+    form.sizes.forEach(s => formData.append('sizes', s));
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -240,6 +243,45 @@ export default function AdminProductsPage() {
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Brand</label>
                   <input className="input-field" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} required disabled={submitting} />
                 </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                  Sizes <span style={{ color: 'var(--color-muted)', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span>
+                </label>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  {['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'].map(size => {
+                    const selected = form.sizes.includes(size);
+                    return (
+                      <button
+                        key={size}
+                        type="button"
+                        disabled={submitting}
+                        onClick={() => setForm(f => ({
+                          ...f,
+                          sizes: selected
+                            ? f.sizes.filter(s => s !== size)
+                            : [...f.sizes, size]
+                        }))}
+                        style={{
+                          padding: '6px 18px',
+                          borderRadius: '6px',
+                          border: selected ? '2px solid var(--color-accent)' : '2px solid var(--color-border)',
+                          background: selected ? 'rgba(201,168,76,0.15)' : 'transparent',
+                          color: selected ? 'var(--color-accent)' : 'var(--color-muted)',
+                          fontWeight: selected ? '700' : '400',
+                          cursor: submitting ? 'not-allowed' : 'pointer',
+                          fontSize: '0.875rem',
+                          transition: 'all 0.2s',
+                        }}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
+                </div>
+                {form.sizes.length === 0 && (
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)', marginTop: '0.5rem' }}>No sizes selected — product will show without size options.</p>
+                )}
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Images</label>

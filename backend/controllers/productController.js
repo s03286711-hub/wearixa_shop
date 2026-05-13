@@ -61,7 +61,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, sizes } = req.body;
 
     let imageUrls = [];
 
@@ -73,6 +73,11 @@ const createProduct = asyncHandler(async (req, res) => {
         imageUrls = ['https://placehold.co/600x800?text=Wearixa'];
     }
 
+    let parsedSizes = [];
+    if (sizes) {
+        parsedSizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+
     const product = new Product({
         title,
         images: imageUrls,
@@ -82,6 +87,7 @@ const createProduct = asyncHandler(async (req, res) => {
         brand,
         category,
         stock,
+        sizes: parsedSizes,
         user: req.user._id,
     });
 
@@ -93,7 +99,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, images } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, images, sizes } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -105,7 +111,11 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.brand = brand || product.brand;
         product.category = category || product.category;
         product.stock = stock !== undefined ? stock : product.stock;
-        
+
+        if (sizes !== undefined) {
+            product.sizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);
+        }
+
         if (images) {
             product.images = Array.isArray(images) ? images : [images];
         }
