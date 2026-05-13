@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { productService, categoryService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Trash2, Edit, Plus, X, Upload, Search } from 'lucide-react';
+import { Trash2, Edit, Plus, X, Upload, Search, Loader2, CheckCircle } from 'lucide-react';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -11,6 +11,9 @@ export default function AdminProductsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [keyword, setKeyword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const [form, setForm] = useState({
     title: '',
@@ -43,8 +46,18 @@ export default function AdminProductsPage() {
     } catch (err) { console.error(err); }
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+    setEditingProduct(null);
+    setSubmitError('');
+    setSuccessMsg('');
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [] });
+  };
+
   const handleEdit = (p: any) => {
     setEditingProduct(p);
+    setSubmitError('');
+    setSuccessMsg('');
     setForm({
       title: p.title,
       description: p.description,
@@ -60,6 +73,10 @@ export default function AdminProductsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
+    setSubmitError('');
+    setSuccessMsg('');
+
     const formData = new FormData();
     formData.append('title', form.title);
     formData.append('description', form.description);
@@ -68,7 +85,7 @@ export default function AdminProductsPage() {
     formData.append('brand', form.brand);
     formData.append('category', form.category);
     formData.append('stock', form.stock);
-    
+
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
     }
@@ -76,14 +93,21 @@ export default function AdminProductsPage() {
     try {
       if (editingProduct) {
         await productService.update(editingProduct._id, formData);
+        setSuccessMsg('Product updated successfully!');
       } else {
         await productService.create(formData);
+        setSuccessMsg('Product created successfully!');
       }
-      setShowModal(false);
-      setEditingProduct(null);
-      setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [] });
       fetchProducts();
-    } catch (err) { console.error(err); }
+      setTimeout(() => {
+        closeModal();
+      }, 1200);
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Something went wrong. Please try again.';
+      setSubmitError(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -93,7 +117,7 @@ export default function AdminProductsPage() {
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600' }}>Products Management</h1>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>{products.length} products total</p>
         </div>
-        <button onClick={() => { setEditingProduct(null); setShowModal(true); }} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <button onClick={() => { setEditingProduct(null); setSubmitError(''); setSuccessMsg(''); setShowModal(true); }} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Plus size={18} /> Add Product
         </button>
       </div>
@@ -163,68 +187,99 @@ export default function AdminProductsPage() {
           <div className="glass animate-fade-in" style={{ width: '100%', maxWidth: '600px', borderRadius: '16px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, background: 'var(--color-surface)', zIndex: 1 }}>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem' }}>{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
-              <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer' }}><X size={24} /></button>
+              <button onClick={closeModal} disabled={submitting} style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.5 : 1 }}><X size={24} /></button>
             </div>
+
             <form onSubmit={handleSubmit} style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+              {/* Error message */}
+              {submitError && (
+                <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '8px', padding: '0.875rem 1rem', color: '#f87171', fontSize: '0.875rem' }}>
+                  ⚠️ {submitError}
+                </div>
+              )}
+
+              {/* Success message */}
+              {successMsg && (
+                <div style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: '8px', padding: '0.875rem 1rem', color: '#4ade80', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle size={16} /> {successMsg}
+                </div>
+              )}
+
               <div>
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Title</label>
-                <input className="input-field" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required />
+                <input className="input-field" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} required disabled={submitting} />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Description</label>
-                <textarea className="input-field" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4} required />
+                <textarea className="input-field" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4} required disabled={submitting} />
               </div>
-              <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price ($)</label>
-                  <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required />
+                  <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required disabled={submitting} />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Discount ($)</label>
-                  <input className="input-field" type="number" step="0.01" value={form.discountPrice} onChange={e => setForm(f => ({ ...f, discountPrice: e.target.value }))} placeholder="Optional" />
+                  <input className="input-field" type="number" step="0.01" value={form.discountPrice} onChange={e => setForm(f => ({ ...f, discountPrice: e.target.value }))} placeholder="Optional" disabled={submitting} />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Stock</label>
-                  <input className="input-field" type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required />
+                  <input className="input-field" type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required disabled={submitting} />
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Category</label>
-                  <select className="input-field" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required>
+                  <select className="input-field" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required disabled={submitting}>
                     <option value="">Select Category</option>
                     {categories.map((c: any) => <option key={c._id} value={c._id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Brand</label>
-                  <input className="input-field" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} required />
+                  <input className="input-field" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} required disabled={submitting} />
                 </div>
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Images</label>
-                <div style={{ border: '2px dashed var(--color-border)', borderRadius: '8px', padding: '2rem', textAlign: 'center', cursor: 'pointer', transition: 'border-color 0.3s' }}
-                  onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--color-border)')}
-                  onClick={() => document.getElementById('img-upload')?.click()}
+                <div style={{ border: '2px dashed var(--color-border)', borderRadius: '8px', padding: '2rem', textAlign: 'center', cursor: submitting ? 'not-allowed' : 'pointer', transition: 'border-color 0.3s', opacity: submitting ? 0.6 : 1 }}
+                  onMouseEnter={e => { if (!submitting) e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+                  onClick={() => { if (!submitting) document.getElementById('img-upload')?.click(); }}
                 >
                   <Upload size={32} style={{ color: 'var(--color-muted)', marginBottom: '1rem' }} />
-                  <p style={{ fontSize: '0.875rem', color: 'var(--color-muted)' }}>Click to upload images (Max 5)</p>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--color-muted)' }}>
+                    {form.images.length > 0 ? `${form.images.length} image(s) selected ✓ — click to change` : 'Click to upload images (Max 5)'}
+                  </p>
                   <input id="img-upload" type="file" multiple accept="image/*" onChange={e => {
                     if (e.target.files) setForm(f => ({ ...f, images: Array.from(e.target.files!) }));
-                  }} style={{ display: 'none' }} />
+                  }} style={{ display: 'none' }} disabled={submitting} />
                   {form.images.length > 0 && (
-                    <p style={{ marginTop: '1rem', color: 'var(--color-accent)', fontWeight: '600' }}>{form.images.length} images selected</p>
+                    <p style={{ marginTop: '0.75rem', color: 'var(--color-accent)', fontWeight: '600', fontSize: '0.85rem' }}>
+                      {form.images.map(f => f.name).join(', ')}
+                    </p>
                   )}
                 </div>
               </div>
-              <button type="submit" className="btn-primary" style={{ padding: '1rem' }}>
-                {editingProduct ? 'Update Product' : 'Create Product'}
+
+              <button type="submit" className="btn-primary" disabled={submitting} style={{ padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', opacity: submitting ? 0.8 : 1 }}>
+                {submitting ? (
+                  <>
+                    <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
+                    {editingProduct ? 'Updating...' : 'Creating...'}
+                    {form.images.length > 0 && ' (Uploading images...)'}
+                  </>
+                ) : (
+                  editingProduct ? 'Update Product' : 'Create Product'
+                )}
               </button>
             </form>
           </div>
         </div>
       )}
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }
