@@ -138,50 +138,51 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Password</label>
-                  <div style={{ 
-                    position: 'relative', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    background: 'rgba(255,255,255,0.02)', 
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '12px',
-                    padding: '0 1rem',
-                    transition: 'all 0.3s ease'
-                  }}>
-                    <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
-                    <input 
-                      type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                      placeholder="••••••" required 
-                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
-                    />
-                    <button type="button" onClick={() => setShowPass(!showPass)}
-                      style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center' }}>
-                      {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
+              {/* Password */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Password</label>
+                <div style={{ 
+                  position: 'relative', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  background: 'rgba(255,255,255,0.02)', 
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '12px',
+                  padding: '0 1rem',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
+                  <input 
+                    type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                    placeholder="••••••" required 
+                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.9rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
+                  />
+                  <button type="button" onClick={() => setShowPass(!showPass)}
+                    style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10, display: 'flex', alignItems: 'center', marginLeft: '0.5rem' }}>
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Confirm</label>
-                  <div style={{ 
-                    position: 'relative', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    background: 'rgba(255,255,255,0.02)', 
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '12px',
-                    padding: '0 1rem',
-                    transition: 'all 0.3s ease'
-                  }}>
-                    <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
-                    <input 
-                      type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
-                      placeholder="••••••" required 
-                      style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.75rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
-                    />
-                  </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Confirm Password</label>
+                <div style={{ 
+                  position: 'relative', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  background: 'rgba(255,255,255,0.02)', 
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '12px',
+                  padding: '0 1rem',
+                  transition: 'all 0.3s ease'
+                }}>
+                  <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '0.75rem', opacity: 0.8, flexShrink: 0 }} />
+                  <input 
+                    type="password" value={form.confirm} onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))}
+                    placeholder="••••••" required 
+                    style={{ background: 'transparent', border: 'none', width: '100%', fontSize: '0.9rem', color: 'white', outline: 'none', padding: '0.9rem 0', WebkitBoxShadow: '0 0 0 1000px rgba(13,13,13,0) inset', WebkitTextFillColor: 'white' }} 
+                  />
                 </div>
               </div>
 
