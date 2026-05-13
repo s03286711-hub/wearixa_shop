@@ -1,5 +1,5 @@
 const Product = require('../models/Product');
-const cloudinary = require('../config/cloudinary');
+const asyncHandler = require('express-async-handler');
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -60,18 +60,13 @@ const getProductById = async (req, res) => {
 // @desc    Create a product
 // @route   POST /api/products
 // @access  Private/Admin
-const createProduct = async (req, res) => {
+const createProduct = asyncHandler(async (req, res) => {
     const { title, description, price, discountPrice, brand, category, stock } = req.body;
 
     let imageUrls = [];
 
     if (req.files && req.files.length > 0) {
-        for (const file of req.files) {
-            const result = await cloudinary.uploader.upload(file.path, {
-                folder: 'wearixa/products',
-            });
-            imageUrls.push(result.secure_url);
-        }
+        imageUrls = req.files.map(file => file.path);
     } else if (req.body.images) {
         imageUrls = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
     } else {
@@ -92,12 +87,12 @@ const createProduct = async (req, res) => {
 
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);
-};
+});
 
 // @desc    Update a product
 // @route   PUT /api/products/:id
 // @access  Private/Admin
-const updateProduct = async (req, res) => {
+const updateProduct = asyncHandler(async (req, res) => {
     const { title, description, price, discountPrice, brand, category, stock, images } = req.body;
 
     const product = await Product.findById(req.params.id);
@@ -110,17 +105,13 @@ const updateProduct = async (req, res) => {
         product.brand = brand || product.brand;
         product.category = category || product.category;
         product.stock = stock !== undefined ? stock : product.stock;
-        if (images) product.images = Array.isArray(images) ? images : [images];
+        
+        if (images) {
+            product.images = Array.isArray(images) ? images : [images];
+        }
 
         if (req.files && req.files.length > 0) {
-            const imageUrls = [];
-            for (const file of req.files) {
-                const result = await cloudinary.uploader.upload(file.path, {
-                    folder: 'wearixa/products',
-                });
-                imageUrls.push(result.secure_url);
-            }
-            product.images = imageUrls;
+            product.images = req.files.map(file => file.path);
         }
 
         const updatedProduct = await product.save();
