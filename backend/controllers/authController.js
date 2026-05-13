@@ -227,11 +227,16 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @route   PUT /api/auth/reset-password/:token
 // @access  Public
 const resetPassword = asyncHandler(async (req, res) => {
+    console.log(`[RESET PASSWORD] Raw token from URL: '${req.params.token}'`);
+    
     // Get hashed token
     const resetPasswordToken = crypto
         .createHash('sha256')
         .update(req.params.token)
         .digest('hex');
+
+    console.log(`[RESET PASSWORD] Computed Hash: '${resetPasswordToken}'`);
+    console.log(`[RESET PASSWORD] Current Date.now(): ${Date.now()}`);
 
     const user = await User.findOne({
         resetPasswordToken,
@@ -239,9 +244,21 @@ const resetPassword = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
+        console.log(`[RESET PASSWORD] User not found or token expired for hash: ${resetPasswordToken}`);
+        
+        // Debug: check if user exists with just the token (ignore expiry)
+        const userWithoutExpiry = await User.findOne({ resetPasswordToken });
+        if (userWithoutExpiry) {
+            console.log(`[DEBUG] Found user with matching token, but expired! Expiry in DB: ${userWithoutExpiry.resetPasswordExpire.getTime()}`);
+        } else {
+            console.log(`[DEBUG] No user found with this token AT ALL in the DB.`);
+        }
+
         res.status(400);
         throw new Error('Invalid or expired token');
     }
+
+    console.log(`[RESET PASSWORD] Token valid! Resetting password for: ${user.email}`);
 
     // Set new password
     user.password = req.body.password;
