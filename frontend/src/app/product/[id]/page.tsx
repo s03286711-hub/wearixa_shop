@@ -18,10 +18,10 @@ export default function ProductDetailPage() {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { showToast } = useToast();
   
-  const wishlisted = product ? isInWishlist(product._id) : false;
-
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  
+  const wishlisted = product ? isInWishlist(product._id) : false;
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
   const [tab, setTab] = useState<'description' | 'reviews'>('description');
