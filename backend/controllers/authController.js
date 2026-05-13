@@ -167,18 +167,21 @@ const forgotPassword = asyncHandler(async (req, res) => {
     console.log('Token generated');
 
     // Hash and set to resetPasswordToken field
-    user.resetPasswordToken = crypto
+    const hashedToken = crypto
         .createHash('sha256')
         .update(resetToken)
         .digest('hex');
 
     // Set expire (10 minutes)
-    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    const tokenExpire = Date.now() + 10 * 60 * 1000;
     console.log('Token hashed and expiration set');
 
     try {
-        await user.save({ validateBeforeSave: false });
-        console.log('User model saved with reset token');
+        await User.updateOne({ _id: user._id }, {
+            resetPasswordToken: hashedToken,
+            resetPasswordExpire: tokenExpire
+        });
+        console.log('User model hard-updated with reset token');
     } catch (saveErr) {
         console.error('DATABASE SAVE ERROR:', saveErr);
         res.status(500);
@@ -215,9 +218,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
         res.status(200).json({ success: true, data: 'Email sent' });
     } catch (err) {
         console.error('EMAIL SENDING FAILED:', err);
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-        await user.save({ validateBeforeSave: false });
+        await User.updateOne({ _id: user._id }, {
+            $unset: { resetPasswordToken: 1, resetPasswordExpire: 1 }
+        });
         res.status(500);
         throw new Error(`Email could not be sent: ${err.message}`);
     }
@@ -227,12 +230,13 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @route   PUT /api/auth/reset-password/:token
 // @access  Public
 const resetPassword = asyncHandler(async (req, res) => {
-    console.log(`[RESET PASSWORD] Raw token from URL: '${req.params.token}'`);
+    const rawToken = req.params.token.trim();
+    console.log(`[RESET PASSWORD] Raw token from URL: '${rawToken}'`);
     
     // Get hashed token
     const resetPasswordToken = crypto
         .createHash('sha256')
-        .update(req.params.token)
+        .update(rawToken)
         .digest('hex');
 
     console.log(`[RESET PASSWORD] Computed Hash: '${resetPasswordToken}'`);
