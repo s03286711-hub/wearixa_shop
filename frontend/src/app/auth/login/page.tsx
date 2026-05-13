@@ -102,12 +102,12 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontSize: '0.7rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Email Address</label>
-                <div style={{ position: 'relative' }}>
-                  <Mail size={16} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <Mail size={16} style={{ color: 'var(--color-accent)', marginRight: '1rem' }} />
                   <input 
                     className="input-field" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                     placeholder="Enter your email" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 0 0.75rem 2.25rem', width: '100%', color: 'white' }} autoComplete="email" 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 0', width: '100%', color: 'white', fontSize: '0.95rem' }} autoComplete="email" 
                   />
                 </div>
               </div>
@@ -117,15 +117,15 @@ export default function LoginPage() {
                   <label style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Password</label>
                   <Link href="/auth/forgot" style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>Forgot?</Link>
                 </div>
-                <div style={{ position: 'relative' }}>
-                  <Lock size={16} style={{ position: 'absolute', left: '0', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-accent)', zIndex: 10 }} />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <Lock size={16} style={{ color: 'var(--color-accent)', marginRight: '1rem' }} />
                   <input 
                     className="input-field" type={showPass ? 'text' : 'password'} value={form.password} onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                     placeholder="Enter password" required 
-                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 2.25rem 0.75rem 2.25rem', width: '100%', color: 'white' }} autoComplete="current-password" 
+                    style={{ background: 'none', border: 'none', borderBottom: '1px solid var(--color-border)', borderRadius: '0', padding: '0.75rem 0', width: '100%', color: 'white', fontSize: '0.95rem' }} autoComplete="current-password" 
                   />
                   <button type="button" onClick={() => setShowPass(!showPass)}
-                    style={{ position: 'absolute', right: '0', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10 }}>
+                    style={{ position: 'absolute', right: '0', background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', zIndex: 10 }}>
                     {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
