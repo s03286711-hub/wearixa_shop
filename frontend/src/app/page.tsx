@@ -99,7 +99,7 @@ export default function HomePage() {
         }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '4rem', alignItems: 'center' }}>
+          <div className="hero-grid">
             {/* Left Content */}
             <div className="reveal">
               <div style={{
