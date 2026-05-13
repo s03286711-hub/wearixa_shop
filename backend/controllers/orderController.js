@@ -18,6 +18,7 @@ const addOrderItems = async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
+            expectedDelivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // Default 4 days
             statusTimeline: [
                 {
                     status: 'Processing',

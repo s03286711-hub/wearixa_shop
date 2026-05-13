@@ -115,17 +115,19 @@ export default function AdminOrdersPage() {
                             )}
                           </div>
                           
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                             <label style={{ fontSize: '0.65rem', color: 'var(--color-muted)', textTransform: 'uppercase' }}>Delivery:</label>
-                             <input 
-                               type="date" 
-                               value={order.expectedDelivery ? new Date(order.expectedDelivery).toISOString().split('T')[0] : ''}
-                               onChange={(e) => handleDeliveryUpdate(order._id, e.target.value)}
-                               style={{ 
-                                 background: 'var(--color-surface-2)', border: '1px solid var(--color-border)', 
-                                 color: 'var(--color-text)', fontSize: '0.75rem', padding: '2px 4px', borderRadius: '4px', outline: 'none' 
-                               }} 
-                             />
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px', background: 'rgba(255,255,255,0.02)', borderRadius: '6px', border: '1px solid var(--color-border)' }}>
+                             <div style={{ flex: 1 }}>
+                               <label style={{ fontSize: '0.6rem', color: 'var(--color-accent)', textTransform: 'uppercase', display: 'block', marginBottom: '2px', fontWeight: '600' }}>Expected Delivery</label>
+                               <input 
+                                 type="date" 
+                                 value={order.expectedDelivery ? new Date(order.expectedDelivery).toISOString().split('T')[0] : ''}
+                                 onChange={(e) => handleDeliveryUpdate(order._id, e.target.value)}
+                                 style={{ 
+                                   background: 'none', border: 'none', 
+                                   color: 'var(--color-text)', fontSize: '0.75rem', padding: '0', outline: 'none', width: '100%' 
+                                 }} 
+                               />
+                             </div>
                           </div>
                         </div>
                       </td>
