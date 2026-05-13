@@ -148,7 +148,9 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/forgot-password
 // @access  Public
 const forgotPassword = asyncHandler(async (req, res) => {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ 
+        email: { $regex: new RegExp(`^${req.body.email}$`, 'i') } 
+    });
 
     if (!user) {
         res.status(404);
