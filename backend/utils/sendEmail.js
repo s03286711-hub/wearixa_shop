@@ -9,6 +9,15 @@ const sendEmail = async (options) => {
         },
     });
 
+    // Verify connection configuration
+    try {
+        await transporter.verify();
+        console.log('SMTP Transport Verified');
+    } catch (err) {
+        console.error('SMTP Transport Error:', err);
+        throw err;
+    }
+
     const mailOptions = {
         from: process.env.EMAIL_FROM,
         to: options.email,
@@ -16,7 +25,13 @@ const sendEmail = async (options) => {
         html: options.message,
     };
 
-    await transporter.sendMail(mailOptions);
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent: ' + info.response);
+    } catch (err) {
+        console.error('SendMail Error:', err);
+        throw err;
+    }
 };
 
 module.exports = sendEmail;
