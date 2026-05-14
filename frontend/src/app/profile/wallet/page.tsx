@@ -6,7 +6,9 @@ import api from '@/services/api';
 import { CreditCard, Wallet, Smartphone, ArrowRight, Loader2, Plus, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default function WalletPage() {
+import { Suspense } from 'react';
+
+function WalletContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -183,5 +185,13 @@ export default function WalletPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function WalletPage() {
+  return (
+    <Suspense fallback={<div className="container" style={{ paddingTop: '8rem', textAlign: 'center' }}><Loader2 className="animate-spin" /></div>}>
+      <WalletContent />
+    </Suspense>
   );
 }
