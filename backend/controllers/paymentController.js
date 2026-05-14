@@ -6,15 +6,32 @@ const User = require('../models/User');
 // @access  Private
 const depositFunds = async (req, res) => {
     try {
-        const { amount, method } = req.body; // method: 'STRIPE', 'JAZZCASH', 'EASYPAISA'
+        const { amount, method, paymentDetails } = req.body; // method: 'STRIPE', 'JAZZCASH', 'EASYPAISA'
 
         if (!amount || amount <= 0) {
             return res.status(400).json({ message: 'Invalid amount' });
         }
 
         // Mock payment gateway generation
-        // In a real app, this would call Stripe API to create a session, or JazzCash/EasyPaisa API to generate a token.
         const referenceId = `TXN-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
+        // Construct simulation of JazzCash payload if method is JazzCash
+        let gatewayPayload = {};
+        if (method === 'JAZZCASH') {
+            gatewayPayload = {
+                pp_Version: "1.1",
+                pp_TxnType: "MPAY",
+                pp_TxnRefNo: referenceId,
+                pp_MerchantID: process.env.JAZZCASH_MERCHANT_ID || "Test_ID",
+                pp_Amount: (amount * 100).toString(), // Usually in cents/paise
+                pp_TxnCurrency: "PKR",
+                pp_Description: "Wallet Deposit",
+                pp_CustomerCardNumber: paymentDetails?.number || "",
+                pp_CustomerCardExpiry: paymentDetails?.expiry?.replace('/', '') || "",
+                pp_CustomerCardCvv: paymentDetails?.cvv || "",
+            };
+            console.log("JazzCash Payload Constructed:", gatewayPayload);
+        }
 
         const transaction = await Transaction.create({
             user: req.user._id,

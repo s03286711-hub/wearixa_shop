@@ -5,8 +5,8 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
 import { CreditCard, Wallet, Smartphone, ArrowRight, Loader2, Plus, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-
 import { Suspense } from 'react';
+import PaymentForms from '@/components/PaymentForms';
 
 function WalletContent() {
   const router = useRouter();
@@ -20,6 +20,8 @@ function WalletContent() {
   const [depositAmount, setDepositAmount] = useState('100');
   const [depositMethod, setDepositMethod] = useState('STRIPE'); // 'STRIPE', 'JAZZCASH', 'EASYPAISA'
   const [isDepositing, setIsDepositing] = useState(false);
+  const [paymentData, setPaymentData] = useState<any>({});
+  const [isPaymentValid, setIsPaymentValid] = useState(false);
 
   useEffect(() => {
     if (!user) { router.push('/auth/login'); return; }
@@ -41,11 +43,16 @@ function WalletContent() {
 
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isPaymentValid) {
+      alert('Please fill out all payment details correctly.');
+      return;
+    }
     setIsDepositing(true);
     try {
       const { data } = await api.post('/payments/deposit', {
         amount: Number(depositAmount),
-        method: depositMethod
+        method: depositMethod,
+        paymentDetails: paymentData // Sending the actual form data to backend
       });
       // Redirect to the mock checkout page
       window.location.href = `http://localhost:5000${data.checkoutUrl}`;
@@ -176,7 +183,12 @@ function WalletContent() {
                 </div>
               </div>
 
-              <button type="submit" disabled={isDepositing} className="btn-primary" style={{ marginTop: '1rem', padding: '1rem', display: 'flex', justifyContent: 'center' }}>
+              <PaymentForms 
+                method={depositMethod.toLowerCase()} 
+                onChange={(data, valid) => { setPaymentData(data); setIsPaymentValid(valid); }} 
+              />
+
+              <button type="submit" disabled={isDepositing || !isPaymentValid} className="btn-primary" style={{ marginTop: '1rem', padding: '1rem', display: 'flex', justifyContent: 'center' }}>
                 {isDepositing ? <Loader2 className="animate-spin" /> : `Deposit $${depositAmount}`}
               </button>
             </form>
