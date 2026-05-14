@@ -16,6 +16,16 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        isAdmin: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
+        walletBalance: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
         role: {
             type: String,
             required: true,

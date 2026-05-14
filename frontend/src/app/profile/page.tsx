@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { authService, orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import Link from 'next/link';
-import { User, Package, Settings, Save } from 'lucide-react';
+import { User, Package, Settings, Save, Wallet } from 'lucide-react';
 
 type Tab = 'profile' | 'orders';
 
@@ -104,6 +104,15 @@ export default function ProfilePage() {
               <Icon size={16} /> {label}
             </button>
           ))}
+          <Link href="/profile/wallet" style={{
+              display: 'flex', alignItems: 'center', gap: '12px', width: '100%', padding: '1rem 1.5rem',
+              background: 'none', border: 'none',
+              borderLeft: `3px solid transparent`,
+              color: 'var(--color-muted)', cursor: 'pointer', textDecoration: 'none', fontSize: '0.875rem',
+              transition: 'all 0.3s', textAlign: 'left', fontWeight: '400',
+          }}>
+            <Wallet size={16} /> My Wallet
+          </Link>
           {user.role === 'admin' && (
             <Link href="/admin" style={{
               display: 'flex', alignItems: 'center', gap: '12px', padding: '1rem 1.5rem',

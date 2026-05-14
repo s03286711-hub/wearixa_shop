@@ -1,15 +1,39 @@
 const Order = require('../models/Order');
+const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = async (req, res) => {
-    const { orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
+    try {
+        const { orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
 
-    if (orderItems && orderItems.length === 0) {
-        res.status(400);
-        throw new Error('No order items');
-    } else {
+        if (orderItems && orderItems.length === 0) {
+            return res.status(400).json({ message: 'No order items' });
+        }
+
+        const user = await User.findById(req.user._id);
+
+        if (paymentMethod === 'wallet') {
+            if (user.walletBalance < totalPrice) {
+                return res.status(400).json({ message: 'Insufficient wallet balance' });
+            }
+            // Deduct balance
+            user.walletBalance -= totalPrice;
+            await user.save();
+
+            // Record transaction
+            await Transaction.create({
+                user: user._id,
+                amount: totalPrice,
+                type: 'PURCHASE',
+                paymentGateway: 'WALLET',
+                status: 'COMPLETED',
+                description: `Payment for Order`,
+            });
+        }
+
         const order = new Order({
             orderItems,
             user: req.user._id,
@@ -18,6 +42,8 @@ const addOrderItems = async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
+            isPaid: paymentMethod === 'wallet',
+            paidAt: paymentMethod === 'wallet' ? new Date() : undefined,
             expectedDelivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // Default 4 days
             statusTimeline: [
                 {
@@ -30,6 +56,9 @@ const addOrderItems = async (req, res) => {
 
         const createdOrder = await order.save();
         res.status(201).json(createdOrder);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server Error processing order' });
     }
 };
 

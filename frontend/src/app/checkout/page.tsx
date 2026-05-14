@@ -5,7 +5,8 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { orderService } from '@/services';
-import { MapPin, CreditCard, CheckCircle, ArrowRight } from 'lucide-react';
+import api from '@/services/api';
+import { MapPin, CreditCard, CheckCircle, ArrowRight, Wallet, Smartphone } from 'lucide-react';
 
 const STEPS = ['Shipping', 'Payment', 'Confirm'];
 
@@ -20,6 +21,15 @@ export default function CheckoutPage() {
 
   const [shipping, setShipping] = useState({ address: '', city: '', postalCode: '', country: '' });
   const [payment, setPayment] = useState({ method: 'stripe' });
+  const [walletBalance, setWalletBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      api.get('/payments/transactions')
+         .then(res => setWalletBalance(res.data.balance))
+         .catch(console.error);
+    }
+  }, [user]);
 
   // Fix: Move navigation side-effect to useEffect
   useEffect(() => {
@@ -117,24 +127,39 @@ export default function CheckoutPage() {
                 <CreditCard size={20} style={{ color: 'var(--color-accent)' }} />
                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Payment Method</h2>
               </div>
-              {['stripe', 'paypal', 'cod'].map((m) => (
-                <label key={m} style={{
-                  display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '8px',
-                  border: `1px solid ${payment.method === m ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                  background: payment.method === m ? 'rgba(201,168,76,0.05)' : 'transparent',
-                  cursor: 'pointer', marginBottom: '0.75rem', transition: 'all 0.3s',
-                }}>
-                  <input type="radio" name="payment" value={m} checked={payment.method === m} onChange={() => setPayment({ method: m })} style={{ accentColor: 'var(--color-accent)' }} />
-                  <div>
-                    <p style={{ fontWeight: '600', fontSize: '0.9rem' }}>
-                      {m === 'stripe' ? 'Credit / Debit Card (Stripe)' : m === 'paypal' ? 'PayPal' : 'Cash on Delivery'}
-                    </p>
-                    <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem' }}>
-                      {m === 'stripe' ? 'Visa, Mastercard, Amex' : m === 'paypal' ? 'Pay with your PayPal account' : 'Pay when you receive'}
-                    </p>
-                  </div>
-                </label>
-              ))}
+              {[
+                { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet },
+                { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard },
+                { id: 'jazzcash', name: 'JazzCash Mobile Wallet', desc: 'Pay instantly via JazzCash', icon: Smartphone },
+                { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone },
+                { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle },
+              ].map((m) => {
+                const disabled = m.id === 'wallet' && (walletBalance === null || walletBalance < totalPrice);
+                return (
+                  <label key={m.id} style={{
+                    display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '8px',
+                    border: `1px solid ${payment.method === m.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                    background: payment.method === m.id ? 'rgba(201,168,76,0.05)' : 'transparent',
+                    cursor: disabled ? 'not-allowed' : 'pointer', marginBottom: '0.75rem', transition: 'all 0.3s',
+                    opacity: disabled ? 0.5 : 1
+                  }}>
+                    <input type="radio" name="payment" value={m.id} disabled={disabled} checked={payment.method === m.id} onChange={() => setPayment({ method: m.id })} style={{ accentColor: 'var(--color-accent)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
+                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent)' }}>
+                        <m.icon size={16} />
+                      </div>
+                      <div>
+                        <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled && m.id === 'wallet' ? '#ef4444' : 'var(--color-text)' }}>
+                          {m.name} {disabled && m.id === 'wallet' && '(Insufficient)'}
+                        </p>
+                        <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem', margin: 0 }}>
+                          {m.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </label>
+                );
+              })}
               <div className="checkout-actions" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                 <button onClick={() => setStep(0)} className="btn-outline" style={{ flex: 1 }}>Back</button>
                 <button onClick={() => setStep(2)} className="btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
