@@ -32,8 +32,11 @@ const getProducts = async (req, res) => {
         : {};
 
     const dealFilter = req.query.dealType ? { dealType: req.query.dealType } : {};
+    const colorFilter = req.query.color ? { colors: req.query.color } : {};
+    const sizeFilter = req.query.size ? { sizes: req.query.size } : {};
+    const materialFilter = req.query.material ? { material: req.query.material } : {};
 
-    const filter = { ...keyword, ...categoryFilter, ...priceFilter, ...dealFilter };
+    const filter = { ...keyword, ...categoryFilter, ...priceFilter, ...dealFilter, ...colorFilter, ...sizeFilter, ...materialFilter };
 
     const count = await Product.countDocuments(filter);
     const products = await Product.find(filter)
@@ -42,7 +45,31 @@ const getProducts = async (req, res) => {
         .skip(pageSize * (page - 1))
         .sort({ createdAt: -1 });
 
-    res.json({ products, page, pages: Math.ceil(count / pageSize), total: count });
+    // Fetch dynamic filter counts
+    const aggregateFilter = { ...keyword, ...categoryFilter, ...priceFilter, ...dealFilter }; // Base filter without size/color/material
+    
+    const [counts] = await Product.aggregate([
+        { $match: aggregateFilter },
+        {
+            $facet: {
+                colors: [{ $unwind: '$colors' }, { $group: { _id: '$colors', count: { $sum: 1 } } }],
+                sizes: [{ $unwind: '$sizes' }, { $group: { _id: '$sizes', count: { $sum: 1 } } }],
+                materials: [{ $group: { _id: '$material', count: { $sum: 1 } } }]
+            }
+        }
+    ]);
+
+    res.json({ 
+        products, 
+        page, 
+        pages: Math.ceil(count / pageSize), 
+        total: count,
+        metadata: {
+            colors: counts.colors.map(c => ({ name: c._id, count: c.count })),
+            sizes: counts.sizes.map(s => ({ name: s._id, count: s.count })),
+            materials: counts.materials.filter(m => m._id).map(m => ({ name: m._id, count: m.count }))
+        }
+    });
 };
 
 // @desc    Fetch single product

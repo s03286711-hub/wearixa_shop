@@ -6,10 +6,12 @@ import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useToast } from '@/context/ToastContext';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import { ProductDetailsSkeleton } from '@/components/Skeleton';
-import { ShoppingBag, Heart, Star, ChevronLeft, ChevronRight, Truck, Shield, RefreshCw, CheckCircle } from 'lucide-react';
+import ZoomGallery from '@/components/ZoomGallery';
+import { ShoppingBag, Heart, Star, Truck, Shield, RefreshCw } from 'lucide-react';
 import { calculateShippingCharge } from '@/utils/shippingUtils';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -24,7 +26,6 @@ export default function ProductDetailPage() {
   
   const wishlisted = product ? isInWishlist(product._id) : false;
   const [qty, setQty] = useState(1);
-  const [activeImg, setActiveImg] = useState(0);
   const [tab, setTab] = useState<'description' | 'reviews'>('description');
   const [added, setAdded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
@@ -101,34 +102,7 @@ export default function ProductDetailPage() {
       <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
 
         {/* ── Images ── */}
-        <div>
-          <div style={{ position: 'relative', aspectRatio: '3/4', borderRadius: '8px', overflow: 'hidden', background: 'var(--color-surface)', marginBottom: '1rem' }}>
-            <img src={product.images[activeImg] || 'https://placehold.co/600x800?text=Wearixa'} alt={product.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.3s' }} />
-            {product.images.length > 1 && (
-              <>
-                <button onClick={() => setActiveImg(i => (i - 1 + product.images.length) % product.images.length)}
-                  style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: 'white', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <ChevronLeft size={18} />
-                </button>
-                <button onClick={() => setActiveImg(i => (i + 1) % product.images.length)}
-                  style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: 'white', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <ChevronRight size={18} />
-                </button>
-              </>
-            )}
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            {product.images.map((img: string, i: number) => (
-              <button key={i} onClick={() => setActiveImg(i)} style={{
-                width: '72px', height: '96px', borderRadius: '6px', overflow: 'hidden', padding: 0, border: '2px solid',
-                borderColor: activeImg === i ? 'var(--color-accent)' : 'transparent', cursor: 'pointer',
-              }}>
-                <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </button>
-            ))}
-          </div>
-        </div>
+        <ZoomGallery images={product.images} title={product.title} />
 
         {/* ── Info ── */}
         <div>
@@ -415,11 +389,63 @@ export default function ProductDetailPage() {
         )}
       </div>
 
+      {/* ── You May Also Like ── */}
+      <YouMayAlsoLike currentId={product._id} categoryId={product.category?._id || product.category} />
+
       <style>{`
         @media (max-width: 768px) {
           .product-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
+  );
+}
+
+function YouMayAlsoLike({ currentId, categoryId }: { currentId: string; categoryId: string }) {
+  const [recs, setRecs] = useState<any[]>([]);
+  const { addToCart } = useCart();
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (!categoryId) return;
+    productService.getAll({ category: categoryId, pageSize: 5 })
+      .then(data => setRecs((data.products || []).filter((p: any) => p._id !== currentId).slice(0, 4)))
+      .catch(console.error);
+  }, [categoryId, currentId]);
+
+  if (recs.length === 0) return null;
+
+  return (
+    <motion.section initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+      style={{ marginTop: '5rem', paddingTop: '3rem', borderTop: '1px solid var(--color-border)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2.5rem' }}>
+        <div style={{ flex: 1, height: '1px', background: 'var(--color-border)' }} />
+        <p style={{ color: 'var(--color-accent)', letterSpacing: '0.35em', textTransform: 'uppercase', fontSize: '0.72rem', fontWeight: '700', whiteSpace: 'nowrap' }}>You May Also Like</p>
+        <div style={{ flex: 1, height: '1px', background: 'var(--color-border)' }} />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem' }}>
+        {recs.map((p, i) => (
+          <motion.div key={p._id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+            whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}
+            style={{ background: 'var(--color-surface)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', transition: 'all 0.3s' }}>
+            <Link href={`/product/${p._id}`} style={{ display: 'block' }}>
+              <div style={{ aspectRatio: '3/4', overflow: 'hidden' }}>
+                <img src={p.images[0]} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
+                  onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.06)')}
+                  onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')} />
+              </div>
+              <div style={{ padding: '1rem' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.3rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.title}</p>
+                <p className="text-gold" style={{ fontWeight: '700', fontSize: '1rem' }}>${(p.discountPrice > 0 ? p.discountPrice : p.price).toFixed(2)}</p>
+              </div>
+            </Link>
+            <button onClick={() => { addToCart({ _id: p._id, title: p.title, price: p.discountPrice > 0 ? p.discountPrice : p.price, image: p.images[0], qty: 1, stock: p.stock, shippingCharges: p.shippingCharges || 0, applyShippingCharges: p.applyShippingCharges || false }); showToast(`${p.title} added to cart`, 'success', p.images[0]); }}
+              className="btn-primary" style={{ width: 'calc(100% - 2rem)', margin: '0 1rem 1rem', padding: '0.5rem', fontSize: '0.78rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              <ShoppingBag size={14} /> Add to Cart
+            </button>
+          </motion.div>
+        ))}
+      </div>
+    </motion.section>
   );
 }

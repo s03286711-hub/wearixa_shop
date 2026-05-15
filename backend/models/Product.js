@@ -69,6 +69,10 @@ const productSchema = mongoose.Schema(
             type: [String],
             default: [],
         },
+        material: {
+            type: String,
+            default: '',
+        },
         dealType: {
             type: String,
             default: '',
