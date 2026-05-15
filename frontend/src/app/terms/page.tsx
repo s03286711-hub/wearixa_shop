@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Gavel, CheckCircle2, AlertCircle, ShoppingCart, Info, ChevronRight } from 'lucide-react';
+import { FileText, CheckCircle2, AlertCircle, ShoppingCart, Info, ChevronRight } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'acceptance', title: '1. Acceptance of Terms', icon: CheckCircle2 },
