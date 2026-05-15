@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Footer() {
   return (
@@ -26,22 +27,20 @@ export default function Footer() {
                 { Icon: Phone, href: 'tel:+923286711208' },
                 { Icon: MapPin, href: 'https://maps.google.com/?q=Lahore,+Punjab+Pakistan' }
               ].map(({ Icon, href }, i) => (
-                <a key={i} href={href} target="_blank" rel="noopener noreferrer" style={{
-                  width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  border: '1px solid var(--color-border)', borderRadius: '50%', color: 'var(--color-muted)',
-                  transition: 'all 0.3s',
-                }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-accent)';
-                    e.currentTarget.style.color = 'var(--color-accent)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--color-border)';
-                    e.currentTarget.style.color = 'var(--color-muted)';
+                <motion.a 
+                  key={i} 
+                  href={href} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  whileHover={{ y: -3, color: 'var(--color-accent)', borderColor: 'var(--color-accent)' }}
+                  style={{
+                    width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    border: '1px solid var(--color-border)', borderRadius: '50%', color: 'var(--color-muted)',
+                    transition: 'all 0.3s',
                   }}
                 >
                   <Icon size={16} />
-                </a>
+                </motion.a>
               ))}
             </div>
           </div>
@@ -57,10 +56,7 @@ export default function Footer() {
                 const href = isSpecial ? '/shop' : `/shop?category=${item.toLowerCase()}`;
                 return (
                   <li key={item}>
-                    <Link href={href} style={{ color: 'var(--color-muted)', fontSize: '0.875rem', transition: 'color 0.3s' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted)')}
-                    >
+                    <Link href={href} style={{ color: 'var(--color-muted)', fontSize: '0.875rem', position: 'relative', display: 'inline-block' }} className="footer-link">
                       {item}
                     </Link>
                   </li>
@@ -83,10 +79,7 @@ export default function Footer() {
                 { name: 'Privacy Policy', path: '/privacy' }
               ].map((item) => (
                 <li key={item.name}>
-                  <Link href={item.path} style={{ color: 'var(--color-muted)', fontSize: '0.875rem', transition: 'color 0.3s' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted)')}
-                  >
+                  <Link href={item.path} style={{ color: 'var(--color-muted)', fontSize: '0.875rem', position: 'relative', display: 'inline-block' }} className="footer-link">
                     {item.name}
                   </Link>
                 </li>
@@ -105,13 +98,17 @@ export default function Footer() {
                 { Icon: Phone, text: '+92 328 6711 208', href: 'tel:+923286711208' },
                 { Icon: MapPin, text: 'Lahore, Punjab Pakistan', href: 'https://maps.google.com/?q=Lahore,+Punjab+Pakistan' },
               ].map(({ Icon, text, href }) => (
-                <a key={text} href={href} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-muted)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.3s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted)')}
+                <motion.a 
+                  key={text} 
+                  href={href} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  whileHover={{ x: 5, color: 'var(--color-text)' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--color-muted)', fontSize: '0.875rem', textDecoration: 'none', transition: 'color 0.3s' }}
                 >
                   <Icon size={15} style={{ color: 'var(--color-accent)', flexShrink: 0 }} />
                   {text}
-                </a>
+                </motion.a>
               ))}
             </div>
 
@@ -124,16 +121,31 @@ export default function Footer() {
                   placeholder="Enter email"
                   style={{ fontSize: '0.8rem', padding: '0.5rem 0.75rem' }}
                 />
-                <button className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                <motion.button 
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-primary" 
+                  style={{ padding: '0.5rem 1.5rem', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                >
                   Join
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        {/* ── Animated Bottom Bar ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          style={{ 
+            borderTop: '1px solid var(--color-border)', paddingTop: '1.5rem', 
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+            flexWrap: 'wrap', gap: '1rem' 
+          }}
+        >
           <p style={{ color: 'var(--color-muted)', fontSize: '0.8rem' }}>
             © {new Date().getFullYear()} Wearixa. All rights reserved.
           </p>
@@ -143,16 +155,32 @@ export default function Footer() {
               { name: 'Privacy', path: '/privacy' },
               { name: 'Cookies', path: '/cookies' }
             ].map((item) => (
-              <Link key={item.name} href={item.path} style={{ color: 'var(--color-muted)', fontSize: '0.8rem', transition: 'color 0.3s' }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-text)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-muted)')}
-              >
+              <Link key={item.name} href={item.path} style={{ color: 'var(--color-muted)', fontSize: '0.8rem', position: 'relative' }} className="footer-link">
                 {item.name}
               </Link>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
+      
+      <style>{`
+        .footer-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 1px;
+          bottom: -2px;
+          left: 0;
+          background-color: var(--color-accent);
+          transition: width 0.3s ease;
+        }
+        .footer-link:hover::after {
+          width: 100%;
+        }
+        .footer-link:hover {
+          color: var(--color-text) !important;
+        }
+      `}</style>
     </footer>
   );
 }
