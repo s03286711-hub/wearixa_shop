@@ -220,7 +220,7 @@ export default function RegisterPage() {
                 onError={() => {
                   showToast('Google registration failed', 'error');
                 }}
-                theme="dark"
+                theme="filled_black"
                 shape="pill"
                 text="signup_with"
                 width="400"

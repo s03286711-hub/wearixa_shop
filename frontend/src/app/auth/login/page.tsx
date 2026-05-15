@@ -183,7 +183,7 @@ export default function LoginPage() {
                 onError={() => {
                   showToast('Google login failed', 'error');
                 }}
-                theme="dark"
+                theme="filled_black"
                 shape="pill"
                 text="continue_with"
                 width="400"
