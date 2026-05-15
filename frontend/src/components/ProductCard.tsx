@@ -30,6 +30,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     addToCart({
       _id: product._id,
       title: product.title,
@@ -47,6 +48,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     toggleWishlist({
       _id: product._id,
       title: product.title,

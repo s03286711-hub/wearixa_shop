@@ -8,6 +8,7 @@ import { orderService } from '@/services';
 import api from '@/services/api';
 import { MapPin, CreditCard, CheckCircle, ArrowRight, Wallet, Smartphone } from 'lucide-react';
 import PaymentForms from '@/components/PaymentForms';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const STEPS = ['Shipping', 'Payment', 'Confirm'];
 
@@ -113,109 +114,129 @@ export default function CheckoutPage() {
           <div className="checkout-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2rem', alignItems: 'start' }}>
             {/* Main form */}
             <div>
-              {step === 0 && (
-                <div className="glass" style={{ borderRadius: '12px', padding: '2rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.75rem' }}>
-                    <MapPin size={20} style={{ color: 'var(--color-accent)' }} />
-                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Shipping Address</h2>
-                  </div>
-                  <div style={inputStyle}><label style={labelStyle}>Street Address</label><input className="input-field" value={shipping.address} onChange={e => setShipping(s => ({ ...s, address: e.target.value }))} placeholder="123 Fashion Avenue" required /></div>
-                  <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div style={inputStyle}><label style={labelStyle}>City</label><input className="input-field" value={shipping.city} onChange={e => setShipping(s => ({ ...s, city: e.target.value }))} placeholder="New York" required /></div>
-                    <div style={inputStyle}><label style={labelStyle}>Postal Code</label><input className="input-field" value={shipping.postalCode} onChange={e => setShipping(s => ({ ...s, postalCode: e.target.value }))} placeholder="10001" required /></div>
-                  </div>
-                  <div style={inputStyle}><label style={labelStyle}>Country</label><input className="input-field" value={shipping.country} onChange={e => setShipping(s => ({ ...s, country: e.target.value }))} placeholder="United States" required /></div>
-                  <button onClick={() => { if (Object.values(shipping).every(v => v)) setStep(1); }} className="btn-primary" style={{ width: '100%', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                    Continue to Payment <ArrowRight size={16} />
-                  </button>
-                </div>
-              )}
-
-              {step === 1 && (
-                <div className="glass" style={{ borderRadius: '12px', padding: '2rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.75rem' }}>
-                    <CreditCard size={20} style={{ color: 'var(--color-accent)' }} />
-                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Payment Method</h2>
-                  </div>
-                  {[
-                    { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet },
-                    { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard },
-                    { id: 'jazzcash', name: 'JazzCash Mobile Wallet', desc: 'Pay instantly via JazzCash', icon: Smartphone },
-                    { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone },
-                    { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle },
-                  ].map((m) => {
-                    const disabled = m.id === 'wallet' && (walletBalance === null || walletBalance < grandTotal);
-                    return (
-                      <div key={m.id} style={{ marginBottom: '0.75rem' }}>
-                        <label style={{
-                          display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '8px',
-                          border: `1px solid ${payment.method === m.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                          background: payment.method === m.id ? 'rgba(201,168,76,0.05)' : 'transparent',
-                          cursor: disabled ? 'not-allowed' : 'pointer', transition: 'all 0.3s',
-                          opacity: disabled ? 0.5 : 1
-                        }}>
-                          <input type="radio" name="payment" value={m.id} disabled={disabled} checked={payment.method === m.id} onChange={() => setPayment({ method: m.id })} style={{ accentColor: 'var(--color-accent)' }} />
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
-                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent)' }}>
-                              <m.icon size={16} />
-                            </div>
-                            <div>
-                              <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled && m.id === 'wallet' ? '#ef4444' : 'var(--color-text)' }}>
-                                {m.name} {disabled && m.id === 'wallet' && '(Insufficient)'}
-                              </p>
-                              <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem', margin: 0 }}>
-                                {m.desc}
-                              </p>
-                            </div>
-                          </div>
-                        </label>
-                        {payment.method === m.id && m.id !== 'wallet' && m.id !== 'cod' && (
-                          <PaymentForms 
-                            method={m.id} 
-                            onChange={(data, valid) => { setPaymentData(data); setIsPaymentValid(valid); }} 
-                          />
-                        )}
-                      </div>
-                    );
-                  })}
-                  <div className="checkout-actions" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                    <button onClick={() => setStep(0)} className="btn-outline" style={{ flex: 1 }}>Back</button>
-                    <button 
-                      onClick={() => {
-                        if (payment.method !== 'wallet' && payment.method !== 'cod' && !isPaymentValid) {
-                          showToast('Please fill out all payment details correctly.', 'error');
-                          return;
-                        }
-                        setStep(2);
-                      }} 
-                      className="btn-primary" 
-                      style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                    >
-                      Review Order <ArrowRight size={16} />
+              <AnimatePresence mode="wait">
+                {step === 0 && (
+                  <motion.div 
+                    key="step0"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="glass" style={{ borderRadius: '12px', padding: '2rem' }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.75rem' }}>
+                      <MapPin size={20} style={{ color: 'var(--color-accent)' }} />
+                      <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Shipping Address</h2>
+                    </div>
+                    <div style={inputStyle}><label style={labelStyle}>Street Address</label><input className="input-field" value={shipping.address} onChange={e => setShipping(s => ({ ...s, address: e.target.value }))} placeholder="123 Fashion Avenue" required /></div>
+                    <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <div style={inputStyle}><label style={labelStyle}>City</label><input className="input-field" value={shipping.city} onChange={e => setShipping(s => ({ ...s, city: e.target.value }))} placeholder="New York" required /></div>
+                      <div style={inputStyle}><label style={labelStyle}>Postal Code</label><input className="input-field" value={shipping.postalCode} onChange={e => setShipping(s => ({ ...s, postalCode: e.target.value }))} placeholder="10001" required /></div>
+                    </div>
+                    <div style={inputStyle}><label style={labelStyle}>Country</label><input className="input-field" value={shipping.country} onChange={e => setShipping(s => ({ ...s, country: e.target.value }))} placeholder="United States" required /></div>
+                    <button onClick={() => { if (Object.values(shipping).every(v => v)) setStep(1); }} className="btn-primary" style={{ width: '100%', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      Continue to Payment <ArrowRight size={16} />
                     </button>
-                  </div>
-                </div>
-              )}
+                  </motion.div>
+                )}
 
-              {step === 2 && (
-                <div className="glass" style={{ borderRadius: '12px', padding: '2rem' }}>
-                  <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', marginBottom: '1.5rem' }}>Order Review</h2>
-                  <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--color-surface-2)', borderRadius: '8px' }}>
-                    <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Shipping to</p>
-                    <p style={{ fontSize: '0.9rem' }}>{shipping.address}, {shipping.city}, {shipping.postalCode}, {shipping.country}</p>
-                  </div>
-                  <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--color-surface-2)', borderRadius: '8px' }}>
-                    <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Payment</p>
-                    <p style={{ fontSize: '0.9rem', textTransform: 'capitalize' }}>{payment.method}</p>
-                  </div>
-                  <div className="checkout-actions" style={{ display: 'flex', gap: '1rem' }}>
-                    <button onClick={() => setStep(1)} className="btn-outline" style={{ flex: 1 }}>Back</button>
-                    <button onClick={handlePlaceOrder} disabled={loading} className="btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      {loading ? 'Placing Order...' : 'Place Order'}
-                    </button>
-                  </div>
-                </div>
-              )}
+                {step === 1 && (
+                  <motion.div 
+                    key="step1"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="glass" style={{ borderRadius: '12px', padding: '2rem' }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.75rem' }}>
+                      <CreditCard size={20} style={{ color: 'var(--color-accent)' }} />
+                      <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Payment Method</h2>
+                    </div>
+                    {[
+                      { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet },
+                      { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard },
+                      { id: 'jazzcash', name: 'JazzCash Mobile Wallet', desc: 'Pay instantly via JazzCash', icon: Smartphone },
+                      { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone },
+                      { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle },
+                    ].map((m) => {
+                      const disabled = m.id === 'wallet' && (walletBalance === null || walletBalance < grandTotal);
+                      return (
+                        <div key={m.id} style={{ marginBottom: '0.75rem' }}>
+                          <label style={{
+                            display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '8px',
+                            border: `1px solid ${payment.method === m.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                            background: payment.method === m.id ? 'rgba(201,168,76,0.05)' : 'transparent',
+                            cursor: disabled ? 'not-allowed' : 'pointer', transition: 'all 0.3s',
+                            opacity: disabled ? 0.5 : 1
+                          }}>
+                            <input type="radio" name="payment" value={m.id} disabled={disabled} checked={payment.method === m.id} onChange={() => setPayment({ method: m.id })} style={{ accentColor: 'var(--color-accent)' }} />
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', width: '100%' }}>
+                              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent)' }}>
+                                <m.icon size={16} />
+                              </div>
+                              <div>
+                                <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled && m.id === 'wallet' ? '#ef4444' : 'var(--color-text)' }}>
+                                  {m.name} {disabled && m.id === 'wallet' && '(Insufficient)'}
+                                </p>
+                                <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem', margin: 0 }}>
+                                  {m.desc}
+                                </p>
+                              </div>
+                            </div>
+                          </label>
+                          {payment.method === m.id && m.id !== 'wallet' && m.id !== 'cod' && (
+                            <PaymentForms 
+                              method={m.id} 
+                              onChange={(data, valid) => { setPaymentData(data); setIsPaymentValid(valid); }} 
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                    <div className="checkout-actions" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                      <button onClick={() => setStep(0)} className="btn-outline" style={{ flex: 1 }}>Back</button>
+                      <button 
+                        onClick={() => {
+                          if (payment.method !== 'wallet' && payment.method !== 'cod' && !isPaymentValid) {
+                            showToast('Please fill out all payment details correctly.', 'error');
+                            return;
+                          }
+                          setStep(2);
+                        }} 
+                        className="btn-primary" 
+                        style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                      >
+                        Review Order <ArrowRight size={16} />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div 
+                    key="step2"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    className="glass" style={{ borderRadius: '12px', padding: '2rem' }}
+                  >
+                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', marginBottom: '1.5rem' }}>Order Review</h2>
+                    <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--color-surface-2)', borderRadius: '8px' }}>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Shipping to</p>
+                      <p style={{ fontSize: '0.9rem' }}>{shipping.address}, {shipping.city}, {shipping.postalCode}, {shipping.country}</p>
+                    </div>
+                    <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'var(--color-surface-2)', borderRadius: '8px' }}>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>Payment</p>
+                      <p style={{ fontSize: '0.9rem', textTransform: 'capitalize' }}>{payment.method}</p>
+                    </div>
+                    <div className="checkout-actions" style={{ display: 'flex', gap: '1rem' }}>
+                      <button onClick={() => setStep(1)} className="btn-outline" style={{ flex: 1 }}>Back</button>
+                      <button onClick={handlePlaceOrder} disabled={loading} className="btn-primary" style={{ flex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                        {loading ? 'Placing Order...' : 'Place Order'}
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Order summary sidebar */}
@@ -252,7 +273,12 @@ export default function CheckoutPage() {
         </>
       ) : (
         /* Order success screen */
-        <div className="glass" style={{ borderRadius: '12px', padding: '4rem 2rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, type: 'spring' }}
+          className="glass" style={{ borderRadius: '12px', padding: '4rem 2rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}
+        >
           <CheckCircle size={64} style={{ color: '#4ade80', margin: '0 auto 2rem' }} />
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.25rem', marginBottom: '1rem' }}>Order Placed!</h2>
           <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Thank you for your purchase.</p>
@@ -261,7 +287,7 @@ export default function CheckoutPage() {
             <button onClick={() => router.push('/orders')} className="btn-primary">View My Orders</button>
             <button onClick={() => router.push('/shop')} className="btn-outline">Continue Shopping</button>
           </div>
-        </div>
+        </motion.div>
       )}
       <style>{`
         @media (max-width: 768px) {
