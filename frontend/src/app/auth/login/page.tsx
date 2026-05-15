@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { authService } from '@/services';
 import { Eye, EyeOff, Mail, Lock, Sparkles } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,6 +16,25 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        setLoading(true);
+        const data = await authService.googleLogin(tokenResponse.access_token, true);
+        login(data);
+        showToast(`Welcome back, ${data.name}!`);
+        router.push('/');
+      } catch (err: any) {
+        const msg = err?.response?.data?.message || 'Google login failed';
+        setError(msg);
+        showToast(msg, 'error');
+      } finally {
+        setLoading(false);
+      }
+    },
+    onError: () => showToast('Google login failed', 'error')
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,32 +181,39 @@ export default function LoginPage() {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <GoogleLogin
-                onSuccess={async (credentialResponse) => {
-                  if (credentialResponse.credential) {
-                    try {
-                      setLoading(true);
-                      const data = await authService.googleLogin(credentialResponse.credential);
-                      login(data);
-                      showToast(`Welcome back, ${data.name}!`);
-                      router.push('/');
-                    } catch (err: any) {
-                      const msg = err?.response?.data?.message || 'Google login failed';
-                      setError(msg);
-                      showToast(msg, 'error');
-                    } finally {
-                      setLoading(false);
-                    }
-                  }
+              <button 
+                type="button"
+                onClick={() => googleLogin()}
+                disabled={loading}
+                className="glass"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '12px',
+                  padding: '0.8rem',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  background: 'rgba(255,255,255,0.02)'
                 }}
-                onError={() => {
-                  showToast('Google login failed', 'error');
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)';
                 }}
-                theme="filled_black"
-                shape="pill"
-                text="continue_with"
-                width="400"
-              />
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                }}
+              >
+                <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" alt="Google" style={{ width: '20px', height: '20px' }} />
+                Continue with Google
+              </button>
             </div>
           </div>
         </div>

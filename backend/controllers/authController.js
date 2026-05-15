@@ -286,7 +286,7 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // @route   POST /api/auth/google
 // @access  Public
 const googleAuth = asyncHandler(async (req, res) => {
-    const { token } = req.body;
+    const { token, isAccessToken } = req.body;
 
     if (!token) {
         res.status(400);
@@ -294,13 +294,25 @@ const googleAuth = asyncHandler(async (req, res) => {
     }
 
     try {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.GOOGLE_CLIENT_ID,
-        });
-        const payload = ticket.getPayload();
+        let payload;
         
-        const { sub: googleId, email, name } = payload;
+        if (isAccessToken) {
+            // Fetch user info using access token
+            const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`);
+            payload = await response.json();
+            if (payload.error) throw new Error(payload.error_description);
+            payload.googleId = payload.sub;
+        } else {
+            // Verify ID Token
+            const ticket = await client.verifyIdToken({
+                idToken: token,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            payload = ticket.getPayload();
+            payload.googleId = payload.sub;
+        }
+        
+        const { googleId, email, name } = payload;
 
         // Check if user already exists
         let user = await User.findOne({ email });
