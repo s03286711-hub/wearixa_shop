@@ -67,7 +67,7 @@ function WalletContent() {
 
   return (
     <div className="container" style={{ paddingTop: '8rem', paddingBottom: '4rem' }}>
-      <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', marginBottom: '2rem' }}>
+      <div className="wallet-header" style={{ display: 'flex', gap: '2rem', alignItems: 'center', marginBottom: '2rem' }}>
         <Link href="/profile" style={{ color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span>&larr; Back to Profile</span>
         </Link>
@@ -87,7 +87,7 @@ function WalletContent() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem', alignItems: 'start' }}>
+      <div className="wallet-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem', alignItems: 'start' }}>
         {/* Left Col: Transactions */}
         <div>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px', marginBottom: '2rem' }}>
@@ -98,7 +98,7 @@ function WalletContent() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 {transactions.map(txn => (
-                  <div key={txn._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
+                  <div key={txn._id} className="transaction-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '12px', background: 'rgba(0,0,0,0.2)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                       <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: txn.type === 'DEPOSIT' ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: txn.type === 'DEPOSIT' ? '#22c55e' : '#ef4444' }}>
                         {txn.type === 'DEPOSIT' ? <ArrowDownLeft size={20} /> : <ArrowUpRight size={20} />}
@@ -110,7 +110,7 @@ function WalletContent() {
                         </p>
                       </div>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
+                    <div className="transaction-amount" style={{ textAlign: 'right' }}>
                       <p style={{ margin: 0, fontWeight: '600', color: txn.type === 'DEPOSIT' ? '#22c55e' : 'var(--color-text)' }}>
                         {txn.type === 'DEPOSIT' ? '+' : '-'}${txn.amount.toFixed(2)}
                       </p>
@@ -124,10 +124,10 @@ function WalletContent() {
         </div>
 
         {/* Right Col: Balance & Deposit */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        <div className="wallet-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           
           {/* Balance Card */}
-          <div style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)', padding: '2rem', borderRadius: '16px', color: '#0d0d0d', boxShadow: '0 10px 40px rgba(201,168,76,0.3)' }}>
+          <div className="wallet-balance-card" style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)', padding: '2rem', borderRadius: '16px', color: '#0d0d0d', boxShadow: '0 10px 40px rgba(201,168,76,0.3)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
               <span style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600' }}>Available Balance</span>
               <Wallet size={24} />
@@ -204,6 +204,35 @@ export default function WalletPage() {
   return (
     <Suspense fallback={<div className="container" style={{ paddingTop: '8rem', textAlign: 'center' }}><Loader2 className="animate-spin" /></div>}>
       <WalletContent />
+      <style>{`
+        @media (max-width: 992px) {
+          .wallet-grid { 
+            grid-template-columns: 1fr !important; 
+          }
+          .wallet-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 1rem !important;
+          }
+          .wallet-sidebar {
+            order: -1; /* Show balance and deposit on top on mobile */
+          }
+        }
+        @media (max-width: 576px) {
+          .transaction-item {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 1rem;
+          }
+          .transaction-amount {
+            text-align: left !important;
+            width: 100%;
+          }
+          .wallet-balance-card h2 {
+            font-size: 2.25rem !important;
+          }
+        }
+      `}</style>
     </Suspense>
   );
 }

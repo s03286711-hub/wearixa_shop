@@ -49,7 +49,7 @@ export default function PaymentForms({ method, onChange }: PaymentFormsProps) {
             </div>
           </div>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="payment-grid-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.75rem', color: 'var(--color-muted)', marginBottom: '0.4rem' }}>Expiry Date</label>
               <input 
@@ -131,4 +131,19 @@ export default function PaymentForms({ method, onChange }: PaymentFormsProps) {
 
     </div>
   );
+}
+
+const styles = `
+  @media (max-width: 480px) {
+    .payment-grid-row {
+      grid-template-columns: 1fr !important;
+    }
+  }
+`;
+
+if (typeof document !== 'undefined' && !document.getElementById('payment-forms-styles')) {
+  const styleSheet = document.createElement("style");
+  styleSheet.id = 'payment-forms-styles';
+  styleSheet.innerText = styles;
+  document.head.appendChild(styleSheet);
 }
