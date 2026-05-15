@@ -5,7 +5,7 @@ import { useToast } from '@/context/ToastContext';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export default function CartPage() {
-  const { cartItems, removeFromCart, updateQty, totalPrice, clearCart } = useCart();
+  const { cartItems, removeFromCart, updateQty, totalPrice, totalShipping, clearCart } = useCart();
   const { showToast } = useToast();
 
   if (cartItems.length === 0) {
@@ -23,9 +23,10 @@ export default function CartPage() {
     );
   }
 
-  const shipping = totalPrice > 100 ? 0 : 12.99;
-  const tax = totalPrice * 0.08;
-  const grandTotal = totalPrice + shipping + tax;
+  const subtotal = totalPrice - totalShipping;
+  const shipping = subtotal > 100 ? 0 : 12.99;
+  const tax = subtotal * 0.08;
+  const grandTotal = subtotal + shipping + tax;
 
   return (
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
@@ -97,7 +98,7 @@ export default function CartPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem' }}>
               {[
-                { label: 'Subtotal', value: `$${totalPrice.toFixed(2)}` },
+                { label: 'Subtotal', value: `$${subtotal.toFixed(2)}` },
                 { label: 'Shipping', value: shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}` },
                 { label: 'Tax (8%)', value: `$${tax.toFixed(2)}` },
               ].map(({ label, value }) => (
@@ -110,7 +111,7 @@ export default function CartPage() {
 
             {shipping > 0 && (
               <div style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '6px', padding: '0.75rem', marginBottom: '1.5rem', fontSize: '0.78rem', color: 'var(--color-accent)', textAlign: 'center' }}>
-                Add ${(100 - totalPrice).toFixed(2)} more for free shipping!
+                Add ${(100 - subtotal).toFixed(2)} more for free shipping!
               </div>
             )}
 
