@@ -71,8 +71,10 @@ export const productService = {
     return data;
   },
 
-  createReview: async (id: string, review: { rating: number; comment: string }) => {
-    const { data } = await api.post(`/products/${id}/reviews`, review);
+  createReview: async (id: string, formData: FormData) => {
+    const { data } = await api.post(`/products/${id}/reviews`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return data;
   },
 };

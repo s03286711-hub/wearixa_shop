@@ -207,10 +207,16 @@ const createProductReview = async (req, res) => {
             throw new Error('Product already reviewed');
         }
 
+        let imageUrls = [];
+        if (req.files && req.files.length > 0) {
+            imageUrls = req.files.map(file => file.path);
+        }
+
         const review = {
             name: req.user.name,
             rating: Number(rating),
             comment,
+            images: imageUrls,
             user: req.user._id,
         };
 

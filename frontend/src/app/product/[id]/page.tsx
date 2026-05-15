@@ -8,7 +8,8 @@ import { useWishlist } from '@/context/WishlistContext';
 import { useToast } from '@/context/ToastContext';
 import { ProductDetailsSkeleton } from '@/components/Skeleton';
 import ZoomGallery from '@/components/ZoomGallery';
-import { ShoppingBag, Heart, Star, Truck, Shield, RefreshCw } from 'lucide-react';
+import UploadZone from '@/components/UploadZone';
+import { ShoppingBag, Heart, Star, Truck, Shield, RefreshCw, Image as ImageIcon, X } from 'lucide-react';
 import { calculateShippingCharge } from '@/utils/shippingUtils';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -30,7 +31,7 @@ export default function ProductDetailPage() {
   const [added, setAdded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
-  const [review, setReview] = useState({ rating: 5, comment: '' });
+  const [review, setReview] = useState<{rating: number; comment: string; images: File[]}>({ rating: 5, comment: '', images: [] });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -86,11 +87,22 @@ export default function ProductDetailPage() {
     if (!user) { router.push('/auth/login'); return; }
     setSubmitting(true);
     try {
-      await productService.createReview(product._id, review);
+      const formData = new FormData();
+      formData.append('rating', review.rating.toString());
+      formData.append('comment', review.comment);
+      review.images.forEach((file) => {
+        formData.append('images', file);
+      });
+
+      await productService.createReview(product._id, formData);
       const updated = await productService.getById(product._id);
       setProduct(updated);
-      setReview({ rating: 5, comment: '' });
-    } catch (err) { console.error(err); }
+      setReview({ rating: 5, comment: '', images: [] });
+      showToast('Review submitted successfully!', 'success');
+    } catch (err: any) { 
+      console.error(err); 
+      showToast(err?.response?.data?.message || 'Failed to submit review', 'error');
+    }
     finally { setSubmitting(false); }
   };
 
@@ -348,7 +360,18 @@ export default function ProductDetailPage() {
                         {[1,2,3,4,5].map(s => <Star key={s} size={13} fill={s <= r.rating ? '#c9a84c' : 'none'} color={s <= r.rating ? '#c9a84c' : '#444'} />)}
                       </div>
                     </div>
-                    <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem' }}>{r.comment}</p>
+                    <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginBottom: r.images && r.images.length > 0 ? '1rem' : '0' }}>{r.comment}</p>
+                    
+                    {/* Review Images */}
+                    {r.images && r.images.length > 0 && (
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {r.images.map((img: string, idx: number) => (
+                          <div key={idx} style={{ width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+                            <img src={img} alt={`Review photo ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -378,6 +401,43 @@ export default function ProductDetailPage() {
                     <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>Comment</label>
                     <textarea className="input-field" rows={4} value={review.comment} onChange={(e) => setReview(r => ({ ...r, comment: e.target.value }))}
                       placeholder="Share your thoughts..." required />
+                  </div>
+                  
+                  {/* Image Upload */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <ImageIcon size={14} /> Add Photos (up to 3)
+                    </label>
+                    {review.images.length < 3 && (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <UploadZone 
+                          onFilesSelected={(files) => {
+                            const newFiles = [...review.images, ...files].slice(0, 3);
+                            setReview(r => ({ ...r, images: newFiles }));
+                          }} 
+                          maxFiles={3 - review.images.length} 
+                          title="Drag & drop or click to upload" 
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Image Previews */}
+                    {review.images.length > 0 && (
+                      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        {review.images.map((file, idx) => (
+                          <div key={idx} style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+                            <img src={URL.createObjectURL(file)} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <button 
+                              type="button" 
+                              onClick={() => setReview(r => ({ ...r, images: r.images.filter((_, i) => i !== idx) }))}
+                              style={{ position: 'absolute', top: '4px', right: '4px', background: 'rgba(0,0,0,0.6)', color: '#fff', border: 'none', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                            >
+                              <X size={12} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <button type="submit" className="btn-primary" disabled={submitting} style={{ alignSelf: 'flex-start' }}>
                     {submitting ? 'Submitting...' : 'Submit Review'}
