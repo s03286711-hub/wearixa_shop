@@ -5,6 +5,8 @@ const {
     getOrderById,
     updateOrderToPaid,
     updateOrderToDelivered,
+    updateOrderStatus,
+    getMyOrders,
     getOrders,
 } = require('../controllers/orderController');
 const { protect, admin } = require('../middleware/authMiddleware');
