@@ -4,12 +4,8 @@ const orderSchema = mongoose.Schema(
     {
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            required: false,
+            required: true,
             ref: 'User',
-        },
-        guestEmail: {
-            type: String,
-            required: function() { return !this.user; },
         },
         orderItems: [
             {

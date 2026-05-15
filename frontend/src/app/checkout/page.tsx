@@ -16,12 +16,10 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { cartItems, totalPrice, totalShipping, clearCart } = useCart();
-  const { showToast } = useToast();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState('');
 
-  const [guestEmail, setGuestEmail] = useState('');
   const [shipping, setShipping] = useState({ address: '', city: '', postalCode: '', country: '' });
   const [payment, setPayment] = useState({ method: 'stripe' });
   const [paymentData, setPaymentData] = useState<any>({});
@@ -42,15 +40,14 @@ export default function CheckoutPage() {
     }
   }, [user]);
 
-  // Removed the automatic login redirect for guest checkout support
   useEffect(() => {
-    // If not logged in and wallet is selected by default, switch to stripe
-    if (!authLoading && !user && payment.method === 'wallet') {
-      setPayment({ method: 'stripe' });
+    if (!authLoading && user === null) {
+      router.push('/auth/login');
     }
-  }, [user, authLoading, payment.method]);
+  }, [user, authLoading, router]);
 
   if (authLoading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '5rem' }}><Loader2 className="animate-spin" size={32} /></div>;
+  if (!user) return null;
 
   // Pricing
   const subtotal = totalPrice - totalShipping;
@@ -71,7 +68,6 @@ export default function CheckoutPage() {
         taxPrice: tax,
         shippingPrice: shippingCost,
         totalPrice: grandTotal,
-        guestEmail: !user ? guestEmail : undefined,
       };
       const created = await orderService.create(orderData);
       setOrderId(created._id);
@@ -152,25 +148,13 @@ export default function CheckoutPage() {
                       <MapPin size={20} style={{ color: 'var(--color-accent)' }} />
                       <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Shipping Address</h2>
                     </div>
-                    {!user && (
-                      <div style={inputStyle}>
-                        <label style={labelStyle}>Contact Email (For Order Updates)</label>
-                        <input type="email" className="input-field" value={guestEmail} onChange={e => setGuestEmail(e.target.value)} placeholder="you@example.com" required />
-                      </div>
-                    )}
                     <div style={inputStyle}><label style={labelStyle}>Street Address</label><input className="input-field" value={shipping.address} onChange={e => setShipping(s => ({ ...s, address: e.target.value }))} placeholder="123 Fashion Avenue" required /></div>
                     <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                       <div style={inputStyle}><label style={labelStyle}>City</label><input className="input-field" value={shipping.city} onChange={e => setShipping(s => ({ ...s, city: e.target.value }))} placeholder="New York" required /></div>
                       <div style={inputStyle}><label style={labelStyle}>Postal Code</label><input className="input-field" value={shipping.postalCode} onChange={e => setShipping(s => ({ ...s, postalCode: e.target.value }))} placeholder="10001" required /></div>
                     </div>
                     <div style={inputStyle}><label style={labelStyle}>Country</label><input className="input-field" value={shipping.country} onChange={e => setShipping(s => ({ ...s, country: e.target.value }))} placeholder="United States" required /></div>
-                    <button onClick={() => { 
-                      if (!user && (!guestEmail || !guestEmail.includes('@'))) {
-                        showToast('Please enter a valid email address', 'error');
-                        return;
-                      }
-                      if (Object.values(shipping).every(v => v)) setStep(1); 
-                    }} className="btn-primary" style={{ width: '100%', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    <button onClick={() => { if (Object.values(shipping).every(v => v)) setStep(1); }} className="btn-primary" style={{ width: '100%', marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                       Continue to Payment <ArrowRight size={16} />
                     </button>
                   </motion.div>
@@ -195,10 +179,7 @@ export default function CheckoutPage() {
                       { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone },
                       { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle },
                     ].map((m) => {
-                      const isWallet = m.id === 'wallet';
-                      const disabled = isWallet && (!user || walletBalance === null || walletBalance < grandTotal);
-                      const disabledReason = !user ? '(Members Only)' : '(Insufficient)';
-                      
+                      const disabled = m.id === 'wallet' && (walletBalance === null || walletBalance < grandTotal);
                       return (
                         <div key={m.id} style={{ marginBottom: '0.75rem' }}>
                           <label style={{
@@ -214,8 +195,8 @@ export default function CheckoutPage() {
                                 <m.icon size={16} />
                               </div>
                               <div>
-                                <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled && isWallet ? '#ef4444' : 'var(--color-text)' }}>
-                                  {m.name} {disabled && isWallet && disabledReason}
+                                <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled && m.id === 'wallet' ? '#ef4444' : 'var(--color-text)' }}>
+                                  {m.name} {disabled && m.id === 'wallet' && '(Insufficient)'}
                                 </p>
                                 <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem', margin: 0 }}>
                                   {m.desc}
@@ -373,11 +354,7 @@ export default function CheckoutPage() {
           <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Thank you for your purchase.</p>
           <p style={{ color: 'var(--color-accent)', fontSize: '0.95rem', fontWeight: '600', marginBottom: '2.5rem' }}>Order ID: {orderId}</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            {user ? (
-              <button onClick={() => router.push('/orders')} className="btn-primary">View My Orders</button>
-            ) : (
-              <button onClick={() => router.push('/track')} className="btn-primary">Track My Order</button>
-            )}
+            <button onClick={() => router.push('/orders')} className="btn-primary">View My Orders</button>
             <button onClick={() => router.push('/shop')} className="btn-outline">Continue Shopping</button>
           </div>
         </motion.div>

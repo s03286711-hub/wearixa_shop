@@ -4,28 +4,18 @@ const Transaction = require('../models/Transaction');
 
 // @desc    Create new order
 // @route   POST /api/orders
-// @access  Public (Optional auth)
+// @access  Private
 const addOrderItems = async (req, res) => {
     try {
-        const { orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice, guestEmail } = req.body;
+        const { orderItems, shippingAddress, paymentMethod, taxPrice, shippingPrice, totalPrice } = req.body;
 
         if (orderItems && orderItems.length === 0) {
             return res.status(400).json({ message: 'No order items' });
         }
 
-        const isGuest = !req.user;
-        let user = null;
-
-        if (!isGuest) {
-            user = await User.findById(req.user._id);
-        } else if (!guestEmail) {
-            return res.status(400).json({ message: 'Guest email is required' });
-        }
+        const user = await User.findById(req.user._id);
 
         if (paymentMethod === 'wallet') {
-            if (isGuest) {
-                return res.status(400).json({ message: 'Wallet payment is not available for guests' });
-            }
             if (user.walletBalance < totalPrice) {
                 return res.status(400).json({ message: 'Insufficient wallet balance' });
             }
@@ -46,8 +36,7 @@ const addOrderItems = async (req, res) => {
 
         const order = new Order({
             orderItems,
-            user: isGuest ? undefined : req.user._id,
-            guestEmail: isGuest ? guestEmail : undefined,
+            user: req.user._id,
             shippingAddress,
             paymentMethod,
             taxPrice,
@@ -192,38 +181,4 @@ const getOrders = async (req, res) => {
     res.json(orders);
 };
 
-// @desc    Track order as a guest
-// @route   POST /api/orders/track
-// @access  Public
-const trackGuestOrder = async (req, res) => {
-    const { orderId, email } = req.body;
-    
-    if (!orderId || !email) {
-        return res.status(400).json({ message: 'Order ID and email are required' });
-    }
-
-    try {
-        const order = await Order.findById(orderId);
-        
-        if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-
-        // Allow if it's a guest order with matching email OR if it's an authenticated user's order and their email matches
-        if (order.guestEmail === email) {
-            return res.json(order);
-        } else if (order.user) {
-            const user = await User.findById(order.user);
-            if (user && user.email === email) {
-                return res.json(order);
-            }
-        }
-        
-        res.status(404).json({ message: 'Order not found or email does not match' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-module.exports = { addOrderItems, getOrderById, updateOrderToPaid, updateOrderToDelivered, updateOrderStatus, getMyOrders, getOrders, trackGuestOrder };
+module.exports = { addOrderItems, getOrderById, updateOrderToPaid, updateOrderToDelivered, updateOrderStatus, getMyOrders, getOrders };

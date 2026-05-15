@@ -5,15 +5,11 @@ const {
     getOrderById,
     updateOrderToPaid,
     updateOrderToDelivered,
-    updateOrderStatus,
-    getMyOrders,
     getOrders,
-    trackGuestOrder,
 } = require('../controllers/orderController');
-const { protect, admin, optionalAuth } = require('../middleware/authMiddleware');
+const { protect, admin } = require('../middleware/authMiddleware');
 
-router.route('/').post(optionalAuth, addOrderItems).get(protect, admin, getOrders);
-router.post('/track', trackGuestOrder);
+router.route('/').post(protect, addOrderItems).get(protect, admin, getOrders);
 router.route('/myorders').get(protect, getMyOrders);
 router.route('/:id').get(protect, getOrderById);
 router.route('/:id/pay').put(protect, updateOrderToPaid);

@@ -112,11 +112,6 @@ export const orderService = {
     const { data } = await api.put(`/orders/${id}/status`, { status, expectedDelivery });
     return data;
   },
-
-  trackGuestOrder: async (orderId: string, email: string) => {
-    const { data } = await api.post('/orders/track', { orderId, email });
-    return data;
-  },
 };
 
 export const categoryService = {
