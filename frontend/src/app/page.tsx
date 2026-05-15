@@ -3,10 +3,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { productService, categoryService } from '@/services';
-import { ArrowRight, Sparkles, Shield, Truck, RefreshCw } from 'lucide-react';
 import { ProductSkeleton } from '@/components/Skeleton';
+import { productService, categoryService } from '@/services';
+import { Truck, RefreshCw, Shield, Sparkles, ArrowRight, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import QuickViewModal from '@/components/QuickViewModal';
 
 const HERO_SLIDES = [
   {
@@ -30,6 +31,8 @@ export default function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [seasonalData, setSeasonalData] = useState<{ [key: string]: any[] }>({});
   const [loading, setLoading] = useState(true);
+  const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -400,7 +403,7 @@ export default function HomePage() {
               {loading ? (
                 [...Array(4)].map((_, i) => <ProductSkeleton key={i} />)
               ) : (
-                seasonalData[season].map((p) => <ProductCard key={p._id} product={p} />)
+                seasonalData[season].map((p) => <ProductCard key={p._id} product={p} onQuickView={(p) => { setQuickViewProduct(p); setIsQuickViewOpen(true); }} />)
               )}
             </div>
           </div>
@@ -439,11 +442,17 @@ export default function HomePage() {
             </div>
           ) : (
             <motion.div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
-              {products.map((p) => <ProductCard key={p._id} product={p} />)}
+              {products.map((p) => <ProductCard key={p._id} product={p} onQuickView={(p) => { setQuickViewProduct(p); setIsQuickViewOpen(true); }} />)}
             </motion.div>
           )}
         </div>
       </motion.section>
+
+      <QuickViewModal 
+        product={quickViewProduct} 
+        isOpen={isQuickViewOpen} 
+        onClose={() => setIsQuickViewOpen(false)} 
+      />
 
       {/* ── Banner CTA ── */}
       <section style={{

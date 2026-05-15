@@ -20,12 +20,13 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
-  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('wearixaWishlist');
-    if (stored) setWishlistItems(JSON.parse(stored));
-  }, []);
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('wearixaWishlist');
+      return stored ? JSON.parse(stored) : [];
+    }
+    return [];
+  });
 
   useEffect(() => {
     localStorage.setItem('wearixaWishlist', JSON.stringify(wishlistItems));

@@ -1,5 +1,6 @@
 'use client';
 import { CheckCircle, Clock, Package, Truck, ShieldCheck, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface TimelineStep {
   status: string;
@@ -25,15 +26,21 @@ export default function OrderTracking({ currentStatus, timeline, expectedDeliver
   const normalizedStatus = currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1).toLowerCase() : 'Processing';
   
   const currentIdx = STEPS.findIndex(s => s.id.toLowerCase() === normalizedStatus.toLowerCase());
-  const displayIdx = currentIdx === -1 ? 0 : currentIdx; // Fallback to 0 if not found
+  const displayIdx = currentIdx === -1 ? 0 : currentIdx; 
   
   const isCancelled = normalizedStatus === 'Cancelled';
 
   return (
-    <div className="reveal" style={{ 
-      borderRadius: '16px', padding: '2rem', marginBottom: '2.5rem', 
-      border: '2px solid var(--color-accent)', background: 'var(--color-surface)' 
-    }}>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      style={{ 
+        borderRadius: '16px', padding: '2rem', marginBottom: '2.5rem', 
+        border: '2px solid var(--color-accent)', background: 'var(--color-surface)' 
+      }}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: '600' }}>Track Order</h2>
@@ -58,12 +65,16 @@ export default function OrderTracking({ currentStatus, timeline, expectedDeliver
             position: 'absolute', top: '24px', left: '1.5rem', right: '1.5rem', height: '2px', 
             background: 'var(--color-border)', zIndex: 0 
           }} />
-          <div style={{ 
-            position: 'absolute', top: '24px', left: '1.5rem', 
-            width: `${(displayIdx / (STEPS.length - 1)) * 100}%`, 
-            height: '2px', background: 'var(--color-accent)', 
-            transition: 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)', zIndex: 0 
-          }} />
+          <motion.div 
+            initial={{ width: 0 }}
+            whileInView={{ width: `${(displayIdx / (STEPS.length - 1)) * 100}%` }}
+            transition={{ duration: 1.5, ease: "circOut", delay: 0.3 }}
+            style={{ 
+              position: 'absolute', top: '24px', left: '1.5rem', 
+              height: '2px', background: 'var(--color-accent)', 
+              zIndex: 0 
+            }} 
+          />
 
           {/* Steps */}
           <div style={{ display: 'flex', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
@@ -122,6 +133,6 @@ export default function OrderTracking({ currentStatus, timeline, expectedDeliver
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

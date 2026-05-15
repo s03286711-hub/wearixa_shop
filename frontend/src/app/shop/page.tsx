@@ -7,6 +7,7 @@ import { productService, categoryService } from '@/services';
 import { SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import { ProductSkeleton } from '@/components/Skeleton';
 import { motion, AnimatePresence } from 'framer-motion';
+import QuickViewModal from '@/components/QuickViewModal';
 
 export default function ShopPage() {
   return (
@@ -25,6 +26,8 @@ function ShopPageContent() {
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
 
   const [filters, setFilters] = useState({
     keyword: searchParams.get('keyword') || '',
@@ -33,6 +36,8 @@ function ShopPageContent() {
     maxPrice: '',
     sort: '',
     dealType: searchParams.get('dealType') || '',
+    color: '',
+    size: '',
   });
 
   const fetchProducts = useCallback(async () => {
@@ -44,6 +49,8 @@ function ShopPageContent() {
       if (filters.minPrice) params.minPrice = filters.minPrice;
       if (filters.maxPrice) params.maxPrice = filters.maxPrice;
       if (filters.dealType) params.dealType = filters.dealType;
+      if (filters.color) params.color = filters.color;
+      if (filters.size) params.size = filters.size;
 
       const data = await productService.getAll(params);
       setProducts(data.products || []);
@@ -60,11 +67,11 @@ function ShopPageContent() {
   useEffect(() => { categoryService.getAll().then(setCategories); }, []);
 
   const clearFilters = () => {
-    setFilters({ keyword: '', category: '', minPrice: '', maxPrice: '', sort: '', dealType: '' });
+    setFilters({ keyword: '', category: '', minPrice: '', maxPrice: '', sort: '', dealType: '', color: '', size: '' });
     setPage(1);
   };
 
-  const hasFilters = filters.keyword || filters.category || filters.minPrice || filters.maxPrice || filters.dealType;
+  const hasFilters = filters.keyword || filters.category || filters.minPrice || filters.maxPrice || filters.dealType || filters.color || filters.size;
 
   return (
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
@@ -120,6 +127,20 @@ function ShopPageContent() {
             <label style={{ display: 'block', fontSize: '0.75rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Max Price</label>
             <input className="input-field" type="number" value={filters.maxPrice} onChange={(e) => setFilters(f => ({ ...f, maxPrice: e.target.value }))} placeholder="$9999" />
           </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.75rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Color</label>
+            <select className="input-field" value={filters.color} onChange={(e) => setFilters(f => ({ ...f, color: e.target.value }))}>
+              <option value="">All Colors</option>
+              {['Black', 'White', 'Blue', 'Red', 'Gold', 'Silver'].map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.75rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Size</label>
+            <select className="input-field" value={filters.size} onChange={(e) => setFilters(f => ({ ...f, size: e.target.value }))}>
+              <option value="">All Sizes</option>
+              {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button onClick={() => { setPage(1); fetchProducts(); }} className="btn-primary" style={{ flex: 1, padding: '0.65rem' }}>Apply</button>
             {hasFilters && (
@@ -159,7 +180,7 @@ function ShopPageContent() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4, delay: i * 0.05 }}
                 >
-                  <ProductCard product={p} />
+                  <ProductCard product={p} onQuickView={(p) => { setQuickViewProduct(p); setIsQuickViewOpen(true); }} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -186,6 +207,11 @@ function ShopPageContent() {
           )}
         </>
       )}
+      <QuickViewModal 
+        product={quickViewProduct} 
+        isOpen={isQuickViewOpen} 
+        onClose={() => setIsQuickViewOpen(false)} 
+      />
     </div>
   );
 }

@@ -20,7 +20,7 @@ interface Product {
   brand?: string;
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, onQuickView }: { product: Product, onQuickView?: (p: any) => void }) {
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
@@ -59,6 +59,12 @@ export default function ProductCard({ product }: { product: Product }) {
     showToast(wishlisted ? 'Removed from favorites' : 'Added to favorites', 'success', product.images[0]);
   };
 
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onQuickView) onQuickView(product);
+  };
+
   return (
     <Link href={`/product/${product._id}`} style={{ display: 'block', textDecoration: 'none' }}>
       <div
@@ -93,8 +99,10 @@ export default function ProductCard({ product }: { product: Product }) {
           <div style={{
             position: 'absolute', top: '1rem', right: '1rem',
             display: 'flex', flexDirection: 'column', gap: '0.5rem',
-            transform: hovered ? 'translateX(0)' : 'translateX(60px)',
-            transition: 'transform 0.3s ease',
+            opacity: hovered ? 1 : 0,
+            transform: hovered ? 'scale(1)' : 'scale(0.8)',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            pointerEvents: hovered ? 'auto' : 'none'
           }}>
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -109,16 +117,19 @@ export default function ProductCard({ product }: { product: Product }) {
             >
               <Heart size={15} fill={wishlisted ? 'white' : 'none'} color="white" />
             </motion.button>
-            <motion.div
+            <motion.button
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleQuickView}
               style={{
                 width: '36px', height: '36px', borderRadius: '50%',
                 background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                border: 'none', cursor: 'pointer',
                 backdropFilter: 'blur(10px)', transition: 'all 0.3s',
               }}
             >
               <Eye size={15} color="white" />
-            </motion.div>
+            </motion.button>
           </div>
 
           {/* Stock badge */}
