@@ -31,17 +31,26 @@ export default function CareersPage() {
     <main style={{ background: 'var(--color-bg)', minHeight: '100vh' }}>
       {/* ── Hero Section ── */}
       <section style={{ 
-        height: '80vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        height: '90vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden'
       }}>
         <motion.div 
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
           style={{
             position: 'absolute', inset: 0,
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1522071823991-b9671f30c46f?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop')`,
             backgroundSize: 'cover', backgroundPosition: 'center',
+          }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute', inset: 0,
+            background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%)',
+            pointerEvents: 'none'
           }}
         />
         <div className="container" style={{ textAlign: 'center', zIndex: 1 }}>

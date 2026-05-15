@@ -20,7 +20,7 @@ interface AuthContextType {
   login: (userData: User) => void;
   logout: () => void;
   isAdmin: boolean;
-}
+} 
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
