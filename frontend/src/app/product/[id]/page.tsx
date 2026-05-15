@@ -63,6 +63,7 @@ export default function ProductDetailPage() {
       color: selectedColor || undefined
     });
     setAdded(true);
+    showToast(`${product.title} added to cart`, 'success', product.images[0]);
     setTimeout(() => setAdded(false), 2500);
   };
 
