@@ -120,7 +120,8 @@ const verifyPayment = async (req, res) => {
         }
 
         // Redirect back to the frontend wallet page
-        res.redirect('http://localhost:3000/profile/wallet?status=' + status);
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+        res.redirect(`${frontendUrl}/profile/wallet?status=${status}`);
 
     } catch (error) {
         console.error(error);
