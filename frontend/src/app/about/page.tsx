@@ -62,15 +62,22 @@ export default function AboutPage() {
               style={{ position: 'relative' }}
             >
               <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', aspectRatio: '4/5', boxShadow: '0 30px 60px rgba(0,0,0,0.5)' }}>
-                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" alt="Craftsmanship" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }} />
+                <motion.img 
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.6 }}
+                  src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" 
+                  alt="Craftsmanship" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)', pointerEvents: 'none' }} />
               </div>
               <motion.div 
                 animate={{ y: [0, -15, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 style={{ 
                   position: 'absolute', bottom: '-30px', right: '-30px', padding: '2rem', 
-                  background: 'var(--color-accent)', color: 'black', borderRadius: '16px', fontWeight: '800', fontSize: '1.5rem'
+                  background: 'var(--color-accent)', color: 'black', borderRadius: '16px', fontWeight: '800', fontSize: '1.5rem',
+                  boxShadow: '0 20px 40px rgba(201, 168, 76, 0.3)'
                 }}
               >
                 Est. 2018
@@ -100,13 +107,14 @@ export default function AboutPage() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.4 + (i * 0.1) }}
-                    style={{ display: 'flex', gap: '1.5rem' }}
+                    whileHover={{ x: 10 }}
+                    style={{ display: 'flex', gap: '1.5rem', cursor: 'default' }}
                   >
-                    <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.3s' }} className="icon-box">
                       <item.Icon size={22} style={{ color: 'var(--color-accent)' }} />
                     </div>
                     <div>
-                      <h4 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.5rem' }}>{item.title}</h4>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.5rem', transition: 'color 0.3s' }} className="title-text">{item.title}</h4>
                       <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>{item.desc}</p>
                     </div>
                   </motion.div>
@@ -128,8 +136,15 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: 'spring', damping: 15, delay: i * 0.1 }}
+                whileHover={{ y: -10 }}
+                style={{ cursor: 'default' }}
               >
-                <p style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--color-accent)', marginBottom: '0.5rem' }}>{stat.value}</p>
+                <motion.p 
+                  whileHover={{ scale: 1.1, color: 'var(--color-accent-light)' }}
+                  style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--color-accent)', marginBottom: '0.5rem', transition: 'color 0.3s' }}
+                >
+                  {stat.value}
+                </motion.p>
                 <p style={{ color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: '600' }}>{stat.label}</p>
               </motion.div>
             ))}
@@ -146,7 +161,12 @@ export default function AboutPage() {
             viewport={{ once: true }}
             transition={{ duration: 1 }}
           >
-            <Users size={60} style={{ color: 'var(--color-accent)', marginBottom: '2rem', opacity: 0.5 }} />
+            <motion.div
+              animate={{ filter: ['drop-shadow(0 0 0px var(--color-accent))', 'drop-shadow(0 0 20px var(--color-accent))', 'drop-shadow(0 0 0px var(--color-accent))'] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              <Users size={60} style={{ color: 'var(--color-accent)', marginBottom: '2rem', opacity: 0.8 }} />
+            </motion.div>
             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem', marginBottom: '1.5rem', fontWeight: '700' }}>Become Part of <span className="text-gold">Our Legacy.</span></h2>
             <p style={{ color: 'var(--color-muted)', maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.1rem', lineHeight: '1.8' }}>
               We are constantly seeking designers, dreamers, and innovators to join our global fashion house.
