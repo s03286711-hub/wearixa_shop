@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Sparkles, Shield, Heart, Users, MapPin, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const STATS = [
   { label: 'Founded', value: '2018' },
@@ -151,9 +152,21 @@ export default function AboutPage() {
               We are constantly seeking designers, dreamers, and innovators to join our global fashion house.
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <a href="/careers" className="btn-primary" style={{ padding: '1.2rem 3.5rem', borderRadius: '40px' }}>
-                Join the Team <ArrowRight size={18} style={{ marginLeft: '10px' }} />
-              </a>
+              <Link 
+                href="/careers" 
+                className="btn-primary" 
+                style={{ 
+                  padding: '1.2rem 3.5rem', 
+                  borderRadius: '40px', 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                  gap: '12px'
+                }}
+              >
+                Join the Team <ArrowRight size={20} />
+              </Link>
             </motion.div>
           </motion.div>
         </div>
