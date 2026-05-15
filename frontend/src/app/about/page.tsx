@@ -37,8 +37,8 @@ export default function AboutPage() {
             <p style={{ color: 'var(--color-accent)', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1.5rem' }}>
               The Wearixa Story
             </p>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: '800', lineHeight: '1', marginBottom: '2rem' }}>
-              Crafting <span className="text-gold">Timeless</span> <br/> Elegance.
+            <h1 className="hero-text" style={{ fontFamily: 'var(--font-heading)', fontSize: '4.5rem', fontWeight: '800', lineHeight: '1', marginBottom: '2rem' }}>
+              We Design for the <br/> <span className="text-gold">Bold and the Visionary.</span>
             </h1>
             <motion.div 
               initial={{ width: 0 }}
@@ -53,7 +53,7 @@ export default function AboutPage() {
       {/* ── Philosophy Section (Staggered) ── */}
       <section style={{ padding: '10rem 0' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '6rem', alignItems: 'center' }}>
+          <div className="philosophy-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'center' }}>
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -74,6 +74,7 @@ export default function AboutPage() {
               <motion.div 
                 animate={{ y: [0, -15, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="badge"
                 style={{ 
                   position: 'absolute', bottom: '-30px', right: '-30px', padding: '2rem', 
                   background: 'var(--color-accent)', color: 'black', borderRadius: '16px', fontWeight: '800', fontSize: '1.5rem',
@@ -128,7 +129,7 @@ export default function AboutPage() {
       {/* ── Animated Stats Section ── */}
       <section style={{ padding: '8rem 0', background: 'rgba(201,168,76,0.03)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', textAlign: 'center' }}>
+          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', textAlign: 'center' }}>
             {STATS.map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -191,6 +192,19 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
+      <style>{`
+        @media (max-width: 960px) {
+          .philosophy-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 2rem !important; }
+          section { padding: 4rem 0 !important; }
+          .hero-text { font-size: 2.5rem !important; }
+          .badge { right: 0 !important; bottom: -10px !important; padding: 1rem !important; font-size: 1rem !important; }
+        }
+        @media (max-width: 480px) {
+          .stats-grid { grid-template-columns: 1fr !important; }
+          .hero-text { font-size: 2rem !important; }
+        }
+      `}</style>
     </main>
   );
 }

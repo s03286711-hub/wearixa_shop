@@ -60,7 +60,7 @@ export default function PressPage() {
             <p style={{ color: 'var(--color-accent)', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1rem' }}>
               Press & Media Hub
             </p>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
+            <h1 className="hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1.5rem' }}>
               Our Story, <span className="text-gold">Shared.</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', maxWidth: '700px', margin: '0 auto', lineHeight: '1.8' }}>
@@ -176,7 +176,11 @@ export default function PressPage() {
       </div>
       <style>{`
         @media (max-width: 960px) {
-          .press-grid { grid-template-columns: 1fr !important; }
+          .press-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          header { height: auto !important; padding: 4rem 1rem !important; }
+          .hero-title { font-size: 2.2rem !important; }
+          section { padding: 0 !important; }
+          aside { order: 2; }
         }
       `}</style>
     </main>

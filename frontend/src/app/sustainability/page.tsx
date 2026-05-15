@@ -52,7 +52,7 @@ export default function SustainabilityPage() {
             <p style={{ color: '#4ade80', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1.5rem' }}>
               Eco-Luxury Commitment
             </p>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 7vw, 5rem)', fontWeight: '800', lineHeight: '1.1', marginBottom: '2rem' }}>
+            <h1 className="hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 7vw, 5rem)', fontWeight: '800', lineHeight: '1.1', marginBottom: '2rem' }}>
               Fashion Shouldn&apos;t <br/> <span style={{ color: '#4ade80' }}>Cost the Earth.</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.2rem', lineHeight: '1.8', marginBottom: '2.5rem' }}>
@@ -80,7 +80,7 @@ export default function SustainabilityPage() {
             <p style={{ color: 'var(--color-muted)', maxWidth: '600px', margin: '0 auto' }}>We anchor our sustainability strategy in four core principles that guide every decision we make.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
+          <div className="pillars-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2.5rem' }}>
             {PILLARS.map((p, i) => (
               <motion.div
                 key={p.title}
@@ -111,7 +111,7 @@ export default function SustainabilityPage() {
         <div className="container">
           <motion.div 
             whileHover={{ scale: 1.01, boxShadow: '0 30px 60px rgba(0,0,0,0.4)' }}
-            className="glass" 
+            className="glass transparency-banner" 
             style={{ 
               padding: '4rem', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               flexWrap: 'wrap', gap: '3rem', border: '1px solid rgba(74,222,128,0.2)',
@@ -163,6 +163,17 @@ export default function SustainabilityPage() {
           </motion.div>
         </div>
       </section>
+      <style>{`
+        @media (max-width: 960px) {
+          .pillars-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .transparency-banner { padding: 2.5rem !important; flex-direction: column !important; text-align: center !important; }
+          .hero-title { font-size: 2.5rem !important; }
+          section { padding: 4rem 0 !important; }
+        }
+        @media (max-width: 480px) {
+          .hero-title { font-size: 2rem !important; }
+        }
+      `}</style>
     </main>
   );
 }

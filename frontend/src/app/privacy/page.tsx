@@ -51,7 +51,7 @@ export default function PrivacyPolicyPage() {
             style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 1rem' }}
           >
             <ShieldCheck size={48} style={{ color: 'var(--color-accent)', margin: '0 auto 1.5rem' }} />
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem' }}>
+            <h1 className="hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem' }}>
               Your Privacy <span className="text-gold">Matters.</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem' }}>Last updated: May 12, 2026</p>
@@ -195,9 +195,11 @@ export default function PrivacyPolicyPage() {
       </div>
       <style>{`
         @media (max-width: 960px) {
-          .privacy-layout { grid-template-columns: 1fr !important; }
-          aside { display: none !important; }
-          .glass { padding: 2.5rem !important; }
+          .privacy-layout { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          header { height: auto !important; padding: 4rem 1rem !important; }
+          .hero-title { font-size: 2.2rem !important; }
+          section { padding: 2.5rem !important; }
+          aside { position: relative !important; top: 0 !important; order: -1; width: 100% !important; }
         }
       `}</style>
     </main>

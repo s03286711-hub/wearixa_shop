@@ -62,8 +62,8 @@ export default function CareersPage() {
             <p style={{ color: 'var(--color-accent)', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1.5rem' }}>
               Join the Movement
             </p>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 7vw, 5rem)', fontWeight: '800', lineHeight: '1.1', marginBottom: '2rem' }}>
-              Shape the Future of <br/> <span className="text-gold">Fashion Tech</span>
+            <h1 className="hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 7vw, 5.5rem)', fontWeight: '800', lineHeight: '1', marginBottom: '2rem' }}>
+              Shape the Future of <br/> <span className="text-gold">Fashion Tech.</span>
             </h1>
             <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2.5rem', lineHeight: '1.8' }}>
               At Wearixa, we’re blending luxury fashion with cutting-edge technology. We’re looking for visionaries to help us build the next generation of retail.
@@ -93,15 +93,15 @@ export default function CareersPage() {
             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem', fontWeight: '600', marginBottom: '1rem' }}>Our Core Values</h2>
             <div style={{ width: '60px', height: '3px', background: 'var(--color-accent)', margin: '0 auto' }}></div>
           </motion.div>
-
           <motion.div 
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={{
-              visible: { transition: { staggerChildren: 0.2 } }
+              visible: { transition: { staggerChildren: 0.1 } }
             }}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2.5rem' }}
+            className="values-grid"
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '3rem' }}
           >
             {VALUES.map((val) => (
               <motion.div
@@ -141,7 +141,7 @@ export default function CareersPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.01, boxShadow: '0 30px 60px rgba(0,0,0,0.4)' }}
             viewport={{ once: true }}
-            className="glass" 
+            className="glass services-banner" 
             style={{ 
               padding: '4rem', borderRadius: '24px', border: '1px solid rgba(201,168,76,0.2)',
               display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
@@ -186,6 +186,17 @@ export default function CareersPage() {
           </div>
         </div>
       </section>
+      <style>{`
+        @media (max-width: 960px) {
+          .values-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .services-banner { padding: 2.5rem !important; }
+          .hero-title { font-size: 2.5rem !important; }
+          section { padding: 4rem 0 !important; }
+        }
+        @media (max-width: 480px) {
+          .hero-title { font-size: 2rem !important; }
+        }
+      `}</style>
     </main>
   );
 }

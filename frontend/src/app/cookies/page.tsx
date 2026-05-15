@@ -51,14 +51,14 @@ export default function CookiesPage() {
             style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 1rem' }}
           >
             <Cookie size={48} style={{ color: 'var(--color-accent)', margin: '0 auto 1.5rem' }} />
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem', color: '#fff' }}>
+            <h1 className="hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem', color: '#fff' }}>
               Cookie <span className="text-gold">Policy.</span>
             </h1>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem' }}>Last updated: May 12, 2026</p>
           </motion.div>
         </header>
 
-        <div className="policy-layout" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '4rem', alignItems: 'start' }}>
+        <div className="cookies-layout" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '4rem', alignItems: 'start' }}>
           {/* ── Sticky Navigation ── */}
           <aside style={{ position: 'sticky', top: '120px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <p style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--color-muted)', marginBottom: '1rem', fontWeight: '700' }}>Sections</p>
@@ -111,7 +111,7 @@ export default function CookiesPage() {
               <p style={{ color: 'var(--color-muted)', marginBottom: '1.5rem' }}>
                 Wearixa uses cookies for various critical functions to enhance your shopping experience:
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="usage-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 {[
                   'Keep you signed in',
                   'Remember your cart items',
@@ -164,9 +164,12 @@ export default function CookiesPage() {
       </div>
       <style>{`
         @media (max-width: 960px) {
-          .policy-layout { grid-template-columns: 1fr !important; }
-          aside { display: none !important; }
+          .cookies-layout { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          .hero-header { height: auto !important; padding: 4rem 1rem !important; }
+          .hero-title { font-size: 2.2rem !important; }
           .glass { padding: 2.5rem !important; }
+          aside { position: relative !important; top: 0 !important; order: -1; width: 100% !important; }
+          .usage-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </main>
