@@ -14,7 +14,17 @@ const userSchema = mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
+            required: function() { return this.authProvider === 'local'; },
+        },
+        googleId: {
+            type: String,
+            sparse: true,
+            unique: true,
+        },
+        authProvider: {
+            type: String,
+            enum: ['local', 'google', 'facebook'],
+            default: 'local',
         },
         isAdmin: {
             type: Boolean,

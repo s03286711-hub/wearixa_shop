@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ChatWidget from '@/components/ChatWidget';
 import PageTransition from '@/components/PageTransition';
+import GoogleAuthProvider from '@/components/GoogleAuthProvider';
 
 export const metadata: Metadata = {
   title: 'Wearixa – Premium Fashion House',
@@ -29,20 +30,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ToastProvider>
-                <Navbar />
-                <main style={{ minHeight: '100vh', paddingTop: '72px' }}>
-                  <PageTransition>
-                    {children}
-                  </PageTransition>
-                </main>
-                <Footer />
-                <ChatWidget />
-              </ToastProvider>
-            </WishlistProvider>
-          </CartProvider>
+          <GoogleAuthProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <ToastProvider>
+                  <Navbar />
+                  <main style={{ minHeight: '100vh', paddingTop: '72px' }}>
+                    <PageTransition>
+                      {children}
+                    </PageTransition>
+                  </main>
+                  <Footer />
+                  <ChatWidget />
+                </ToastProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </GoogleAuthProvider>
         </AuthProvider>
       </body>
     </html>

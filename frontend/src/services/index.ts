@@ -39,6 +39,11 @@ export const authService = {
     const { data } = await api.delete(`/auth/users/${id}`);
     return data;
   },
+
+  googleLogin: async (token: string) => {
+    const { data } = await api.post('/auth/google', { token });
+    return data;
+  },
 };
 
 export const productService = {

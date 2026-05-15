@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { authService } from '@/services';
 import { Eye, EyeOff, Mail, Lock, Sparkles } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -153,6 +154,41 @@ export default function LoginPage() {
                 {loading ? 'SIGNING IN...' : 'CONTINUE'}
               </button>
             </form>
+
+            <div style={{ display: 'flex', alignItems: 'center', margin: '2rem 0', gap: '1rem' }}>
+              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }} />
+              <span style={{ fontSize: '0.7rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>OR</span>
+              <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.05)' }} />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  if (credentialResponse.credential) {
+                    try {
+                      setLoading(true);
+                      const data = await authService.googleLogin(credentialResponse.credential);
+                      login(data);
+                      showToast(`Welcome back, ${data.name}!`);
+                      router.push('/');
+                    } catch (err: any) {
+                      const msg = err?.response?.data?.message || 'Google login failed';
+                      setError(msg);
+                      showToast(msg, 'error');
+                    } finally {
+                      setLoading(false);
+                    }
+                  }
+                }}
+                onError={() => {
+                  showToast('Google login failed', 'error');
+                }}
+                theme="dark"
+                shape="pill"
+                text="continue_with"
+                width="400"
+              />
+            </div>
           </div>
         </div>
       </div>

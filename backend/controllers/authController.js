@@ -279,4 +279,62 @@ const resetPassword = asyncHandler(async (req, res) => {
     });
 });
 
-module.exports = { loginUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, forgotPassword, resetPassword };
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// @desc    Auth user with Google
+// @route   POST /api/auth/google
+// @access  Public
+const googleAuth = asyncHandler(async (req, res) => {
+    const { token } = req.body;
+
+    if (!token) {
+        res.status(400);
+        throw new Error('No Google token provided');
+    }
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        
+        const { sub: googleId, email, name } = payload;
+
+        // Check if user already exists
+        let user = await User.findOne({ email });
+
+        if (user) {
+            // If user exists but no googleId is linked, link it
+            if (!user.googleId) {
+                user.googleId = googleId;
+                user.authProvider = user.authProvider === 'local' ? 'local' : 'google';
+                await user.save();
+            }
+        } else {
+            // Create a new user
+            user = await User.create({
+                name,
+                email,
+                googleId,
+                authProvider: 'google',
+            });
+            console.log(`NEW OAUTH USER CREATED: ${user.email}`);
+        }
+
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            token: generateToken(user._id),
+        });
+    } catch (error) {
+        console.error('Google Auth Error:', error);
+        res.status(401);
+        throw new Error('Invalid Google Token');
+    }
+});
+
+module.exports = { loginUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, forgotPassword, resetPassword, googleAuth };
