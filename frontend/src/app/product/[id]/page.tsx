@@ -405,7 +405,7 @@ export default function ProductDetailPage() {
                   
                   {/* Image Upload */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <label style={{ fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <ImageIcon size={14} /> Add Photos (up to 3)
                     </label>
                     {review.images.length < 3 && (
