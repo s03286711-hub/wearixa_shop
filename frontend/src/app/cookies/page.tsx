@@ -20,18 +20,41 @@ export default function CookiesPage() {
   return (
     <main style={{ background: 'var(--color-bg)', minHeight: '100vh', paddingTop: '8rem', paddingBottom: '8rem' }}>
       <div className="container">
-        {/* ── Header ── */}
-        <header style={{ marginBottom: '5rem', textAlign: 'center' }}>
+        {/* ── Cinematic Hero ── */}
+        <header style={{ 
+          height: '50vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          borderRadius: '30px', overflow: 'hidden', marginBottom: '5rem'
+        }}>
+          <motion.div 
+            initial={{ scale: 1.1, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            style={{
+              position: 'absolute', inset: 0,
+              backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop')`,
+              backgroundSize: 'cover', backgroundPosition: 'center',
+            }}
+          />
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            style={{
+              position: 'absolute', inset: 0,
+              background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%)',
+              pointerEvents: 'none'
+            }}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 1rem' }}
           >
-            <Cookie size={48} style={{ color: 'var(--color-accent)', marginBottom: '1.5rem' }} />
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem' }}>
+            <Cookie size={48} style={{ color: 'var(--color-accent)', margin: '0 auto 1.5rem' }} />
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem', color: '#fff' }}>
               Cookie <span className="text-gold">Policy.</span>
             </h1>
-            <p style={{ color: 'var(--color-muted)', fontSize: '1rem' }}>Last updated: May 12, 2026</p>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem' }}>Last updated: May 12, 2026</p>
           </motion.div>
         </header>
 
