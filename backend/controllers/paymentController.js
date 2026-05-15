@@ -128,6 +128,42 @@ const verifyPayment = async (req, res) => {
     }
 };
 
+// @desc    Process wallet cashback (5% reward on wallet payments)
+// @route   POST /api/payments/cashback
+// @access  Private
+const processCashback = async (req, res) => {
+    try {
+        const { orderTotal } = req.body;
+        const CASHBACK_RATE = 0.05; // 5%
+        const cashbackAmount = Math.round(orderTotal * CASHBACK_RATE * 100) / 100;
+
+        if (cashbackAmount <= 0) {
+            return res.json({ cashback: 0 });
+        }
+
+        const referenceId = `CB-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
+        await Transaction.create({
+            user: req.user._id,
+            amount: cashbackAmount,
+            type: 'DEPOSIT',
+            paymentGateway: 'CASHBACK',
+            status: 'COMPLETED',
+            referenceId,
+            description: `5% cashback on wallet order ($${orderTotal.toFixed(2)})`,
+        });
+
+        const user = await User.findById(req.user._id);
+        user.walletBalance += cashbackAmount;
+        await user.save();
+
+        res.json({ cashback: cashbackAmount, newBalance: user.walletBalance });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error processing cashback' });
+    }
+};
+
 // @desc    Get user's transactions
 // @route   GET /api/payments/transactions
 // @access  Private
@@ -150,5 +186,6 @@ module.exports = {
     depositFunds,
     mockCheckout,
     verifyPayment,
+    processCashback,
     getTransactions
 };

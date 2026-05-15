@@ -27,6 +27,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const promoRoutes = require('./routes/promoRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -34,6 +35,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/promo', promoRoutes);
 
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

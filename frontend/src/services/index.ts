@@ -135,3 +135,22 @@ export const categoryService = {
     return data;
   },
 };
+
+export const promoService = {
+  validate: async (code: string, orderTotal: number) => {
+    const { data } = await api.post('/promo/validate', { code, orderTotal });
+    return data;
+  },
+
+  use: async (code: string) => {
+    const { data } = await api.post('/promo/use', { code });
+    return data;
+  },
+};
+
+export const cashbackService = {
+  process: async (orderTotal: number) => {
+    const { data } = await api.post('/payments/cashback', { orderTotal });
+    return data;
+  },
+};

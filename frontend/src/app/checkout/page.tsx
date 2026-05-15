@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
-import { orderService } from '@/services';
+import { orderService, promoService, cashbackService } from '@/services';
 import api from '@/services/api';
-import { MapPin, CreditCard, CheckCircle, ArrowRight, Wallet, Smartphone } from 'lucide-react';
+import { MapPin, CreditCard, CheckCircle, ArrowRight, Wallet, Smartphone, Tag, Loader2 } from 'lucide-react';
 import PaymentForms from '@/components/PaymentForms';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -27,6 +27,12 @@ export default function CheckoutPage() {
   const [isPaymentValid, setIsPaymentValid] = useState(false);
   const [walletBalance, setWalletBalance] = useState<number | null>(null);
 
+  // Promo code state
+  const [promoCode, setPromoCode] = useState('');
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoApplied, setPromoApplied] = useState<{ code: string; discount: number; message: string } | null>(null);
+  const [promoError, setPromoError] = useState('');
+
   useEffect(() => {
     if (user) {
       api.get('/payments/transactions')
@@ -45,12 +51,13 @@ export default function CheckoutPage() {
   if (authLoading) return null;
   if (!user) return null;
 
-  // Pricing Logic Fix: totalPrice from context already includes totalShipping
-  // We want to calculate a clean subtotal and then apply checkout-specific rules
+  // Pricing
   const subtotal = totalPrice - totalShipping;
   const shippingCost = subtotal > 100 ? 0 : 12.99;
-  const tax = subtotal * 0.08;
-  const grandTotal = subtotal + shippingCost + tax;
+  const promoDiscount = promoApplied?.discount || 0;
+  const tax = (subtotal - promoDiscount) * 0.08;
+  const grandTotal = Math.max(0, subtotal - promoDiscount + shippingCost + tax);
+  const walletCashback = payment.method === 'wallet' ? Math.round(grandTotal * 0.05 * 100) / 100 : 0;
 
   const handlePlaceOrder = async () => {
     setLoading(true);
@@ -66,6 +73,22 @@ export default function CheckoutPage() {
       };
       const created = await orderService.create(orderData);
       setOrderId(created._id);
+
+      // If promo was applied, mark it as used
+      if (promoApplied) {
+        try { await promoService.use(promoApplied.code); } catch(e) { /* non-critical */ }
+      }
+
+      // If paid with wallet, trigger cashback
+      if (payment.method === 'wallet') {
+        try {
+          const cb = await cashbackService.process(grandTotal);
+          if (cb.cashback > 0) {
+            showToast(`🎉 $${cb.cashback.toFixed(2)} cashback added to your wallet!`, 'success');
+          }
+        } catch(e) { /* non-critical */ }
+      }
+
       showToast('Order placed successfully!', 'success');
       clearCart();
       setStep(2);
@@ -256,6 +279,43 @@ export default function CheckoutPage() {
                   </div>
                 ))}
               </div>
+              {/* Promo Code Section */}
+              <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem', marginBottom: '1rem' }}>
+                <p style={{ fontSize: '0.75rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: '600' }}>Promo Code</p>
+                {promoApplied ? (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.6rem 1rem', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '6px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Tag size={14} style={{ color: '#4ade80' }} />
+                      <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#4ade80' }}>{promoApplied.code}</span>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--color-muted)' }}>−${promoApplied.discount.toFixed(2)}</span>
+                    </div>
+                    <button onClick={() => { setPromoApplied(null); setPromoCode(''); setPromoError(''); }}
+                      style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', fontSize: '0.75rem' }}>Remove</button>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <input className="input-field" value={promoCode} onChange={e => { setPromoCode(e.target.value.toUpperCase()); setPromoError(''); }}
+                        placeholder="Enter code" style={{ fontSize: '0.85rem', flex: 1 }} />
+                      <button onClick={async () => {
+                        if (!promoCode.trim()) return;
+                        setPromoLoading(true); setPromoError('');
+                        try {
+                          const result = await promoService.validate(promoCode, subtotal);
+                          setPromoApplied({ code: result.code, discount: result.discount, message: result.message });
+                          showToast(result.message, 'success');
+                        } catch (err: any) {
+                          setPromoError(err?.response?.data?.message || 'Invalid code');
+                        } finally { setPromoLoading(false); }
+                      }} disabled={promoLoading} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        {promoLoading ? <Loader2 size={14} className="animate-spin" /> : 'Apply'}
+                      </button>
+                    </div>
+                    {promoError && <p style={{ color: '#f87171', fontSize: '0.75rem', marginTop: '0.4rem' }}>{promoError}</p>}
+                  </div>
+                )}
+              </div>
+
               <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {[['Subtotal', `$${subtotal.toFixed(2)}`], ['Shipping', shippingCost === 0 ? 'FREE' : `$${shippingCost.toFixed(2)}`], ['Tax', `$${tax.toFixed(2)}`]].map(([l, v]) => (
                   <div key={l} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
@@ -263,10 +323,22 @@ export default function CheckoutPage() {
                     <span>{v}</span>
                   </div>
                 ))}
+                {promoApplied && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
+                    <span style={{ color: '#4ade80' }}>Discount</span>
+                    <span style={{ color: '#4ade80' }}>−${promoApplied.discount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1rem', marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--color-border)' }}>
                   <span>Total</span>
                   <span style={{ color: 'var(--color-accent)' }}>${grandTotal.toFixed(2)}</span>
                 </div>
+                {walletCashback > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', padding: '0.5rem 0.75rem', background: 'rgba(201,168,76,0.08)', borderRadius: '6px', marginTop: '0.5rem' }}>
+                    <span style={{ color: 'var(--color-accent)' }}>🎉 Wallet Cashback (5%)</span>
+                    <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>+${walletCashback.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
