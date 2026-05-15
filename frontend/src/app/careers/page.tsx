@@ -31,17 +31,26 @@ export default function CareersPage() {
     <main style={{ background: 'var(--color-bg)', minHeight: '100vh' }}>
       {/* ── Hero Section ── */}
       <section style={{ 
-        height: '70vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1522071823991-b9671f30c46f?q=80&w=2070&auto=format&fit=crop')`,
-        backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'
+        height: '80vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden'
       }}>
+        <motion.div 
+          initial={{ scale: 1.2 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1522071823991-b9671f30c46f?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundSize: 'cover', backgroundPosition: 'center',
+          }}
+        />
         <div className="container" style={{ textAlign: 'center', zIndex: 1 }}>
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <p style={{ color: 'var(--color-accent)', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1rem' }}>
+            <p style={{ color: 'var(--color-accent)', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1.5rem' }}>
               Join the Movement
             </p>
             <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 7vw, 5rem)', fontWeight: '800', lineHeight: '1.1', marginBottom: '2rem' }}>
@@ -50,42 +59,63 @@ export default function CareersPage() {
             <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto 2.5rem', lineHeight: '1.8' }}>
               At Wearixa, we’re blending luxury fashion with cutting-edge technology. We’re looking for visionaries to help us build the next generation of retail.
             </p>
-            <a href="#openings" className="btn-primary" style={{ padding: '1rem 2.5rem' }}>View Open Positions</a>
+            <motion.a 
+              href="#openings" 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="btn-primary" 
+              style={{ padding: '1rem 3rem', borderRadius: '40px' }}
+            >
+              View Open Positions
+            </motion.a>
           </motion.div>
         </div>
       </section>
 
       {/* ── Values Section ── */}
-      <section style={{ padding: '8rem 0', background: 'rgba(201,168,76,0.02)' }}>
+      <section style={{ padding: '10rem 0', background: 'rgba(201,168,76,0.01)' }}>
         <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.5rem', fontWeight: '600', marginBottom: '1rem' }}>Our Core Values</h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: '6rem' }}
+          >
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem', fontWeight: '600', marginBottom: '1rem' }}>Our Core Values</h2>
             <div style={{ width: '60px', height: '3px', background: 'var(--color-accent)', margin: '0 auto' }}></div>
-          </div>
+          </motion.div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-            {VALUES.map((val, i) => (
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.2 } }
+            }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2.5rem' }}
+          >
+            {VALUES.map((val) => (
               <motion.div
                 key={val.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: { opacity: 1, y: 0 }
+                }}
                 className="glass"
-                style={{ padding: '3rem 2rem', borderRadius: '20px', textAlign: 'center', transition: 'all 0.3s' }}
+                style={{ padding: '4rem 2rem', borderRadius: '24px', textAlign: 'center', transition: 'all 0.3s' }}
               >
                 <div style={{ 
-                  width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', 
+                  width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', 
                   display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem',
                   border: '1px solid rgba(201,168,76,0.2)'
                 }}>
                   <val.Icon size={28} style={{ color: 'var(--color-accent)' }} />
                 </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem' }}>{val.title}</h3>
-                <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>{val.desc}</p>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '1.25rem' }}>{val.title}</h3>
+                <p style={{ color: 'var(--color-muted)', fontSize: '0.95rem', lineHeight: '1.7' }}>{val.desc}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 

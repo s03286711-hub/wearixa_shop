@@ -46,22 +46,32 @@ export default function PressPage() {
           </motion.div>
         </header>
 
-        <div className="press-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '4rem', alignItems: 'start' }}>
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.15 } }
+          }}
+          className="press-grid" 
+          style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '4rem', alignItems: 'start' }}
+        >
           {/* ── Main Content: Releases ── */}
           <section>
             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <Newspaper size={24} style={{ color: 'var(--color-accent)' }} /> Latest Releases
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              {RELEASES.map((rel, i) => (
+              {RELEASES.map((rel) => (
                 <motion.article
                   key={rel.title}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  variants={{
+                    hidden: { opacity: 0, x: -30 },
+                    visible: { opacity: 1, x: 0 }
+                  }}
+                  whileHover={{ scale: 1.01, borderColor: 'var(--color-accent)' }}
                   className="glass"
-                  style={{ padding: '2.5rem', borderRadius: '20px', border: '1px solid var(--color-border)', transition: 'transform 0.3s' }}
+                  style={{ padding: '2.5rem', borderRadius: '20px', border: '1px solid var(--color-border)', transition: 'all 0.3s' }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{rel.category}</span>
@@ -127,7 +137,7 @@ export default function PressPage() {
               </a>
             </motion.div>
           </aside>
-        </div>
+        </motion.div>
       </div>
       <style>{`
         @media (max-width: 960px) {

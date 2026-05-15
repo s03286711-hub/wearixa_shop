@@ -66,8 +66,24 @@ export default function PrivacyPolicyPage() {
           </aside>
 
           {/* ── Content ── */}
-          <section className="glass" style={{ padding: '4rem', borderRadius: '24px', border: '1px solid var(--color-border)', lineHeight: '1.8' }}>
-            <div id="collection" style={{ marginBottom: '4rem' }}>
+          <motion.section 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.15 } }
+            }}
+            className="glass" 
+            style={{ padding: '4rem', borderRadius: '24px', border: '1px solid var(--color-border)', lineHeight: '1.8' }}
+          >
+            <motion.div 
+              id="collection" 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              style={{ marginBottom: '4rem' }}
+            >
               <h2 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '1.5rem', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Database size={24} style={{ color: 'var(--color-accent)' }} /> 1. Information We Collect
               </h2>
@@ -84,9 +100,16 @@ export default function PrivacyPolicyPage() {
                   ))}
                 </ul>
               </div>
-            </div>
+            </motion.div>
 
-            <div id="usage" style={{ marginBottom: '4rem' }}>
+            <motion.div 
+              id="usage" 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              style={{ marginBottom: '4rem' }}
+            >
               <h2 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '1.5rem', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Eye size={24} style={{ color: 'var(--color-accent)' }} /> 2. How We Use Information
               </h2>
@@ -99,9 +122,16 @@ export default function PrivacyPolicyPage() {
                 <li>Responding to your comments, questions, and customer service requests.</li>
                 <li>Communicating with you about products, services, offers, and events offered by Wearixa.</li>
               </ul>
-            </div>
+            </motion.div>
 
-            <div id="security" style={{ marginBottom: '4rem' }}>
+            <motion.div 
+              id="security" 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              style={{ marginBottom: '4rem' }}
+            >
               <h2 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '1.5rem', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Lock size={24} style={{ color: 'var(--color-accent)' }} /> 3. Data Security
               </h2>
@@ -113,9 +143,15 @@ export default function PrivacyPolicyPage() {
                   All payment transactions are encrypted using SSL technology and processed via secure payment gateways. We never store your full credit card information on our servers.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            <div id="contact">
+            <motion.div 
+              id="contact"
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+            >
               <h2 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '1.5rem', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Mail size={24} style={{ color: 'var(--color-accent)' }} /> 4. Contact Us
               </h2>
@@ -125,8 +161,8 @@ export default function PrivacyPolicyPage() {
               <a href="mailto:privacy@wearixa.com" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
                 <Mail size={18} /> Email Privacy Team
               </a>
-            </div>
-          </section>
+            </motion.div>
+          </motion.section>
         </div>
       </div>
       <style>{`

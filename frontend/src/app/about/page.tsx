@@ -1,100 +1,163 @@
 'use client';
-import { Sparkles, Shield, Heart, Users, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, Shield, Heart, Users, MapPin, ArrowRight } from 'lucide-react';
+
+const STATS = [
+  { label: 'Founded', value: '2018' },
+  { label: 'Global Offices', value: '12' },
+  { label: 'Artisans', value: '450+' },
+  { label: 'Happy Clients', value: '50k+' },
+];
 
 export default function AboutPage() {
   return (
-    <div style={{ color: 'var(--color-text)' }}>
-      {/* Hero */}
-      <section style={{
-        padding: '6rem 1.5rem',
-        background: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%)',
-        textAlign: 'center',
-        borderBottom: '1px solid var(--color-border)',
+    <main style={{ background: 'var(--color-bg)', minHeight: '100vh', color: 'var(--color-text)' }}>
+      {/* ── Cinematic Hero ── */}
+      <section style={{ 
+        height: '90vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        overflow: 'hidden'
       }}>
-        <div className="container" style={{ maxWidth: '800px' }}>
-          <p style={{ fontSize: '0.8rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>Our Story</p>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: '700', lineHeight: '1.1', marginBottom: '1.5rem' }}>
-            Defining the Future of <span className="text-gold">Modern Fashion</span>
-          </h1>
-          <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', lineHeight: '1.8' }}>
-            Wearixa was founded on the belief that fashion should be a seamless blend of art, quality, and individuality. We curate collections that empower you to express your true self.
-          </p>
+        <motion.div 
+          initial={{ scale: 1.1, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.4 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundSize: 'cover', backgroundPosition: 'center',
+          }}
+        />
+        <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            <p style={{ color: 'var(--color-accent)', letterSpacing: '0.4em', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: '700', marginBottom: '1.5rem' }}>
+              The Wearixa Story
+            </p>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: '800', lineHeight: '1', marginBottom: '2rem' }}>
+              Crafting <span className="text-gold">Timeless</span> <br/> Elegance.
+            </h1>
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: '80px' }}
+              transition={{ duration: 1, delay: 1.2 }}
+              style={{ height: '3px', background: 'var(--color-accent)', margin: '0 auto 2.5rem' }}
+            />
+          </motion.div>
         </div>
       </section>
 
-      {/* Philosophy */}
-      <section className="section">
+      {/* ── Philosophy Section (Staggered) ── */}
+      <section style={{ padding: '10rem 0' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
-            <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', aspectRatio: '4/5' }}>
-              <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800" alt="Fashion Design" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%)' }} />
-            </div>
-            <div>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', marginBottom: '1.5rem' }}>The Wearixa <span className="text-gold">Philosophy</span></h2>
-              <p style={{ color: 'var(--color-muted)', marginBottom: '2rem', lineHeight: '1.8' }}>
-                Every piece in our collection is meticulously selected for its craftsmanship and design. We don&apos;t just follow trends; we set the standard for timeless elegance. Our commitment to sustainability ensures that your style choice is also a responsible one.
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '6rem', alignItems: 'center' }}>
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              style={{ position: 'relative' }}
+            >
+              <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', aspectRatio: '4/5', boxShadow: '0 30px 60px rgba(0,0,0,0.5)' }}>
+                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" alt="Craftsmanship" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)' }} />
+              </div>
+              <motion.div 
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                style={{ 
+                  position: 'absolute', bottom: '-30px', right: '-30px', padding: '2rem', 
+                  background: 'var(--color-accent)', color: 'black', borderRadius: '16px', fontWeight: '800', fontSize: '1.5rem'
+                }}
+              >
+                Est. 2018
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem', marginBottom: '1.5rem', fontWeight: '700' }}>Our <span className="text-gold">Philosophy</span></h2>
+              <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', lineHeight: '1.8', marginBottom: '2.5rem' }}>
+                At the heart of Wearixa lies a simple truth: fashion is the ultimate form of self-expression. We don&apos;t just curate clothes; we craft experiences that empower individuals to step into their own light.
               </p>
-              <div style={{ display: 'grid', gap: '1.5rem' }}>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 {[
-                  { Icon: Shield, title: 'Uncompromising Quality', desc: 'We partner with the world\'s finest artisans to ensure every stitch is perfect.' },
-                  { Icon: Heart, title: 'Ethical Sourcing', desc: 'Our materials are sourced from suppliers who share our values of fairness and respect.' },
-                  { Icon: Sparkles, title: 'Exclusive Designs', desc: 'Limited edition pieces that you won\'t find anywhere else.' },
-                ].map(({ Icon, title, desc }) => (
-                  <div key={title} style={{ display: 'flex', gap: '1rem' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Icon size={18} style={{ color: 'var(--color-accent)' }} />
+                  { Icon: Shield, title: 'Heritage Quality', desc: 'Working with master artisans who have perfected their craft over generations.' },
+                  { Icon: Heart, title: 'Ethical Soul', desc: 'Commitment to zero-waste practices and fair-trade partnerships across our supply chain.' },
+                  { Icon: Sparkles, title: 'Pure Innovation', desc: 'Integrating digital tech with physical design for a seamless shopping journey.' }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={item.title}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.4 + (i * 0.1) }}
+                    style={{ display: 'flex', gap: '1.5rem' }}
+                  >
+                    <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <item.Icon size={22} style={{ color: 'var(--color-accent)' }} />
                     </div>
                     <div>
-                      <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.25rem' }}>{title}</h4>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', lineHeight: '1.5' }}>{desc}</p>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: '700', marginBottom: '0.5rem' }}>{item.title}</h4>
+                      <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>{item.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section style={{ background: 'var(--color-surface)', padding: '5rem 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+      {/* ── Animated Stats Section ── */}
+      <section style={{ padding: '8rem 0', background: 'rgba(201,168,76,0.03)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem', textAlign: 'center' }}>
-            {[
-              { label: 'Founded', value: '2018' },
-              { label: 'Countries', value: '25+' },
-              { label: 'Styles', value: '1k+' },
-              { label: 'Happy Clients', value: '50k+' },
-            ].map(({ label, value }) => (
-              <div key={label}>
-                <p style={{ fontSize: '2.5rem', fontWeight: '700', color: 'var(--color-accent)', marginBottom: '0.5rem' }}>{value}</p>
-                <p style={{ fontSize: '0.8rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>{label}</p>
-              </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '4rem', textAlign: 'center' }}>
+            {STATS.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: 'spring', damping: 15, delay: i * 0.1 }}
+              >
+                <p style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--color-accent)', marginBottom: '0.5rem' }}>{stat.value}</p>
+                <p style={{ color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: '600' }}>{stat.label}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Team/Join */}
-      <section className="section" style={{ textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '600px' }}>
-          <Users size={48} style={{ color: 'var(--color-accent)', margin: '0 auto 1.5rem', opacity: 0.8 }} />
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', marginBottom: '1rem' }}>Join the Movement</h2>
-          <p style={{ color: 'var(--color-muted)', marginBottom: '2.5rem' }}>
-            We are always looking for passionate individuals to join our global team of designers, dreamers, and doers.
-          </p>
-          <a href="/shop" className="btn-primary" style={{ display: 'inline-block' }}>Explore Collections</a>
+      {/* ── Join the Movement CTA ── */}
+      <section style={{ padding: '10rem 0', textAlign: 'center' }}>
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            <Users size={60} style={{ color: 'var(--color-accent)', marginBottom: '2rem', opacity: 0.5 }} />
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '3rem', marginBottom: '1.5rem', fontWeight: '700' }}>Become Part of <span className="text-gold">Our Legacy.</span></h2>
+            <p style={{ color: 'var(--color-muted)', maxWidth: '600px', margin: '0 auto 3rem', fontSize: '1.1rem', lineHeight: '1.8' }}>
+              We are constantly seeking designers, dreamers, and innovators to join our global fashion house.
+            </p>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <a href="/careers" className="btn-primary" style={{ padding: '1.2rem 3.5rem', borderRadius: '40px' }}>
+                Join the Team <ArrowRight size={18} style={{ marginLeft: '10px' }} />
+              </a>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
-
-      <style>{`
-        @media (max-width: 768px) {
-          section div[style*="grid-template-columns: repeat(4"] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-      `}</style>
-    </div>
+    </main>
   );
 }
