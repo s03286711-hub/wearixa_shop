@@ -40,4 +40,21 @@ const admin = (req, res, next) => {
     }
 };
 
-module.exports = { protect, admin };
+const optionalAuth = async (req, res, next) => {
+    let token;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        try {
+            token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, JWT_SECRET);
+            req.user = await User.findById(decoded.id).select('-password');
+        } catch (error) {
+            console.error('Optional JWT verification error:', error.message);
+        }
+    }
+    
+    // Always proceed, even if no user
+    next();
+};
+
+module.exports = { protect, admin, optionalAuth };
