@@ -16,6 +16,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const { cartItems, totalPrice, totalShipping, clearCart } = useCart();
+  const { showToast } = useToast();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState('');
