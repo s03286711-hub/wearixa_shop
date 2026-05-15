@@ -75,7 +75,7 @@ export default function RegisterPage() {
       }}>
         <div style={{ position: 'absolute', bottom: '20%', right: '5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)', borderRadius: '50%', zIndex: -1 }} />
 
-        <div style={{ width: '100%', maxWidth: '400px' }} className="reveal">
+        <div style={{ width: '100%', maxWidth: '400px' }}>
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <Link href="/">
               <span style={{ fontFamily: 'var(--font-heading)', fontSize: '2.25rem', fontWeight: '800', letterSpacing: '0.2em' }} className="text-gold">WEARIXA</span>

@@ -5,6 +5,8 @@ import ProductCard from '@/components/ProductCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { productService, categoryService } from '@/services';
 import { SlidersHorizontal, X, ChevronDown } from 'lucide-react';
+import { ProductSkeleton } from '@/components/Skeleton';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ShopPage() {
   return (
@@ -131,7 +133,9 @@ function ShopPageContent() {
 
       {/* Products grid */}
       {loading ? (
-        <LoadingSpinner />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+          {[...Array(8)].map((_, i) => <ProductSkeleton key={i} />)}
+        </div>
       ) : products.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '6rem', color: 'var(--color-muted)' }}>
           <p style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No products found</p>
@@ -140,9 +144,26 @@ function ShopPageContent() {
         </div>
       ) : (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
-            {products.map((p) => <ProductCard key={p._id} product={p} />)}
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}
+          >
+            <AnimatePresence mode="popLayout">
+              {products.map((p, i) => (
+                <motion.div
+                  key={p._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                >
+                  <ProductCard product={p} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
 
           {/* Pagination */}
           {pages > 1 && (

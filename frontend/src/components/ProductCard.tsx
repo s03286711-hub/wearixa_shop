@@ -6,6 +6,7 @@ import { Heart, ShoppingBag, Star, Eye } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useToast } from '@/context/ToastContext';
+import { motion } from 'framer-motion';
 
 interface Product {
   _id: string;
@@ -93,7 +94,9 @@ export default function ProductCard({ product }: { product: Product }) {
             transform: hovered ? 'translateX(0)' : 'translateX(60px)',
             transition: 'transform 0.3s ease',
           }}>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={handleWishlist}
               style={{
                 width: '36px', height: '36px', borderRadius: '50%',
@@ -103,8 +106,9 @@ export default function ProductCard({ product }: { product: Product }) {
               }}
             >
               <Heart size={15} fill={wishlisted ? 'white' : 'none'} color="white" />
-            </button>
-            <div
+            </motion.button>
+            <motion.div
+              whileHover={{ scale: 1.1 }}
               style={{
                 width: '36px', height: '36px', borderRadius: '50%',
                 background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -112,7 +116,7 @@ export default function ProductCard({ product }: { product: Product }) {
               }}
             >
               <Eye size={15} color="white" />
-            </div>
+            </motion.div>
           </div>
 
           {/* Stock badge */}
@@ -144,7 +148,9 @@ export default function ProductCard({ product }: { product: Product }) {
             transform: hovered ? 'translateY(0)' : 'translateY(10px)',
             transition: 'all 0.3s ease',
           }}>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={handleAddToCart}
               disabled={product.stock === 0}
               style={{
@@ -169,7 +175,7 @@ export default function ProductCard({ product }: { product: Product }) {
             >
               <ShoppingBag size={14} />
               {added ? 'Added!' : product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-            </button>
+            </motion.button>
           </div>
         </div>
 

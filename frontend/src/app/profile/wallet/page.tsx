@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/services/api';
 import { CreditCard, Wallet, Smartphone, ArrowRight, Loader2, Plus, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { WalletSkeleton } from '@/components/Skeleton';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import PaymentForms from '@/components/PaymentForms';
@@ -63,7 +64,7 @@ function WalletContent() {
     }
   };
 
-  if (loading) return <div className="container" style={{ paddingTop: '8rem', textAlign: 'center' }}><Loader2 className="animate-spin" /></div>;
+  if (loading) return <WalletSkeleton />;
 
   return (
     <div className="container" style={{ paddingTop: '8rem', paddingBottom: '4rem' }}>
@@ -202,7 +203,7 @@ function WalletContent() {
 
 export default function WalletPage() {
   return (
-    <Suspense fallback={<div className="container" style={{ paddingTop: '8rem', textAlign: 'center' }}><Loader2 className="animate-spin" /></div>}>
+    <Suspense fallback={<WalletSkeleton />}>
       <WalletContent />
       <style>{`
         @media (max-width: 992px) {

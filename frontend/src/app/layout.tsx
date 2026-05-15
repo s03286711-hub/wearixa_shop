@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ChatWidget from '@/components/ChatWidget';
 import ScrollReveal from '@/components/ScrollReveal';
+import PageTransition from '@/components/PageTransition';
 
 export const metadata: Metadata = {
   title: 'Wearixa – Premium Fashion House',
@@ -34,11 +35,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ToastProvider>
                 <Navbar />
                 <main style={{ minHeight: '100vh', paddingTop: '72px' }}>
-                  {children}
+                  <PageTransition>
+                    {children}
+                  </PageTransition>
                 </main>
                 <Footer />
                 <ChatWidget />
-                <ScrollReveal />
               </ToastProvider>
             </WishlistProvider>
           </CartProvider>

@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useToast } from '@/context/ToastContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { ProductDetailsSkeleton } from '@/components/Skeleton';
 import { ShoppingBag, Heart, Star, ChevronLeft, ChevronRight, Truck, Shield, RefreshCw, CheckCircle } from 'lucide-react';
 import { calculateShippingCharge } from '@/utils/shippingUtils';
 
@@ -91,7 +92,7 @@ export default function ProductDetailPage() {
     finally { setSubmitting(false); }
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return <ProductDetailsSkeleton />;
   if (!product) return <div style={{ textAlign: 'center', padding: '6rem', color: 'var(--color-muted)' }}>Product not found.</div>;
 
   return (

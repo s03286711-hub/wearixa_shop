@@ -5,6 +5,8 @@ import ProductCard from '@/components/ProductCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { productService, categoryService } from '@/services';
 import { ArrowRight, Sparkles, Shield, Truck, RefreshCw } from 'lucide-react';
+import { ProductSkeleton } from '@/components/Skeleton';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const HERO_SLIDES = [
   {
@@ -75,7 +77,7 @@ export default function HomePage() {
 
   const current = HERO_SLIDES[slide];
 
-  if (!hasMounted) return <LoadingSpinner />;
+  if (!hasMounted) return null; // Let the page transition handle initial fade in
 
   return (
     <>
@@ -136,7 +138,12 @@ export default function HomePage() {
               }
             `}} />
             {/* Left Content */}
-            <div className="reveal">
+            <motion.div 
+              key={slide}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: '10px',
                 background: 'rgba(201,168,76,0.15)', backdropFilter: 'blur(10px)',
@@ -185,10 +192,15 @@ export default function HomePage() {
                   New Arrivals
                 </Link>
               </div>
-            </div>
+            </motion.div>
 
             {/* Right Visual Element */}
-            <div className="reveal" style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}
+            >
               <div style={{ 
                 position: 'relative', width: '100%', maxWidth: '450px', aspectRatio: '3/4',
                 borderRadius: '20px', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
@@ -245,7 +257,7 @@ export default function HomePage() {
                 background: 'radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%)',
                 zIndex: -1
               }} />
-            </div>
+            </motion.div>
           </div>
         </div>
 
@@ -280,9 +292,15 @@ export default function HomePage() {
       </section>
 
       {/* ── Feature Badges ── */}
-      <section className="reveal" style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}
+      >
         <div className="container" style={{ padding: '2rem 1.5rem' }}>
-          <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
             {[
               { Icon: Truck, title: 'Free Shipping', desc: 'On orders over $100' },
               { Icon: RefreshCw, title: 'Easy Returns', desc: '30-day return policy' },
@@ -305,32 +323,38 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Categories ── */}
-      {categories.length > 0 && (
-        <section className="section reveal">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <p style={{ fontSize: '0.75rem', letterSpacing: '0.25em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Browse by</p>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600' }}>
-                Shop <span className="text-gold">Categories</span>
-              </h2>
-            </div>
-            <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
-              {categories.map((cat: any) => (
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="section"
+      >
+        <div className="container">
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <p style={{ fontSize: '0.75rem', letterSpacing: '0.25em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Browse by</p>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600' }}>
+              Shop <span className="text-gold">Categories</span>
+            </h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+            {loading ? (
+              [...Array(4)].map((_, i) => (
+                <div key={i} className="skeleton" style={{ aspectRatio: '1/1', borderRadius: '8px' }} />
+              ))
+            ) : categories.length === 0 ? (
+              <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', color: 'var(--color-muted)' }}>No categories available.</div>
+            ) : (
+              categories.map((cat: any) => (
                 <Link key={cat._id} href={`/shop?category=${cat.name.toLowerCase()}`} style={{ display: 'block' }}>
-                  <div style={{
-                    position: 'relative', aspectRatio: '1/1', borderRadius: '8px', overflow: 'hidden',
-                    border: '1px solid var(--color-border)', transition: 'all 0.3s',
-                  }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--color-accent)';
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--color-border)';
-                      e.currentTarget.style.transform = 'translateY(0)';
+                  <motion.div 
+                    whileHover={{ y: -5 }}
+                    style={{
+                      position: 'relative', aspectRatio: '1/1', borderRadius: '8px', overflow: 'hidden',
+                      border: '1px solid var(--color-border)', transition: 'all 0.3s',
                     }}
                   >
                     <img src={cat.image} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -338,20 +362,28 @@ export default function HomePage() {
                     <div style={{ position: 'absolute', bottom: '1.25rem', left: '1.25rem' }}>
                       <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: '600', color: 'white' }}>{cat.name}</h3>
                     </div>
-                  </div>
+                  </motion.div>
                 </Link>
-              ))}
-            </div>
+              ))
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </motion.section>
 
       {/* ── Seasonal Deal Sections ── */}
       {!loading && Object.keys(seasonalData).map((season, idx) => (
-        <section key={season} className="section" style={{ 
-          background: idx % 2 === 0 ? 'rgba(201,168,76,0.02)' : 'transparent',
-          borderTop: '1px solid var(--color-border)'
-        }}>
+        <motion.section 
+          key={season} 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="section" 
+          style={{ 
+            background: idx % 2 === 0 ? 'rgba(201,168,76,0.02)' : 'transparent',
+            borderTop: '1px solid var(--color-border)'
+          }}
+        >
           <div className="container">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
@@ -365,14 +397,25 @@ export default function HomePage() {
               </Link>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
-              {seasonalData[season].map((p) => <ProductCard key={p._id} product={p} />)}
+              {loading ? (
+                [...Array(4)].map((_, i) => <ProductSkeleton key={i} />)
+              ) : (
+                seasonalData[season].map((p) => <ProductCard key={p._id} product={p} />)
+              )}
             </div>
           </div>
-        </section>
+        </motion.section>
       ))}
 
       {/* ── Featured Products ── */}
-      <section className="section reveal" style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}>
+      <motion.section 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="section" 
+        style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}
+      >
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
@@ -387,18 +430,20 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <LoadingSpinner />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+              {[...Array(4)].map((_, i) => <ProductSkeleton key={i} />)}
+            </div>
           ) : products.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--color-muted)' }}>
               <p>No products yet. Check back soon!</p>
             </div>
           ) : (
-            <div className="reveal-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+            <motion.div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
               {products.map((p) => <ProductCard key={p._id} product={p} />)}
-            </div>
+            </motion.div>
           )}
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Banner CTA ── */}
       <section style={{

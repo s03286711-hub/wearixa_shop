@@ -78,7 +78,7 @@ export default function LoginPage() {
         {/* Background glow */}
         <div style={{ position: 'absolute', top: '20%', right: '10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%)', borderRadius: '50%', zIndex: -1 }} />
 
-        <div style={{ width: '100%', maxWidth: '400px' }} className="reveal">
+        <div style={{ width: '100%', maxWidth: '400px' }}>
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <Link href="/">
