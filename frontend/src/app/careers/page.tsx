@@ -101,16 +101,21 @@ export default function CareersPage() {
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0 }
                 }}
+                whileHover={{ y: -10, borderColor: 'var(--color-accent)' }}
                 className="glass"
-                style={{ padding: '4rem 2rem', borderRadius: '24px', textAlign: 'center', transition: 'all 0.3s' }}
+                style={{ padding: '4rem 2rem', borderRadius: '24px', textAlign: 'center', transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', border: '1px solid var(--color-border)' }}
               >
-                <div style={{ 
-                  width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', 
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem',
-                  border: '1px solid rgba(201,168,76,0.2)'
-                }}>
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  style={{ 
+                    width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem',
+                    border: '1px solid rgba(201,168,76,0.2)', transition: 'all 0.3s'
+                  }}
+                  className="icon-container"
+                >
                   <val.Icon size={28} style={{ color: 'var(--color-accent)' }} />
-                </div>
+                </motion.div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: '700', marginBottom: '1.25rem' }}>{val.title}</h3>
                 <p style={{ color: 'var(--color-muted)', fontSize: '0.95rem', lineHeight: '1.7' }}>{val.desc}</p>
               </motion.div>
@@ -125,12 +130,14 @@ export default function CareersPage() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            whileHover={{ scale: 1.01, boxShadow: '0 30px 60px rgba(0,0,0,0.4)' }}
             viewport={{ once: true }}
             className="glass" 
             style={{ 
               padding: '4rem', borderRadius: '24px', border: '1px solid rgba(201,168,76,0.2)',
               display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
-              background: 'linear-gradient(135deg, rgba(20,20,40,0.4) 0%, rgba(10,10,10,0.4) 100%)'
+              background: 'linear-gradient(135deg, rgba(20,20,40,0.4) 0%, rgba(10,10,10,0.4) 100%)',
+              transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>

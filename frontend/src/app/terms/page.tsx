@@ -43,23 +43,28 @@ export default function TermsPage() {
               <button
                 key={s.id}
                 onClick={() => scrollToSection(s.id)}
+                className="footer-link"
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px', padding: '1rem', borderRadius: '8px',
                   background: 'rgba(255,255,255,0.03)', border: '1px solid transparent', color: 'var(--color-muted)',
-                  cursor: 'pointer', textAlign: 'left', transition: 'all 0.3s', fontSize: '0.9rem'
+                  cursor: 'pointer', transition: 'all 0.3s', textAlign: 'left'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'rgba(201,168,76,0.05)';
                   e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)';
                   e.currentTarget.style.color = 'var(--color-accent)';
+                  const icon = e.currentTarget.querySelector('svg');
+                  if (icon) icon.style.transform = 'scale(1.1)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
                   e.currentTarget.style.borderColor = 'transparent';
                   e.currentTarget.style.color = 'var(--color-muted)';
+                  const icon = e.currentTarget.querySelector('svg');
+                  if (icon) icon.style.transform = 'scale(1)';
                 }}
               >
-                <s.icon size={16} />
+                <s.icon size={16} style={{ transition: 'transform 0.3s' }} />
                 {s.title.split('. ')[1]}
               </button>
             ))}

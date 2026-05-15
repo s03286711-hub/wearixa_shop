@@ -96,24 +96,36 @@ export default function PressPage() {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
+              whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}
               viewport={{ once: true }}
               className="glass" 
-              style={{ padding: '2rem', borderRadius: '20px', background: 'rgba(201,168,76,0.05)' }}
+              style={{ padding: '2.5rem 2rem', borderRadius: '24px', background: 'rgba(201,168,76,0.05)', transition: 'all 0.4s' }}
             >
-              <h3 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '1.5rem' }}>Media Kit</h3>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '1.5rem', color: 'var(--color-accent)' }}>Media Kit</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0.75rem 1rem', fontSize: '0.85rem' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Download size={16} /> Brand Logos</span>
-                  <span style={{ color: 'var(--color-muted)', fontSize: '0.7rem' }}>2.4 MB</span>
-                </button>
-                <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0.75rem 1rem', fontSize: '0.85rem' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><ImageIcon size={16} /> Product Photos</span>
-                  <span style={{ color: 'var(--color-muted)', fontSize: '0.7rem' }}>148 MB</span>
-                </button>
-                <button className="btn-outline" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0.75rem 1rem', fontSize: '0.85rem' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><FileText size={16} /> Fact Sheet</span>
-                  <span style={{ color: 'var(--color-muted)', fontSize: '0.7rem' }}>0.5 MB</span>
-                </button>
+                {[
+                  { icon: Download, label: 'Brand Logos', size: '2.4 MB' },
+                  { icon: ImageIcon, label: 'Product Photos', size: '148 MB' },
+                  { icon: FileText, label: 'Fact Sheet', size: '0.5 MB' }
+                ].map((item, i) => (
+                  <motion.button 
+                    key={item.label}
+                    whileHover={{ x: 5, backgroundColor: 'rgba(255,255,255,0.05)' }}
+                    whileTap={{ scale: 0.98 }}
+                    className="btn-outline" 
+                    style={{ 
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                      width: '100%', padding: '0.85rem 1.25rem', fontSize: '0.85rem',
+                      borderRadius: '12px', border: '1px solid rgba(201,168,76,0.2)', transition: 'all 0.2s'
+                    }}
+                  >
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <item.icon size={18} style={{ color: 'var(--color-accent)' }} /> 
+                      {item.label}
+                    </span>
+                    <span style={{ color: 'var(--color-muted)', fontSize: '0.7rem', fontWeight: '600' }}>{item.size}</span>
+                  </motion.button>
+                ))}
               </div>
             </motion.div>
 

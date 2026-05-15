@@ -88,10 +88,16 @@ export default function SustainabilityPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -10, borderColor: p.color, boxShadow: `0 20px 40px ${p.color}15` }}
                 className="glass"
-                style={{ padding: '3.5rem 2.5rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', transition: 'all 0.3s' }}
+                style={{ padding: '3.5rem 2.5rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
               >
-                <p.Icon size={40} style={{ color: p.color, marginBottom: '2rem' }} />
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <p.Icon size={40} style={{ color: p.color, marginBottom: '2rem' }} />
+                </motion.div>
                 <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1.25rem' }}>{p.title}</h3>
                 <p style={{ color: 'var(--color-muted)', lineHeight: '1.7', fontSize: '0.95rem' }}>{p.desc}</p>
               </motion.div>
@@ -103,10 +109,15 @@ export default function SustainabilityPage() {
       {/* ── Transparency Banner ── */}
       <section style={{ padding: '6rem 0', background: 'rgba(74,222,128,0.03)' }}>
         <div className="container">
-          <div className="glass" style={{ 
-            padding: '4rem', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: '3rem', border: '1px solid rgba(74,222,128,0.2)'
-          }}>
+          <motion.div 
+            whileHover={{ scale: 1.01, boxShadow: '0 30px 60px rgba(0,0,0,0.4)' }}
+            className="glass" 
+            style={{ 
+              padding: '4rem', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              flexWrap: 'wrap', gap: '3rem', border: '1px solid rgba(74,222,128,0.2)',
+              transition: 'all 0.4s'
+            }}
+          >
             <div style={{ flex: '1', minWidth: '300px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#4ade80', marginBottom: '1rem' }}>
                 <ShieldCheck size={20} />
@@ -118,9 +129,16 @@ export default function SustainabilityPage() {
               </p>
             </div>
             <div style={{ flexShrink: 0 }}>
-              <button className="btn-primary" style={{ background: '#4ade80', border: 'none', padding: '1.2rem 3rem' }}>Read Impact Report</button>
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-primary" 
+                style={{ background: '#4ade80', border: 'none', padding: '1.2rem 3rem', borderRadius: '40px', color: '#0d0d0d', fontWeight: '700' }}
+              >
+                Read Impact Report
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
