@@ -1,5 +1,7 @@
 const Transaction = require('../models/Transaction');
+const Order = require('../models/Order');
 const User = require('../models/User');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // @desc    Initiate a deposit to wallet
 // @route   POST /api/payments/deposit
@@ -43,7 +45,43 @@ const depositFunds = async (req, res) => {
             description: `Deposit via ${method}`,
         });
 
-        // We return the simulated payment URL. For mock, we'll just redirect to the verification endpoint after a delay.
+        // REAL STRIPE INTEGRATION
+        if (method === 'STRIPE') {
+            try {
+                const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ['card'],
+                    line_items: [{
+                        price_data: {
+                            currency: 'usd', // Adjust currency as needed
+                            product_data: {
+                                name: 'Wallet Deposit',
+                                description: `Ref: ${referenceId}`,
+                            },
+                            unit_amount: Math.round(amount * 100), // Stripe expects cents
+                        },
+                        quantity: 1,
+                    }],
+                    mode: 'payment',
+                    success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile/wallet?status=COMPLETED&ref=${referenceId}`,
+                    cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile/wallet?status=CANCELLED`,
+                    metadata: {
+                        referenceId: referenceId,
+                        userId: req.user._id.toString()
+                    }
+                });
+
+                return res.status(200).json({ 
+                    success: true, 
+                    referenceId, 
+                    checkoutUrl: session.url 
+                });
+            } catch (stripeError) {
+                console.error("Stripe Session Error:", stripeError);
+                return res.status(500).json({ message: 'Error creating Stripe session' });
+            }
+        }
+
+        // We return the simulated payment URL for other methods (Mock).
         const mockCheckoutUrl = `/api/payments/mock-checkout?ref=${referenceId}&method=${method}&amount=${amount}`;
 
         res.status(200).json({ 
@@ -129,6 +167,57 @@ const verifyPayment = async (req, res) => {
     }
 };
 
+// @desc    Stripe Webhook Handler
+// @route   POST /api/payments/stripe-webhook
+// @access  Public
+const stripeWebhook = async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (err) {
+        console.error(`Webhook Error: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        const referenceId = session.metadata.referenceId;
+        const orderId = session.metadata.orderId;
+
+        if (referenceId) {
+            // Wallet Deposit logic
+            const transaction = await Transaction.findOne({ referenceId });
+            if (transaction && transaction.status === 'PENDING') {
+                transaction.status = 'COMPLETED';
+                await transaction.save();
+
+                const user = await User.findById(transaction.user);
+                user.walletBalance += transaction.amount;
+                await user.save();
+                console.log(`Wallet Deposit successful for Ref: ${referenceId}`);
+            }
+        } else if (orderId) {
+            // Direct Order Payment logic
+            const order = await Order.findById(orderId);
+            if (order && !order.isPaid) {
+                order.isPaid = true;
+                order.paidAt = new Date();
+                order.paymentResult = {
+                    id: session.id,
+                    status: 'COMPLETED',
+                    email_address: session.customer_details?.email
+                };
+                await order.save();
+                console.log(`Order Payment successful for Order ID: ${orderId}`);
+            }
+        }
+    }
+
+    res.json({ received: true });
+};
+
 // @desc    Process wallet cashback (5% reward on wallet payments)
 // @route   POST /api/payments/cashback
 // @access  Private
@@ -187,6 +276,7 @@ module.exports = {
     depositFunds,
     mockCheckout,
     verifyPayment,
+    stripeWebhook,
     processCashback,
     getTransactions
 };

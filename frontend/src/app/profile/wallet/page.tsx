@@ -55,8 +55,14 @@ function WalletContent() {
         method: depositMethod,
         paymentDetails: paymentData // Sending the actual form data to backend
       });
-      // Redirect to the mock checkout page
-      window.location.href = `http://localhost:5000${data.checkoutUrl}`;
+      // Redirect to the checkout page
+      if (data.checkoutUrl.startsWith('http')) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        // Use the API base URL for relative mock redirects
+        const baseUrl = api.defaults.baseURL?.replace('/api', '') || 'http://localhost:5000';
+        window.location.href = `${baseUrl}${data.checkoutUrl}`;
+      }
     } catch (err) {
       console.error(err);
       alert('Failed to initiate deposit');

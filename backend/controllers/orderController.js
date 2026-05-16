@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -55,6 +56,42 @@ const addOrderItems = async (req, res) => {
         });
 
         const createdOrder = await order.save();
+
+        // If Stripe, create a session
+        if (paymentMethod === 'stripe') {
+            try {
+                const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ['card'],
+                    line_items: orderItems.map(item => ({
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: item.name,
+                                images: [item.image.startsWith('http') ? item.image : `${process.env.BACKEND_URL || 'http://localhost:5000'}${item.image}`],
+                            },
+                            unit_amount: Math.round(item.price * 100),
+                        },
+                        quantity: item.qty,
+                    })),
+                    mode: 'payment',
+                    success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/orders?status=COMPLETED&orderId=${createdOrder._id}`,
+                    cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/checkout?status=CANCELLED`,
+                    metadata: {
+                        orderId: createdOrder._id.toString(),
+                        userId: req.user._id.toString()
+                    }
+                });
+
+                return res.status(201).json({
+                    ...createdOrder.toObject(),
+                    checkoutUrl: session.url
+                });
+            } catch (stripeError) {
+                console.error("Stripe Order Session Error:", stripeError);
+                return res.status(500).json({ message: 'Error creating Stripe checkout for order' });
+            }
+        }
+
         res.status(201).json(createdOrder);
     } catch (error) {
         console.error(error);

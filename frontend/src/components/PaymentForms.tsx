@@ -11,7 +11,9 @@ export default function PaymentForms({ method, onChange }: PaymentFormsProps) {
   const [mobileData, setMobileData] = useState({ phone: '', cnic: '' });
 
   useEffect(() => {
-    if (method === 'stripe' || method === 'card') {
+    if (method === 'stripe') {
+      onChange({}, true); // Stripe Checkout happens on Stripe's page, so it's always valid here
+    } else if (method === 'card') {
       const isValid = cardData.number.length >= 15 && cardData.expiry.length === 5 && cardData.cvv.length >= 3;
       onChange(cardData, isValid);
     } else if (method === 'jazzcash' || method === 'easypaisa') {
@@ -27,7 +29,18 @@ export default function PaymentForms({ method, onChange }: PaymentFormsProps) {
   return (
     <div style={{ marginTop: '1rem', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-border)', borderRadius: '8px' }}>
       
-      {(method === 'stripe' || method === 'card') && (
+      {method === 'stripe' && (
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', color: 'var(--color-accent)', marginBottom: '0.5rem' }}>
+            <Lock size={16} /> <span style={{ fontWeight: '600' }}>Secure Stripe Checkout</span>
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', margin: 0 }}>
+            You will be redirected to Stripe to securely complete your credit card payment.
+          </p>
+        </div>
+      )}
+
+      {method === 'card' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>
             <Lock size={14} /> <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Secure Card Payment</span>

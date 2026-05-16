@@ -71,6 +71,13 @@ export default function CheckoutPage() {
         totalPrice: grandTotal,
       };
       const created = await orderService.create(orderData);
+      
+      // Handle Stripe Redirect
+      if (payment.method === 'stripe' && created.checkoutUrl) {
+        window.location.href = created.checkoutUrl;
+        return; // Stop execution here as we are redirecting
+      }
+
       setOrderId(created._id);
 
       // If promo was applied, mark it as used

@@ -14,6 +14,10 @@ app.use(cors({
     origin: true,
     credentials: true
 }));
+
+const { stripeWebhook } = require('./controllers/paymentController');
+app.post('/api/payments/stripe-webhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
