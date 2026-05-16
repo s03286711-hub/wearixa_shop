@@ -1,7 +1,11 @@
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
+
+if (!stripe) {
+    console.warn('⚠️  WARNING: STRIPE_SECRET_KEY is missing in Order Controller.');
+}
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -59,6 +63,9 @@ const addOrderItems = async (req, res) => {
 
         // If Stripe, create a session
         if (paymentMethod === 'stripe') {
+            if (!stripe) {
+                return res.status(500).json({ message: 'Stripe is not configured on the server.' });
+            }
             try {
                 const session = await stripe.checkout.sessions.create({
                     payment_method_types: ['card'],

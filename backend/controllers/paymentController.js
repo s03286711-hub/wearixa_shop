@@ -1,7 +1,11 @@
 const Transaction = require('../models/Transaction');
 const Order = require('../models/Order');
 const User = require('../models/User');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
+
+if (!stripe) {
+    console.warn('⚠️  WARNING: STRIPE_SECRET_KEY is missing. Stripe payments will not work.');
+}
 
 // @desc    Initiate a deposit to wallet
 // @route   POST /api/payments/deposit
@@ -47,6 +51,9 @@ const depositFunds = async (req, res) => {
 
         // REAL STRIPE INTEGRATION
         if (method === 'STRIPE') {
+            if (!stripe) {
+                return res.status(500).json({ message: 'Stripe is not configured on the server.' });
+            }
             try {
                 const session = await stripe.checkout.sessions.create({
                     payment_method_types: ['card'],
