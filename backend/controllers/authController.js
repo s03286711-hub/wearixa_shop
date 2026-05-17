@@ -349,4 +349,32 @@ const googleAuth = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { loginUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, forgotPassword, resetPassword, googleAuth };
+// @desc    Update user role (Admin only)
+// @route   PUT /api/auth/users/:id/role
+// @access  Private/Admin
+const updateUserRole = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        if (user._id.toString() === req.user._id.toString()) {
+            res.status(400);
+            throw new Error('You cannot change your own admin role');
+        }
+
+        const { role } = req.body;
+        if (role && ['user', 'admin'].includes(role)) {
+            user.role = role;
+            user.isAdmin = (role === 'admin');
+            await user.save();
+            res.json({ message: 'User role updated successfully', user: { _id: user._id, role: user.role, isAdmin: user.isAdmin } });
+        } else {
+            res.status(400);
+            throw new Error('Invalid role specified');
+        }
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+});
+
+module.exports = { loginUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser, forgotPassword, resetPassword, googleAuth, updateUserRole };

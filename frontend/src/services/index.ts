@@ -40,6 +40,11 @@ export const authService = {
     return data;
   },
 
+  updateUserRole: async (id: string, role: string) => {
+    const { data } = await api.put(`/auth/users/${id}/role`, { role });
+    return data;
+  },
+
   googleLogin: async (token: string, isAccessToken: boolean = false) => {
     const { data } = await api.post('/auth/google', { token, isAccessToken });
     return data;
