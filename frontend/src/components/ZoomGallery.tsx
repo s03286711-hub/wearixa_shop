@@ -19,6 +19,11 @@ export default function ZoomGallery({ images, title }: ZoomGalleryProps) {
 
   const ZOOM = 2.5;
   const LENS = 140; // lens diameter px
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   useEffect(() => {
     if (fullScreen) {
@@ -102,7 +107,7 @@ export default function ZoomGallery({ images, title }: ZoomGalleryProps) {
             animate={{ opacity: isHovering ? 0 : 1, scale: isHovering ? 0.9 : 1 }}
             style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '6px 10px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', pointerEvents: 'none' }}
           >
-            <ZoomIn size={13} /> Hover to zoom
+            <ZoomIn size={13} /> {isTouch ? 'Tap to expand' : 'Hover to zoom'}
           </motion.div>
 
           {/* Image counter */}

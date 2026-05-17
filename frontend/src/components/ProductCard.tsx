@@ -95,8 +95,26 @@ export default function ProductCard({ product, onQuickView }: { product: Product
             transition: 'opacity 0.3s ease',
           }} />
 
-          {/* Quick actions */}
-          <div style={{
+          {/* Mobile Wishlist Button */}
+          <div className="mobile-wishlist-btn" style={{
+            position: 'absolute', top: '0.75rem', right: '0.75rem', zIndex: 10
+          }}>
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={handleWishlist}
+              style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                background: wishlisted ? 'rgba(248,113,113,0.95)' : 'rgba(0,0,0,0.5)',
+                border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                backdropFilter: 'blur(8px)', transition: 'all 0.3s',
+              }}
+            >
+              <Heart size={14} fill={wishlisted ? 'white' : 'none'} color="white" />
+            </motion.button>
+          </div>
+
+          {/* Quick actions (Desktop) */}
+          <div className="desktop-quick-actions" style={{
             position: 'absolute', top: '1rem', right: '1rem',
             display: 'flex', flexDirection: 'column', gap: '0.5rem',
             opacity: hovered ? 1 : 0,
@@ -154,8 +172,8 @@ export default function ProductCard({ product, onQuickView }: { product: Product
             </div>
           )}
 
-          {/* Add to cart button */}
-          <div style={{
+          {/* Add to cart button (Desktop) */}
+          <div className="desktop-add-cart-btn" style={{
             position: 'absolute', bottom: '1rem', left: '1rem', right: '1rem',
             opacity: hovered ? 1 : 0,
             transform: hovered ? 'translateY(0)' : 'translateY(10px)',
@@ -220,19 +238,60 @@ export default function ProductCard({ product, onQuickView }: { product: Product
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {product.discountPrice && product.discountPrice > 0 ? (
-                <>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <span className="price">${product.discountPrice.toFixed(2)}</span>
-                  <span style={{ textDecoration: 'line-through', color: 'var(--color-muted)', fontSize: '0.8rem' }}>
+                  <span style={{ textDecoration: 'line-through', color: 'var(--color-muted)', fontSize: '0.75rem' }}>
                     ${product.price.toFixed(2)}
                   </span>
-                </>
+                </div>
               ) : (
                 <span className="price">${product.price.toFixed(2)}</span>
               )}
             </div>
+            {/* Mobile Add to Cart Button */}
+            <div className="mobile-add-to-cart">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+                style={{
+                  background: added ? 'rgba(74,222,128,0.2)' : 'rgba(201,168,76,0.15)',
+                  border: added ? '1px solid rgba(74,222,128,0.5)' : '1px solid rgba(201,168,76,0.4)',
+                  color: added ? '#4ade80' : 'var(--color-accent)',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: product.stock === 0 ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s'
+                }}
+              >
+                <ShoppingBag size={14} />
+              </motion.button>
+            </div>
           </div>
         </div>
       </div>
+      <style>{`
+        @media (hover: hover) and (min-width: 1025px) {
+          .mobile-wishlist-btn {
+            display: none !important;
+          }
+          .mobile-add-to-cart {
+            display: none !important;
+          }
+        }
+        @media (max-width: 1024px) {
+          .desktop-quick-actions {
+            display: none !important;
+          }
+          .desktop-add-cart-btn {
+            display: none !important;
+          }
+        }
+      `}</style>
     </Link>
   );
 }

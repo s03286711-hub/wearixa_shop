@@ -454,7 +454,10 @@ export default function ProductDetailPage() {
 
       <style>{`
         @media (max-width: 768px) {
-          .product-grid { grid-template-columns: 1fr !important; }
+          .product-grid { 
+            grid-template-columns: 1fr !important; 
+            gap: 1.5rem !important;
+          }
         }
       `}</style>
     </div>

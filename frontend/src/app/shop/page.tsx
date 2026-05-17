@@ -64,6 +64,19 @@ function ShopPageContent() {
   const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [metadata, setMetadata] = useState<Metadata>({ colors: [], sizes: [], materials: [] });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [filters, setFilters] = useState({
     keyword: searchParams.get('keyword') || '',
@@ -120,22 +133,26 @@ function ShopPageContent() {
         {/* ── Header ── */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ marginBottom: '2.5rem' }}>
           <p style={{ fontSize: '0.7rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Discover</p>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600' }}>
-              {filters.keyword ? `Search: "${filters.keyword}"` : filters.dealType ? filters.dealType : 'All Collections'}
-            </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <span style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>{total} products</span>
+          <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', width: isMobile ? '100%' : 'auto' }}>
+              <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600' }}>
+                {filters.keyword ? `Search: "${filters.keyword}"` : filters.dealType ? filters.dealType : 'All Collections'}
+              </h1>
+              {isMobile && <span style={{ color: 'var(--color-muted)', fontSize: '0.85rem', marginLeft: '1rem' }}>{total} products</span>}
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', width: isMobile ? '100%' : 'auto' }}>
+              {!isMobile && <span style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>{total} products</span>}
               {/* Sort */}
               <select value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value }))}
-                className="input-field" style={{ width: 'auto', fontSize: '0.85rem', padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                className="input-field" style={{ width: isMobile ? '50%' : 'auto', fontSize: '0.85rem', padding: '0.65rem 1rem', cursor: 'pointer', height: '42px', display: 'flex', alignItems: 'center' }}>
                 <option value="">Sort By</option>
                 {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
-              <button onClick={() => setSidebarOpen(o => !o)} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', transition: 'all 0.3s' }}
+              <button onClick={() => setSidebarOpen(o => !o)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', background: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text)', padding: '0.65rem 1rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', transition: 'all 0.3s', width: isMobile ? '50%' : 'auto', height: '42px' }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--color-border)')}>
-                <SlidersHorizontal size={15} /> Filters
+                <SlidersHorizontal size={14} /> Filters
                 {activeFilterCount > 0 && <span className="badge">{activeFilterCount}</span>}
               </button>
             </div>
@@ -163,14 +180,69 @@ function ShopPageContent() {
           </AnimatePresence>
         </motion.div>
 
+        {/* Backdrop Overlay for Mobile Filters */}
+        <AnimatePresence>
+          {isMobile && sidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.6)',
+                backdropFilter: 'blur(4px)',
+                zIndex: 999,
+              }}
+            />
+          )}
+        </AnimatePresence>
+
         {/* ── Layout ── */}
-        <div className="shop-layout" style={{ display: 'grid', gridTemplateColumns: sidebarOpen ? '260px 1fr' : '1fr', gap: '3rem', alignItems: 'start' }}>
+        <div className="shop-layout" style={{ display: 'grid', gridTemplateColumns: (!isMobile && sidebarOpen) ? '260px 1fr' : '1fr', gap: isMobile ? '1.5rem' : '3rem', alignItems: 'start' }}>
 
           {/* ── Sidebar ── */}
           <AnimatePresence>
             {sidebarOpen && (
-              <motion.aside initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}
-                style={{ position: 'sticky', top: '100px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-border)', borderRadius: '16px', padding: '1.75rem' }}>
+              <motion.aside
+                initial={{ opacity: 0, x: isMobile ? -300 : -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: isMobile ? -300 : -30 }}
+                transition={{ duration: 0.3 }}
+                style={isMobile ? {
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  width: '300px',
+                  maxWidth: '85vw',
+                  background: 'rgba(13,13,13,0.96)',
+                  backdropFilter: 'blur(25px)',
+                  borderRight: '1px solid var(--color-border)',
+                  padding: '2rem 1.75rem',
+                  zIndex: 1000,
+                  overflowY: 'auto',
+                  boxShadow: '20px 0 40px rgba(0,0,0,0.5)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                } : {
+                  position: 'sticky',
+                  top: '100px',
+                  background: 'rgba(255,255,255,0.02)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: '16px',
+                  padding: '1.75rem',
+                }}
+              >
+                {isMobile && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '1rem' }}>
+                    <span style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: '700', color: 'var(--color-accent)' }}>Filters</span>
+                    <button onClick={() => setSidebarOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--color-text)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <X size={20} />
+                    </button>
+                  </div>
+                )}
                 
                 {/* Search */}
                 <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
@@ -257,7 +329,7 @@ function ShopPageContent() {
                 </FilterSection>
 
                 {activeFilterCount > 0 && (
-                  <button onClick={clearFilters} className="btn-outline" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '0.8rem', padding: '0.6rem' }}>
+                  <button onClick={clearFilters} className="btn-outline" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '0.8rem', padding: '0.6rem', marginTop: '1rem' }}>
                     <X size={14} /> Clear All Filters
                   </button>
                 )}
