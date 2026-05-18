@@ -17,6 +17,7 @@ export default function AdminOrdersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('All');
   const [expandedOrders, setExpandedOrders] = useState<string[]>([]);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   const fetchOrders = () => {
     setLoading(true);
@@ -165,29 +166,55 @@ export default function AdminOrdersPage() {
 
       {/* 2. Analytical Statistics Summary */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
-        {statCards.map((card, i) => (
-          <div key={card.label} className="glass" style={{
-            borderRadius: '16px',
-            padding: '1.25rem 1.5rem',
-            background: 'rgba(13, 13, 13, 0.4)',
-            border: `1px solid ${card.border}`,
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
-            position: 'relative',
-            overflow: 'hidden',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}>
-            <div>
-              <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', letterSpacing: '0.05em' }}>[{card.sub}]</p>
-              <p style={{ fontSize: '0.72rem', color: '#fff', fontWeight: '500', marginTop: '2px', textTransform: 'uppercase' }}>{card.label}</p>
-              <p style={{ fontSize: '1.5rem', fontWeight: '700', color: card.color, fontFamily: 'monospace', marginTop: '6px', lineHeight: 1.1 }}>{card.value}</p>
+        {statCards.map((card, i) => {
+          const isHovered = hoveredCard === i;
+          return (
+            <div 
+              key={card.label} 
+              className="glass"
+              onMouseEnter={() => setHoveredCard(i)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                borderRadius: '16px',
+                padding: '1.25rem 1.5rem',
+                background: isHovered ? 'rgba(20, 20, 20, 0.65)' : 'rgba(13, 13, 13, 0.4)',
+                border: `1px solid ${isHovered ? card.color : card.border}`,
+                boxShadow: isHovered 
+                  ? `0 10px 25px -5px ${card.color}22, 0 8px 16px -6px ${card.color}11, inset 0 0 12px ${card.color}0a`
+                  : '0 4px 20px rgba(0, 0, 0, 0.4)',
+                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <div>
+                <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', letterSpacing: '0.05em' }}>[{card.sub}]</p>
+                <p style={{ fontSize: '0.72rem', color: '#fff', fontWeight: '500', marginTop: '2px', textTransform: 'uppercase' }}>{card.label}</p>
+                <p style={{ fontSize: '1.5rem', fontWeight: '700', color: card.color, fontFamily: 'monospace', marginTop: '6px', lineHeight: 1.1 }}>{card.value}</p>
+              </div>
+              <div style={{ 
+                width: '36px', 
+                height: '36px', 
+                borderRadius: '8px', 
+                background: card.bg, 
+                border: `1px solid ${isHovered ? card.color : card.border}`, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                color: card.color,
+                transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}>
+                {card.icon}
+              </div>
             </div>
-            <div style={{ width: '36px', height: '36px', borderRadius: '8px', background: card.bg, border: `1px solid ${card.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: card.color }}>
-              {card.icon}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 3. Table Filters, Search & Command Actions */}
@@ -282,12 +309,27 @@ export default function AdminOrdersPage() {
                     const isExpanded = expandedOrders.includes(order._id);
                     return (
                       <Fragment key={order._id}>
-                        <tr style={{ 
-                          borderBottom: '1px solid rgba(255,255,255,0.03)',
-                          borderLeft: isExpanded ? '3px solid var(--color-accent)' : '3px solid transparent',
-                          background: isExpanded ? 'rgba(255,255,255,0.01)' : 'transparent',
-                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
-                        }}>
+                        <tr 
+                          style={{ 
+                            borderBottom: '1px solid rgba(255,255,255,0.03)',
+                            borderLeft: isExpanded ? '3px solid var(--color-accent)' : '3px solid transparent',
+                            background: isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent',
+                            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                            cursor: 'pointer'
+                          }}
+                          onMouseEnter={e => {
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.015)';
+                            if (!isExpanded) {
+                              e.currentTarget.style.borderLeftColor = 'rgba(201,168,76,0.35)';
+                            }
+                          }}
+                          onMouseLeave={e => {
+                            e.currentTarget.style.background = isExpanded ? 'rgba(255,255,255,0.02)' : 'transparent';
+                            if (!isExpanded) {
+                              e.currentTarget.style.borderLeftColor = 'transparent';
+                            }
+                          }}
+                        >
                           
                           {/* Expand Trigger Button */}
                           <td style={{ padding: '0.9rem 0 0.9rem 1rem', textAlign: 'center' }}>
@@ -469,7 +511,29 @@ export default function AdminOrdersPage() {
                                   </h4>
                                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                     {order.orderItems?.map((item: any, idx: number) => (
-                                      <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'center', background: 'rgba(255,255,255,0.015)', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
+                                      <div 
+                                        key={idx} 
+                                        style={{ 
+                                          display: 'flex', 
+                                          gap: '1rem', 
+                                          alignItems: 'center', 
+                                          background: 'rgba(255,255,255,0.015)', 
+                                          padding: '8px 12px', 
+                                          borderRadius: '8px', 
+                                          border: '1px solid rgba(255,255,255,0.03)',
+                                          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                                        }}
+                                        onMouseEnter={e => {
+                                          e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
+                                          e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)';
+                                          e.currentTarget.style.transform = 'translateX(4px)';
+                                        }}
+                                        onMouseLeave={e => {
+                                          e.currentTarget.style.background = 'rgba(255,255,255,0.015)';
+                                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.03)';
+                                          e.currentTarget.style.transform = 'translateX(0)';
+                                        }}
+                                      >
                                         {item.image ? (
                                           <img src={item.image} alt={item.name} style={{ width: '40px', height: '50px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.05)' }} />
                                         ) : (
