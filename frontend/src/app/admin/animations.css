@@ -40,12 +40,27 @@
 }
 
 /* 2. Cyber KPI / Stat Cards */
-.kpi-card {
+.kpi-card,
+.kpi-card-cyan,
+.kpi-card-purple,
+.kpi-card-green,
+.kpi-card-orange,
+.kpi-card-rose,
+.kpi-card-blue {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
-.kpi-card:hover {
+.kpi-card:hover,
+.kpi-card-cyan:hover,
+.kpi-card-purple:hover,
+.kpi-card-green:hover,
+.kpi-card-orange:hover,
+.kpi-card-rose:hover,
+.kpi-card-blue:hover {
   transform: translateY(-5px) scale(1.015);
+}
+
+.kpi-card:hover {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(201, 168, 76, 0.12) !important;
   border-color: var(--color-accent) !important;
 }
