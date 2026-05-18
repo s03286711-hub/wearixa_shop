@@ -202,7 +202,7 @@ export default function AdminProductsPage() {
       {/* Product Modal */}
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '2rem' }}>
-          <div className="glass animate-fade-in" style={{ width: '100%', maxWidth: '600px', borderRadius: '16px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="glass animate-fade-in admin-modal-content" style={{ width: '100%', maxWidth: '600px', borderRadius: '16px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, background: 'var(--color-surface)', zIndex: 1 }}>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem' }}>{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
               <button onClick={closeModal} disabled={submitting} style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.5 : 1 }}><X size={24} /></button>
@@ -232,7 +232,7 @@ export default function AdminProductsPage() {
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Description</label>
                 <textarea className="input-field" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4} required disabled={submitting} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
+              <div className="admin-form-grid-5">
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price ($)</label>
                   <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required disabled={submitting} />
@@ -282,7 +282,7 @@ export default function AdminProductsPage() {
                   <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
                 </div>
               )}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+              <div className="admin-form-grid-3">
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Category</label>
                   <select className="input-field" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} required disabled={submitting}>
@@ -438,7 +438,41 @@ export default function AdminProductsPage() {
         </div>
       )}
 
-      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .admin-form-grid-5 {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 1rem;
+        }
+        
+        .admin-form-grid-3 {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+          .admin-form-grid-5 {
+            grid-template-columns: 1fr !important;
+            gap: 0.75rem !important;
+          }
+          .admin-form-grid-3 {
+            grid-template-columns: 1fr !important;
+            gap: 0.75rem !important;
+          }
+          .admin-modal-content {
+            padding: 0.5rem !important;
+            width: 95% !important;
+            max-height: 95vh !important;
+          }
+          .admin-modal-content form {
+            padding: 1rem !important;
+            gap: 1rem !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

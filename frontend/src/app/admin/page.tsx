@@ -93,7 +93,7 @@ export default function AdminDashboard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* 1. Cybernetic Telemetry Header */}
-      <div className="glass" style={{
+      <div className="glass cyber-telemetry-header" style={{
         borderRadius: '16px',
         padding: '1.25rem 2rem',
         background: 'rgba(13, 13, 13, 0.45)',
@@ -118,9 +118,9 @@ export default function AdminDashboard() {
               Wearixa Command Deck
             </h1>
           </div>
-          <p style={{ color: 'var(--color-muted)', fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '4px', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <p style={{ color: 'var(--color-muted)', fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '4px', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <span>LAT: 40.7128° N // LON: 74.0060° W</span>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }}>|</span>
+            <span style={{ color: 'rgba(255,255,255,0.15)' }} className="hidden-mobile">|</span>
             <span style={{ color: '#4ade80', display: 'flex', alignItems: 'center', gap: '4px' }}>
               <ShieldCheck size={12} /> SECURE_NODE_ONLINE
             </span>
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Telemetry metadata section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div className="cyber-telemetry-meta" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
           {/* Uptime and latency info */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontFamily: 'monospace', fontSize: '0.68rem', color: 'var(--color-muted)' }}>
             <span>SYS_CORE_SECURE // V.2.4</span>
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
           </div>
           
           {/* Real-time UTC clock */}
-          <div style={{
+          <div className="cyber-clock-box" style={{
             background: 'rgba(255,255,255,0.03)',
             border: '1px solid rgba(255,255,255,0.05)',
             borderRadius: '8px',
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* 3. High-Tech Visual Charts Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.25rem' }}>
+      <div className="cyber-dashboard-grid">
         <div style={{ gridColumn: 'span 1' }}>
           <SalesTrendMatrix stats={stats} />
         </div>
@@ -255,17 +255,8 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Responsive adjustments for graphs */}
-      <style>{`
-        @media (max-width: 1024px) {
-          div[style*="gridTemplateColumns: 1.5fr 1fr"] {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
-
       {/* 4. Database Ledger (Recent Orders) & Live Logging Console */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.25rem' }}>
+      <div className="cyber-dashboard-grid">
         
         {/* Recent Orders LEDGER */}
         <div className="glass" style={{
@@ -385,9 +376,34 @@ export default function AdminDashboard() {
       </div>
 
       <style>{`
+        .cyber-dashboard-grid {
+          display: grid;
+          grid-template-columns: 1.5fr 1fr;
+          gap: 1.25rem;
+        }
+
         @media (max-width: 1024px) {
-          div[style*="gridTemplateColumns: 1.5fr 1fr"] {
+          .cyber-dashboard-grid {
             grid-template-columns: 1fr !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .cyber-telemetry-header {
+            padding: 1rem !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+          }
+          .cyber-telemetry-meta {
+            align-items: flex-start !important;
+            width: 100% !important;
+            justify-content: space-between !important;
+            flex-direction: row !important;
+          }
+          .cyber-clock-box {
+            width: 100% !important;
+            justify-content: center !important;
+            margin-top: 0.5rem !important;
           }
         }
       `}</style>

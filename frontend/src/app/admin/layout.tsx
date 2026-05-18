@@ -102,10 +102,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <style>{`
       @media (max-width: 768px) {
         .admin-layout { flex-direction: column !important; }
-        .admin-sidebar { width: 100% !important; height: auto !important; position: static !important; }
+        .admin-sidebar { width: 100% !important; height: auto !important; position: sticky !important; top: 0 !important; zIndex: 100 !important; }
         .admin-nav.closed { display: none !important; }
-        .admin-sidebar > div:last-child { display: none !important; } /* Hide logout block when stacked if needed, or we can leave it */
+        .admin-sidebar > div:last-child { border-top: none !important; padding: 0.5rem 1rem !important; }
+        .admin-sidebar > div:last-child button { padding: 0.5rem !important; }
         .admin-header { display: none !important; }
+        main { padding: 1rem !important; }
       }
     `}</style>
     </>
