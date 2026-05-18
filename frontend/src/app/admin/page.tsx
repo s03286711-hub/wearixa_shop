@@ -308,29 +308,39 @@ export default function AdminDashboard() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(0,0,0,0.15)' }}>
-                    {['TX_ID', 'Customer ID', 'Date', 'Gross Vol', 'Paid', 'Dispatched'].map(h => (
-                      <th key={h} style={{ padding: '0.875rem 1.25rem', textAlign: 'left', color: 'var(--color-muted)', fontWeight: '600', fontSize: '0.68rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>{h}</th>
+                    {['TX_ID', 'Customer', 'Date', 'Gross Vol', 'Paid', 'Dispatched'].map(h => (
+                      <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'var(--color-muted)', fontWeight: '600', fontSize: '0.68rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {recentOrders.map((order: any) => (
-                    <tr key={order._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.2s' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(201,168,76,0.02)')}
-                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                      <td style={{ padding: '0.9rem 1.25rem', fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--color-accent-light)' }}>
+                    <tr key={order._id} style={{ 
+                      borderBottom: '1px solid rgba(255,255,255,0.03)', 
+                      transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                      borderLeft: '3px solid transparent'
+                    }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.015)';
+                        e.currentTarget.style.borderLeftColor = 'var(--color-accent)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.borderLeftColor = 'transparent';
+                      }}>
+                      <td style={{ padding: '0.75rem 1rem', fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--color-accent-light)', whiteSpace: 'nowrap' }}>
                         #{order._id.slice(-8).toUpperCase()}
                       </td>
-                      <td style={{ padding: '0.9rem 1.25rem', color: '#eaeaea', fontWeight: '500' }}>
+                      <td style={{ padding: '0.75rem 1rem', color: '#eaeaea', fontWeight: '500', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', maxWidth: '140px' }}>
                         {order.user?.name || 'GUEST_USER'}
                       </td>
-                      <td style={{ padding: '0.9rem 1.25rem', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.72rem' }}>
+                      <td style={{ padding: '0.75rem 1rem', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
-                      <td style={{ padding: '0.9rem 1.25rem', fontWeight: '700', color: '#fff', fontFamily: 'monospace' }}>
+                      <td style={{ padding: '0.75rem 1rem', fontWeight: '700', color: '#fff', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
                         ${order.totalPrice.toFixed(2)}
                       </td>
-                      <td style={{ padding: '0.9rem 1.25rem' }}>
+                      <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
                         <span style={{ 
                           padding: '2px 8px', 
                           borderRadius: '4px', 
@@ -344,7 +354,7 @@ export default function AdminDashboard() {
                           {order.isPaid ? 'VAL_TRUE' : 'VAL_FALSE'}
                         </span>
                       </td>
-                      <td style={{ padding: '0.9rem 1.25rem' }}>
+                      <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
                         <span style={{ 
                           padding: '2px 8px', 
                           borderRadius: '4px', 
@@ -368,7 +378,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Live Terminal Output Console */}
-        <div style={{ gridColumn: 'span 1' }}>
+        <div style={{ gridColumn: 'span 1', display: 'flex', flexDirection: 'column' }}>
           <LiveActivityConsole recentOrders={recentOrders} />
         </div>
       </div>

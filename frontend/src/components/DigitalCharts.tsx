@@ -782,7 +782,8 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        height: '350px'
+        height: '100%',
+        minHeight: '380px'
       }}>
         {/* Terminal Header */}
         <div style={{
