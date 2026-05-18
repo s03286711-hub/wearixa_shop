@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useEffect, useState } from 'react';
 import { authService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -7,6 +8,13 @@ import {
   Trash2, Shield, Users, UserCheck, UserX, Crown,
   Search, RefreshCw, ArrowUpRight, Mail, Calendar, Activity
 } from 'lucide-react';
+
+const getCardColorClass = (color: string) => {
+  if (color === '#4ade80') return 'kpi-card-green';
+  if (color === '#06b6d4') return 'kpi-card-cyan';
+  if (color === '#a78bfa') return 'kpi-card-purple';
+  return 'kpi-card'; // default gold
+};
 
 export default function AdminCustomersPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -54,7 +62,7 @@ export default function AdminCustomersPage() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
 
       {/* ─ Header ─ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
@@ -70,9 +78,8 @@ export default function AdminCustomersPage() {
           </p>
         </div>
         <button onClick={fetchUsers}
+          className="hover-btn"
           style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(201,168,76,0.2)', background: 'rgba(201,168,76,0.06)', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontFamily: 'monospace', transition: 'all 0.2s' }}
-          onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.12)'}
-          onMouseLeave={e => e.currentTarget.style.background = 'rgba(201,168,76,0.06)'}
         >
           <RefreshCw size={13} /> SYNC_CRM
         </button>
@@ -80,8 +87,9 @@ export default function AdminCustomersPage() {
 
       {/* ─ CRM Stat Cards ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-        {statCards.map(({ label, value, desc, Icon, color, bg, border }) => (
-          <div key={label} className="glass" style={{
+        {statCards.map(({ label, value, desc, Icon, color, bg, border }, i) => (
+          <div key={label} className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} style={{
+            animationDelay: `${i * 0.08}s`,
             borderRadius: '12px', padding: '1.25rem',
             background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
             clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
@@ -149,9 +157,8 @@ export default function AdminCustomersPage() {
             <tbody>
               {filtered.map((u: any) => (
                 <tr key={u._id}
-                  style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.2s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.02)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  className="ledger-row"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}
                 >
                   {/* Customer Identity */}
                   <td style={{ padding: '1rem 1.25rem' }}>
@@ -216,9 +223,8 @@ export default function AdminCustomersPage() {
                     <div style={{ display: 'flex', gap: '6px' }}>
                       {u._id !== currentUser?._id && u.role !== 'admin' && (
                         <button onClick={() => handleDelete(u._id, u.name)}
-                          style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '6px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', cursor: 'pointer', fontSize: '0.68rem', fontFamily: 'monospace', fontWeight: '700', transition: 'all 0.2s' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.4)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.08)'; e.currentTarget.style.borderColor = 'rgba(239,68,68,0.2)'; }}
+                          className="hover-btn-danger"
+                          style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '5px 10px', borderRadius: '6px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', cursor: 'pointer', fontSize: '0.68rem', fontFamily: 'monospace', fontWeight: '700' }}
                         >
                           <Trash2 size={11} /> REMOVE
                         </button>

@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useEffect, useState } from 'react';
 import { categoryService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -67,15 +68,15 @@ export default function AdminCategoriesPage() {
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600' }}>Categories</h1>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>Manage product categories</p>
         </div>
-        <button onClick={() => { setEditingCategory(null); setShowModal(true); }} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <button onClick={() => { setEditingCategory(null); setShowModal(true); }} className="btn-primary hover-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Plus size={18} /> Add Category
         </button>
       </div>
 
       {loading ? <LoadingSpinner /> : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
-          {categories.map((c) => (
-            <div key={c._id} className="glass" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+          {categories.map((c, i) => (
+            <div key={c._id} className="glass glass-container animate-fade-in-stagger" style={{ animationDelay: `${i * 0.08}s`, borderRadius: '12px', overflow: 'hidden' }}>
               <div style={{ height: '140px', background: 'var(--color-surface-2)', position: 'relative' }}>
                 <img src={c.image || 'https://placehold.co/400x200?text=' + c.name} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.3s' }}

@@ -1,4 +1,5 @@
 'use client';
+import './animations.css';
 import { useEffect, useState } from 'react';
 import { authService, productService, orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -7,6 +8,13 @@ import {
   ArrowUpRight, Cpu, Clock, Activity, ShieldCheck 
 } from 'lucide-react';
 import { SalesTrendMatrix, CategoryDistributionRing, LiveActivityConsole } from '@/components/DigitalCharts';
+
+const getCardColorClass = (color: string) => {
+  if (color === '#60a5fa') return 'kpi-card-blue';
+  if (color === '#a78bfa') return 'kpi-card-purple';
+  if (color === '#4ade80') return 'kpi-card-green';
+  return 'kpi-card'; // gold default
+};
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ users: 0, products: 0, orders: 0, revenue: 0 });
@@ -90,7 +98,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* 1. Cybernetic Telemetry Header */}
       <div className="glass cyber-telemetry-header" style={{
@@ -159,11 +167,12 @@ export default function AdminDashboard() {
 
       {/* 2. Cyber-Notched Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '1.25rem' }}>
-        {cards.map(({ label, value, sub, Icon, color, bg, border, sparkline }) => (
+        {cards.map(({ label, value, sub, Icon, color, bg, border, sparkline }, i) => (
           <div 
             key={label} 
-            className="glass" 
+            className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} 
             style={{ 
+              animationDelay: `${i * 0.15}s`,
               borderRadius: '16px', 
               padding: '1.5rem', 
               display: 'flex', 
@@ -175,19 +184,8 @@ export default function AdminDashboard() {
               boxShadow: `0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.01)`,
               overflow: 'hidden',
               cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
               // The diagonal notch design: cut out the top right corner
               clipPath: 'polygon(0px 0px, calc(100% - 16px) 0px, 100% 16px, 100% 100%, 0% 100%)'
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = `0 12px 30px rgba(0,0,0,0.6), 0 0 15px ${color}25`;
-              e.currentTarget.style.borderColor = color;
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.01)';
-              e.currentTarget.style.borderColor = border;
             }}
           >
             {/* Background grid texture overlay */}

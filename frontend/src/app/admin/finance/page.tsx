@@ -58,9 +58,7 @@ function TxRow({ order }: { order: any }) {
   const fee = (order.totalPrice * 0.029 + 0.30).toFixed(2);
   const net = (order.totalPrice - parseFloat(fee)).toFixed(2);
   return (
-    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.2s' }}
-      onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.02)'}
-      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+    <tr className="ledger-row" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
       <td style={{ padding: '0.85rem 1.25rem', fontFamily: 'monospace', fontSize: '0.72rem', color: 'var(--color-accent)' }}>
         #{order._id.slice(-10).toUpperCase()}
       </td>
@@ -90,6 +88,13 @@ function TxRow({ order }: { order: any }) {
     </tr>
   );
 }
+
+const getCardColorClass = (color: string) => {
+  if (color === '#4ade80') return 'kpi-card-green';
+  if (color === '#f87171') return 'kpi-card-rose';
+  if (color === '#f59e0b') return 'kpi-card-orange';
+  return 'kpi-card'; // default gold
+};
 
 export default function FinancePage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -145,9 +150,8 @@ export default function FinancePage() {
           </span>
           <button
             onClick={() => { setLoading(true); setRefreshKey(k => k + 1); }}
+            className="hover-btn"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(201,168,76,0.2)', background: 'rgba(201,168,76,0.06)', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontFamily: 'monospace', transition: 'all 0.2s' }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.12)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(201,168,76,0.06)'}
           >
             <RefreshCw size={13} /> SYNC_LEDGER
           </button>
@@ -157,7 +161,7 @@ export default function FinancePage() {
       {/* ─ Financial KPIs ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
         {financials.map(({ label, value, desc, Icon, color, bg, border }, i) => (
-          <div key={label} className="glass animate-fade-in-stagger" style={{ animationDelay: `${i * 0.1}s`,
+          <div key={label} className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} style={{ animationDelay: `${i * 0.1}s`,
             borderRadius: '12px', padding: '1.5rem',
             background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
             clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',

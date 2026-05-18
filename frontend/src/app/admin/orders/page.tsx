@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useEffect, useState } from 'react';
 import { orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -74,9 +75,7 @@ export default function AdminOrdersPage() {
                 {orders.map((order: any) => {
                   const s = getStatusColor(order.status || 'Processing');
                   return (
-                    <tr key={order._id} style={{ borderBottom: '1px solid var(--color-border)', transition: 'background 0.2s' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
-                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                    <tr key={order._id} className="ledger-row" style={{ borderBottom: '1px solid var(--color-border)' }}>
                       <td style={{ padding: '1.25rem' }}>
                         <p style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: '600' }}>#{order._id.slice(-8).toUpperCase()}</p>
                         <p style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginTop: '4px' }}>{new Date(order.createdAt).toLocaleDateString()}</p>

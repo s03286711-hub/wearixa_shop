@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useEffect, useState } from 'react';
 import { productService, categoryService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -135,7 +136,7 @@ export default function AdminProductsPage() {
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600' }}>Products Management</h1>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>{products.length} products total</p>
         </div>
-        <button onClick={() => { setEditingProduct(null); setSubmitError(''); setSuccessMsg(''); setShowModal(true); }} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <button onClick={() => { setEditingProduct(null); setSubmitError(''); setSuccessMsg(''); setShowModal(true); }} className="btn-primary hover-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Plus size={18} /> Add Product
         </button>
       </div>
@@ -160,9 +161,7 @@ export default function AdminProductsPage() {
               </thead>
               <tbody>
                 {products.map((p) => (
-                  <tr key={p._id} style={{ borderBottom: '1px solid var(--color-border)', transition: 'background 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                  <tr key={p._id} className="ledger-row" style={{ borderBottom: '1px solid var(--color-border)' }}>
                     <td style={{ padding: '1rem 1.25rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <div style={{ width: '40px', height: '52px', borderRadius: '4px', overflow: 'hidden', background: 'var(--color-surface-2)', flexShrink: 0 }}>

@@ -1,4 +1,5 @@
 'use client';
+import './animations.css';
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -134,33 +135,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {group.items.map(({ href, label, Icon, exact }) => {
                   const active = isActive(href, exact);
                   return (
-                    <Link key={href} href={href} title={label} style={{
-                      display: 'flex', alignItems: 'center',
-                      gap: sidebarOpen ? '10px' : '0',
-                      justifyContent: sidebarOpen ? 'flex-start' : 'center',
-                      padding: sidebarOpen ? '0.65rem 1.25rem' : '0.75rem',
-                      margin: '1px 8px',
-                      borderRadius: '8px',
-                      background: active ? 'rgba(201,168,76,0.12)' : 'transparent',
-                      border: active ? '1px solid rgba(201,168,76,0.2)' : '1px solid transparent',
-                      color: active ? 'var(--color-accent)' : 'rgba(255,255,255,0.45)',
-                      fontWeight: active ? '600' : '400', fontSize: '0.82rem',
-                      transition: 'all 0.2s', whiteSpace: 'nowrap', textDecoration: 'none',
-                      position: 'relative'
-                    }}
-                      onMouseEnter={e => {
-                        if (!active) {
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                          e.currentTarget.style.color = '#fff';
-                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
-                        }
-                      }}
-                      onMouseLeave={e => {
-                        if (!active) {
-                          e.currentTarget.style.background = 'transparent';
-                          e.currentTarget.style.color = 'rgba(255,255,255,0.45)';
-                          e.currentTarget.style.borderColor = 'transparent';
-                        }
+                    <Link key={href} href={href} title={label} 
+                      className={`admin-nav-link ${active ? 'active' : ''}`}
+                      style={{
+                        display: 'flex', alignItems: 'center',
+                        gap: sidebarOpen ? '10px' : '0',
+                        justifyContent: sidebarOpen ? 'flex-start' : 'center',
+                        padding: sidebarOpen ? '0.65rem 1.25rem' : '0.75rem',
+                        margin: '1px 8px',
+                        borderRadius: '8px',
+                        background: active ? 'rgba(201,168,76,0.12)' : 'transparent',
+                        border: active ? '1px solid rgba(201,168,76,0.2)' : '1px solid transparent',
+                        color: active ? 'var(--color-accent)' : 'rgba(255,255,255,0.45)',
+                        fontWeight: active ? '600' : '400', fontSize: '0.82rem',
+                        whiteSpace: 'nowrap', textDecoration: 'none',
+                        position: 'relative'
                       }}
                     >
                       {/* Active glow dot */}

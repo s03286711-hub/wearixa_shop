@@ -138,6 +138,16 @@ function LiveLog({ orders }: { orders: any[] }) {
   );
 }
 
+const getCardColorClass = (color: string) => {
+  if (color === '#4ade80') return 'kpi-card-green';
+  if (color === '#06b6d4') return 'kpi-card-cyan';
+  if (color === '#c9a84c') return 'kpi-card';
+  if (color === '#a78bfa') return 'kpi-card-purple';
+  if (color === '#f59e0b') return 'kpi-card-orange';
+  if (color === '#f43f5e') return 'kpi-card-rose';
+  return 'kpi-card';
+};
+
 export default function AnalyticsPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
@@ -192,6 +202,7 @@ export default function AnalyticsPage() {
         </div>
         <button
           onClick={() => { setLoading(true); setRefreshKey(k => k + 1); }}
+          className="hover-btn"
           style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(201,168,76,0.2)', background: 'rgba(201,168,76,0.06)', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontFamily: 'monospace', transition: 'all 0.2s' }}
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.12)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(201,168,76,0.06)'}
@@ -203,7 +214,7 @@ export default function AnalyticsPage() {
       {/* ─ Metrics Grid ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
         {metrics.map(({ label, value, desc, Icon, color, bg, border }, i) => (
-          <div key={label} className="glass animate-fade-in-stagger" style={{ animationDelay: `${i * 0.1}s`,
+          <div key={label} className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} style={{ animationDelay: `${i * 0.08}s`,
             borderRadius: '12px', padding: '1.25rem',
             background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
             position: 'relative', overflow: 'hidden',
