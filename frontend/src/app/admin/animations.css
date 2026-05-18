@@ -152,3 +152,19 @@
   border-color: var(--color-accent) !important;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(201, 168, 76, 0.12) !important;
 }
+
+/* 6. Dynamic Inner KPI Icon scale and rotate on parent hover */
+.kpi-icon-container {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.kpi-card:hover .kpi-icon-container,
+.kpi-card-cyan:hover .kpi-icon-container,
+.kpi-card-purple:hover .kpi-icon-container,
+.kpi-card-green:hover .kpi-icon-container,
+.kpi-card-orange:hover .kpi-icon-container,
+.kpi-card-rose:hover .kpi-icon-container,
+.kpi-card-blue:hover .kpi-icon-container {
+  transform: scale(1.1) rotate(5deg) !important;
+}
+

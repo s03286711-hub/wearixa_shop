@@ -21,7 +21,6 @@ export default function AdminCustomersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'admin' | 'user'>('all');
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const { user: currentUser } = useAuth();
 
   const fetchUsers = () => {
@@ -89,23 +88,15 @@ export default function AdminCustomersPage() {
       {/* ─ CRM Stat Cards ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
         {statCards.map(({ label, value, desc, Icon, color, bg, border }, i) => {
-          const isHovered = hoveredCard === i;
           return (
             <div 
               key={label} 
-              className="glass animate-fade-in-stagger"
-              onMouseEnter={() => setHoveredCard(i)}
-              onMouseLeave={() => setHoveredCard(null)}
+              className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`}
               style={{
                 animationDelay: `${i * 0.08}s`,
                 borderRadius: '12px', padding: '1.25rem',
-                background: isHovered ? 'rgba(20, 20, 20, 0.65)' : 'rgba(13,13,13,0.5)',
-                border: `1px solid ${isHovered ? color : border}`,
-                boxShadow: isHovered 
-                  ? `0 10px 25px -5px ${color}22, 0 8px 16px -6px ${color}11, inset 0 0 12px ${color}0a`
-                  : '0 4px 20px rgba(0, 0, 0, 0.4)',
-                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                background: 'rgba(13,13,13,0.5)',
+                border: `1px solid ${border}`,
                 position: 'relative', overflow: 'hidden',
                 cursor: 'pointer'
               }}
@@ -113,18 +104,20 @@ export default function AdminCustomersPage() {
               <div style={{ position: 'absolute', top: 0, right: 0, width: '55px', height: '55px', background: bg, borderRadius: '0 0 0 55px', opacity: 0.6 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
               <p style={{ fontSize: '0.58rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>{label}</p>
-              <div style={{ 
-                width: '30px', 
-                height: '30px', 
-                borderRadius: '8px', 
-                background: bg, 
-                border: `1px solid ${isHovered ? color : border}`, 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}>
+              <div 
+                className="kpi-icon-container"
+                style={{ 
+                  width: '30px', 
+                  height: '30px', 
+                  borderRadius: '8px', 
+                  background: bg, 
+                  border: `1px solid ${border}`, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}
+              >
                 <Icon size={14} style={{ color }} />
               </div>
             </div>

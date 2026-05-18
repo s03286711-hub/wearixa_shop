@@ -11,13 +11,19 @@ import {
 
 const STATUS_OPTIONS = ['Processing', 'Packing', 'Shipped', 'Delivered', 'Cancelled'];
 
+const getCardColorClass = (color: string) => {
+  if (color === '#60a5fa') return 'kpi-card-blue';
+  if (color === '#a78bfa') return 'kpi-card-purple';
+  if (color === '#4ade80') return 'kpi-card-green';
+  return 'kpi-card'; // gold default
+};
+
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('All');
   const [expandedOrders, setExpandedOrders] = useState<string[]>([]);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   const fetchOrders = () => {
     setLoading(true);
@@ -167,23 +173,15 @@ export default function AdminOrdersPage() {
       {/* 2. Analytical Statistics Summary */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
         {statCards.map((card, i) => {
-          const isHovered = hoveredCard === i;
           return (
             <div 
               key={card.label} 
-              className="glass"
-              onMouseEnter={() => setHoveredCard(i)}
-              onMouseLeave={() => setHoveredCard(null)}
+              className={`glass ${getCardColorClass(card.color)}`}
               style={{
                 borderRadius: '16px',
                 padding: '1.25rem 1.5rem',
-                background: isHovered ? 'rgba(20, 20, 20, 0.65)' : 'rgba(13, 13, 13, 0.4)',
-                border: `1px solid ${isHovered ? card.color : card.border}`,
-                boxShadow: isHovered 
-                  ? `0 10px 25px -5px ${card.color}22, 0 8px 16px -6px ${card.color}11, inset 0 0 12px ${card.color}0a`
-                  : '0 4px 20px rgba(0, 0, 0, 0.4)',
-                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                background: 'rgba(13, 13, 13, 0.4)',
+                border: `1px solid ${card.border}`,
                 position: 'relative',
                 overflow: 'hidden',
                 display: 'flex',
@@ -197,19 +195,20 @@ export default function AdminOrdersPage() {
                 <p style={{ fontSize: '0.72rem', color: '#fff', fontWeight: '500', marginTop: '2px', textTransform: 'uppercase' }}>{card.label}</p>
                 <p style={{ fontSize: '1.5rem', fontWeight: '700', color: card.color, fontFamily: 'monospace', marginTop: '6px', lineHeight: 1.1 }}>{card.value}</p>
               </div>
-              <div style={{ 
-                width: '36px', 
-                height: '36px', 
-                borderRadius: '8px', 
-                background: card.bg, 
-                border: `1px solid ${isHovered ? card.color : card.border}`, 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                color: card.color,
-                transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}>
+              <div 
+                className="kpi-icon-container"
+                style={{ 
+                  width: '36px', 
+                  height: '36px', 
+                  borderRadius: '8px', 
+                  background: card.bg, 
+                  border: `1px solid ${card.border}`, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  color: card.color
+                }}
+              >
                 {card.icon}
               </div>
             </div>
