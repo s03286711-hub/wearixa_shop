@@ -10,6 +10,7 @@ import {
 
 // ─── Revenue Split Donut ──────────────────────────────────────────────────────
 function RevenueSplitRing({ data }: { data: { label: string; value: number; color: string }[] }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const total = data.reduce((s, d) => s + d.value, 0) || 1;
   const size = 160, stroke = 18, r = (size - stroke * 2) / 2, circ = 2 * Math.PI * r;
   let acc = 0;
@@ -27,27 +28,72 @@ function RevenueSplitRing({ data }: { data: { label: string; value: number; colo
             const da = `${pct * circ} ${circ}`;
             const offset = circ - acc * circ;
             acc += pct;
+            const isHovered = hoveredIdx === i;
             return (
               <circle key={i} cx={size / 2} cy={size / 2} r={r}
-                fill="transparent" stroke={d.color} strokeWidth={stroke}
+                fill="transparent" stroke={d.color} 
+                strokeWidth={isHovered ? stroke + 4 : stroke}
                 strokeDasharray={da} strokeDashoffset={offset}
-                strokeLinecap="round" filter="url(#ring-glow)" style={{ transition: 'all 0.8s ease' }} />
+                strokeLinecap="round" filter="url(#ring-glow)" 
+                style={{ 
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', 
+                  cursor: 'pointer',
+                  opacity: hoveredIdx === null || isHovered ? 1 : 0.45
+                }}
+                onMouseEnter={() => setHoveredIdx(i)}
+                onMouseLeave={() => setHoveredIdx(null)}
+              />
             );
           })}
         </svg>
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          <p style={{ fontSize: '1.4rem', fontWeight: '800', color: '#fff', fontFamily: 'monospace', lineHeight: 1 }}>${total.toFixed(0)}</p>
-          <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>TOTAL_REV</p>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', textAlign: 'center', padding: '10px' }}>
+          {hoveredIdx !== null ? (
+            <>
+              <p style={{ fontSize: '1.2rem', fontWeight: '800', color: data[hoveredIdx].color, fontFamily: 'monospace', lineHeight: 1.1 }}>
+                ${data[hoveredIdx].value.toFixed(2)}
+              </p>
+              <p style={{ fontSize: '0.55rem', color: '#fff', fontFamily: 'monospace', marginTop: '3px', letterSpacing: '0.05em' }}>
+                {((data[hoveredIdx].value / total) * 100).toFixed(1)}%
+              </p>
+              <p style={{ fontSize: '0.5rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px', textTransform: 'uppercase' }}>
+                {data[hoveredIdx].label.replace(/_/g, ' ')}
+              </p>
+            </>
+          ) : (
+            <>
+              <p style={{ fontSize: '1.4rem', fontWeight: '800', color: '#fff', fontFamily: 'monospace', lineHeight: 1 }}>${total.toFixed(0)}</p>
+              <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>TOTAL_REV</p>
+            </>
+          )}
         </div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-        {data.map(d => (
-          <div key={d.label} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: d.color, flexShrink: 0, boxShadow: `0 0 6px ${d.color}` }} />
-            <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', fontFamily: 'monospace' }}>{d.label}</span>
-            <span style={{ fontSize: '0.78rem', fontWeight: '700', color: d.color, fontFamily: 'monospace', marginLeft: 'auto' }}>${d.value.toFixed(2)}</span>
-          </div>
-        ))}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', minWidth: '150px' }}>
+        {data.map((d, i) => {
+          const isHovered = hoveredIdx === i;
+          return (
+            <div key={d.label} 
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '10px', 
+                cursor: 'pointer',
+                opacity: hoveredIdx === null || isHovered ? 1 : 0.45,
+                transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+            >
+              <span style={{ width: '10px', height: '10px', borderRadius: '3px', background: d.color, flexShrink: 0, boxShadow: `0 0 6px ${d.color}` }} />
+              <span style={{ fontSize: '0.72rem', color: isHovered ? '#fff' : 'rgba(255,255,255,0.6)', fontFamily: 'monospace', fontWeight: isHovered ? '700' : '500' }}>
+                {d.label}
+              </span>
+              <span style={{ fontSize: '0.78rem', fontWeight: '700', color: d.color, fontFamily: 'monospace', marginLeft: 'auto' }}>
+                ${d.value.toFixed(2)}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

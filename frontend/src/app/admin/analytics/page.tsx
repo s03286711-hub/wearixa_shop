@@ -10,24 +10,53 @@ import {
 
 // ─── Mini Funnel Chart ────────────────────────────────────────────────────────
 function FunnelChart({ data }: { data: { label: string; value: number; color: string }[] }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const max = data[0]?.value || 1;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
       {data.map((d, i) => {
         const pct = (d.value / max) * 100;
+        const isHovered = hoveredIdx === i;
         return (
-          <div key={d.label}>
+          <div key={d.label}
+            className="glass"
+            style={{
+              padding: '6px 10px',
+              borderRadius: '8px',
+              border: `1px solid ${isHovered ? d.color : 'transparent'}`,
+              background: isHovered ? 'rgba(255,255,255,0.02)' : 'transparent',
+              transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
+              transition: 'all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1)',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', fontFamily: 'monospace' }}>{d.label}</span>
-              <span style={{ fontSize: '0.72rem', color: d.color, fontFamily: 'monospace', fontWeight: '700' }}>{d.value.toLocaleString()}</span>
+              <span style={{ fontSize: '0.72rem', color: isHovered ? '#fff' : 'rgba(255,255,255,0.6)', fontFamily: 'monospace', fontWeight: isHovered ? '700' : 'normal' }}>
+                {d.label}
+                {isHovered && i > 0 && (
+                  <span style={{ color: 'var(--color-muted)', marginLeft: '8px', fontSize: '0.62rem', fontWeight: '400' }}>
+                    ({((d.value / data[i - 1].value) * 100).toFixed(1)}% step retention)
+                  </span>
+                )}
+              </span>
+              <span style={{ fontSize: '0.72rem', color: d.color, fontFamily: 'monospace', fontWeight: '700' }}>
+                {d.value.toLocaleString()} 
+                {isHovered && (
+                  <span style={{ color: 'rgba(255,255,255,0.4)', marginLeft: '6px', fontSize: '0.65rem', fontWeight: '400' }}>
+                    ({((d.value / data[0].value) * 100).toFixed(1)}% total)
+                  </span>
+                )}
+              </span>
             </div>
-            <div style={{ height: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '3px', overflow: 'hidden' }}>
+            <div style={{ height: isHovered ? '8px' : '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '4px', overflow: 'hidden', transition: 'all 0.2s ease' }}>
               <div style={{
                 height: '100%', width: `${pct}%`,
                 background: `linear-gradient(90deg, ${d.color}99, ${d.color})`,
-                borderRadius: '3px',
-                boxShadow: `0 0 8px ${d.color}40`,
-                transition: 'width 1s ease'
+                borderRadius: '4px',
+                boxShadow: isHovered ? `0 0 12px ${d.color}` : `0 0 8px ${d.color}40`,
+                transition: 'width 1s ease, box-shadow 0.2s ease'
               }} />
             </div>
           </div>
@@ -39,6 +68,7 @@ function FunnelChart({ data }: { data: { label: string; value: number; color: st
 
 // ─── SVG Session Activity Graph ───────────────────────────────────────────────
 function SessionGraph({ orders }: { orders: any[] }) {
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const values = useMemo(() => {
     const base = [420, 680, 540, 820, 760, 950, 610];
@@ -56,7 +86,46 @@ function SessionGraph({ orders }: { orders: any[] }) {
   const areaPath = `M ${pad},${H - pad} L ${pts.join(' L ')} L ${W - pad},${H - pad} Z`;
 
   return (
-    <div style={{ width: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', position: 'relative' }} onMouseLeave={() => setHoveredIdx(null)}>
+      {hoveredIdx !== null && (() => {
+        const pt = pts[hoveredIdx];
+        const [xStr, yStr] = pt.split(',');
+        const x = parseFloat(xStr);
+        const y = parseFloat(yStr);
+        const val = values[hoveredIdx];
+        const day = days[hoveredIdx];
+        
+        // Calculate dynamic relative position in percent
+        const leftPct = (x / W) * 100;
+        const topPct = (y / H) * 100;
+
+        return (
+          <div style={{
+            position: 'absolute',
+            left: `${leftPct}%`,
+            top: `${topPct - 15}%`,
+            transform: 'translate(-50%, -100%)',
+            background: 'rgba(13, 13, 13, 0.95)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(6, 182, 212, 0.4)',
+            borderRadius: '6px',
+            padding: '6px 10px',
+            pointerEvents: 'none',
+            zIndex: 10,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.5), 0 0 10px rgba(6,182,212,0.15)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2px',
+            alignItems: 'center',
+            minWidth: '90px',
+            transition: 'left 0.12s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.12s cubic-bezier(0.25, 0.8, 0.25, 1)'
+          }}>
+            <span style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{day} ACTIVITY</span>
+            <span style={{ fontSize: '0.85rem', fontWeight: '800', fontFamily: 'monospace', color: '#06b6d4' }}>{val.toLocaleString()}</span>
+            <span style={{ fontSize: '0.52rem', color: '#4ade80', fontFamily: 'monospace' }}>ACTIVE_SESSIONS</span>
+          </div>
+        );
+      })()}
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ overflow: 'visible' }}>
         <defs>
           <linearGradient id="sg-area" x1="0" y1="0" x2="0" y2="1">
@@ -73,24 +142,65 @@ function SessionGraph({ orders }: { orders: any[] }) {
           <line key={i} x1={pad} y1={H - pad - r * (H - pad * 2)} x2={W - pad} y2={H - pad - r * (H - pad * 2)}
             stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
         ))}
+        {/* Active Vertical Crosshair Tracker */}
+        {hoveredIdx !== null && (() => {
+          const pt = pts[hoveredIdx];
+          const [xStr] = pt.split(',');
+          const x = parseFloat(xStr);
+          return (
+            <line
+              x1={x}
+              y1={pad}
+              x2={x}
+              y2={H - pad}
+              stroke="rgba(6, 182, 212, 0.45)"
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              pointerEvents="none"
+              style={{ transition: 'x1 0.12s ease, x2 0.12s ease' }}
+            />
+          );
+        })()}
         {/* Area fill */}
         <path d={areaPath} fill="url(#sg-area)" />
         {/* Line */}
         <path d={linePath} fill="none" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" filter="url(#sg-glow)" />
         {/* Data points */}
         {pts.map((pt, i) => {
-          const [x, y] = pt.split(',');
+          const [xStr, yStr] = pt.split(',');
+          const x = parseFloat(xStr);
+          const y = parseFloat(yStr);
+          const isHovered = hoveredIdx === i;
           return (
             <g key={i}>
-              <circle cx={x} cy={y} r="4" fill="#06b6d4" filter="url(#sg-glow)" />
-              <circle cx={x} cy={y} r="2" fill="#fff" />
+              <circle cx={x} cy={y} r={isHovered ? 7 : 4} fill="#06b6d4" filter="url(#sg-glow)" style={{ transition: 'all 0.15s ease', cursor: 'pointer' }} />
+              <circle cx={x} cy={y} r={isHovered ? 3.5 : 2} fill="#fff" style={{ transition: 'all 0.15s ease' }} />
             </g>
           );
         })}
         {/* X labels */}
         {days.map((d, i) => {
           const x = pad + (i / (days.length - 1)) * (W - pad * 2);
-          return <text key={d} x={x} y={H - 4} textAnchor="middle" fontSize="10" fill="rgba(255,255,255,0.3)" fontFamily="monospace">{d}</text>;
+          const isHovered = hoveredIdx === i;
+          return <text key={d} x={x} y={H - 4} textAnchor="middle" fontSize="10" fill={isHovered ? '#06b6d4' : 'rgba(255,255,255,0.3)'} fontWeight={isHovered ? '700' : '500'} fontFamily="monospace" style={{ transition: 'all 0.15s ease' }}>{d}</text>;
+        })}
+        {/* Invisible columns for mouse tracking */}
+        {values.map((v, i) => {
+          const colWidth = (W - pad * 2) / (values.length - 1);
+          const x = pad + (i * colWidth) - colWidth / 2;
+          return (
+            <rect
+              key={i}
+              x={x}
+              y={0}
+              width={colWidth}
+              height={H}
+              fill="transparent"
+              style={{ cursor: 'pointer' }}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseMove={() => setHoveredIdx(i)}
+            />
+          );
         })}
       </svg>
     </div>
