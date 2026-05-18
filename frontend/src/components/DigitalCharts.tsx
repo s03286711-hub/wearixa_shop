@@ -636,7 +636,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
   const [logs, setLogs] = useState<Array<{ id: string; time: string; type: string; message: string; severity: 'info' | 'success' | 'warn' | 'error' }>>([]);
   const [isScanning, setIsScanning] = useState(false);
   const [scanMessage, setScanMessage] = useState('');
-  const logEndRef = useRef<HTMLDivElement>(null);
+  const consoleBodyRef = useRef<HTMLDivElement>(null);
 
   // Generate initial log buffer
   useEffect(() => {
@@ -668,9 +668,14 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
     setLogs(initialLogs);
   }, [recentOrders]);
 
-  // Automatically scroll logs to bottom
+  // Automatically scroll logs to bottom without scrolling parent window
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (consoleBodyRef.current) {
+      consoleBodyRef.current.scrollTo({
+        top: consoleBodyRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }, [logs, isScanning, scanMessage]);
 
   // Periodic random live event simulation
@@ -847,18 +852,21 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
         </div>
 
         {/* Console logs area */}
-        <div style={{
-          flex: 1,
-          padding: '12px 16px',
-          overflowY: 'auto',
-          fontFamily: 'monospace',
-          fontSize: '0.72rem',
-          color: '#c5c5c5',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '6px',
-          background: 'rgba(5, 5, 5, 0.65)'
-        }}>
+        <div 
+          ref={consoleBodyRef}
+          style={{
+            flex: 1,
+            padding: '12px 16px',
+            overflowY: 'auto',
+            fontFamily: 'monospace',
+            fontSize: '0.72rem',
+            color: '#c5c5c5',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px',
+            background: 'rgba(5, 5, 5, 0.65)'
+          }}
+        >
           {logs.map((log) => {
             let color = '#fff';
             let bg = 'rgba(255,255,255,0.03)';
@@ -943,7 +951,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
             </div>
           )}
 
-          <div ref={logEndRef} />
+
         </div>
       </div>
 
