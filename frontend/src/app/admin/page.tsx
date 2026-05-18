@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [utcTime, setUtcTime] = useState('');
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   // Live UTC Clock for high-tech digital telemetry feel
   useEffect(() => {
@@ -165,29 +166,35 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* 2. Cyber-Notched Stat Cards */}
+      {/* 2. Cyber Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '1.25rem' }}>
-        {cards.map(({ label, value, sub, Icon, color, bg, border, sparkline }, i) => (
-          <div 
-            key={label} 
-            className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} 
-            style={{ 
-              animationDelay: `${i * 0.15}s`,
-              borderRadius: '16px', 
-              padding: '1.5rem', 
-              display: 'flex', 
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-              background: 'rgba(13, 13, 13, 0.4)',
-              border: `1px solid ${border}`,
-              boxShadow: `0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.01)`,
-              overflow: 'hidden',
-              cursor: 'pointer',
-              // The diagonal notch design: cut out the top right corner
-              clipPath: 'polygon(0px 0px, calc(100% - 16px) 0px, 100% 16px, 100% 100%, 0% 100%)'
-            }}
-          >
+        {cards.map(({ label, value, sub, Icon, color, bg, border, sparkline }, i) => {
+          const isHovered = hoveredCard === i;
+          return (
+            <div 
+              key={label} 
+              className="glass animate-fade-in-stagger"
+              onMouseEnter={() => setHoveredCard(i)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{ 
+                animationDelay: `${i * 0.15}s`,
+                borderRadius: '16px', 
+                padding: '1.5rem', 
+                display: 'flex', 
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                background: isHovered ? 'rgba(20, 20, 20, 0.65)' : 'rgba(13, 13, 13, 0.4)',
+                border: `1px solid ${isHovered ? color : border}`,
+                boxShadow: isHovered 
+                  ? `0 10px 25px -5px ${color}22, 0 8px 16px -6px ${color}11, inset 0 0 12px ${color}0a`
+                  : '0 4px 20px rgba(0, 0, 0, 0.4)',
+                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                overflow: 'hidden',
+                cursor: 'pointer'
+              }}
+            >
             {/* Background grid texture overlay */}
             <div style={{
               position: 'absolute',
@@ -240,7 +247,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
 
       {/* 3. High-Tech Visual Charts Grid */}

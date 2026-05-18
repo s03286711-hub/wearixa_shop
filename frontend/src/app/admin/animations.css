@@ -21,20 +21,31 @@
 /* 1. Sidebar Navigation Links */
 .admin-nav-link {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  background: transparent;
+  border: 1px solid transparent !important;
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-weight: 400 !important;
+}
+
+.admin-nav-link.active {
+  background: rgba(201, 168, 76, 0.12) !important;
+  border: 1px solid rgba(201, 168, 76, 0.2) !important;
+  color: var(--color-accent) !important;
+  font-weight: 600 !important;
 }
 
 .admin-nav-link:hover:not(.active) {
   background: rgba(255, 255, 255, 0.05) !important;
   color: #fff !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   transform: translateX(4px);
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.02);
 }
 
 .admin-nav-link.active:hover {
-  background: rgba(201, 168, 76, 0.16) !important;
+  background: rgba(201, 168, 76, 0.18) !important;
   color: var(--color-accent) !important;
-  border-color: rgba(201, 168, 76, 0.3) !important;
+  border: 1px solid rgba(201, 168, 76, 0.35) !important;
   transform: translateX(4px);
   box-shadow: 0 4px 15px rgba(201, 168, 76, 0.08);
 }

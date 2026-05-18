@@ -21,6 +21,7 @@ export default function AdminCustomersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'all' | 'admin' | 'user'>('all');
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const { user: currentUser } = useAuth();
 
   const fetchUsers = () => {
@@ -87,15 +88,29 @@ export default function AdminCustomersPage() {
 
       {/* ─ CRM Stat Cards ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-        {statCards.map(({ label, value, desc, Icon, color, bg, border }, i) => (
-          <div key={label} className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} style={{
-            animationDelay: `${i * 0.08}s`,
-            borderRadius: '12px', padding: '1.25rem',
-            background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
-            clipPath: 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '55px', height: '55px', background: bg, borderRadius: '0 0 0 55px', opacity: 0.6 }} />
+        {statCards.map(({ label, value, desc, Icon, color, bg, border }, i) => {
+          const isHovered = hoveredCard === i;
+          return (
+            <div 
+              key={label} 
+              className="glass animate-fade-in-stagger"
+              onMouseEnter={() => setHoveredCard(i)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{
+                animationDelay: `${i * 0.08}s`,
+                borderRadius: '12px', padding: '1.25rem',
+                background: isHovered ? 'rgba(20, 20, 20, 0.65)' : 'rgba(13,13,13,0.5)',
+                border: `1px solid ${isHovered ? color : border}`,
+                boxShadow: isHovered 
+                  ? `0 10px 25px -5px ${color}22, 0 8px 16px -6px ${color}11, inset 0 0 12px ${color}0a`
+                  : '0 4px 20px rgba(0, 0, 0, 0.4)',
+                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                position: 'relative', overflow: 'hidden',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '55px', height: '55px', background: bg, borderRadius: '0 0 0 55px', opacity: 0.6 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
               <p style={{ fontSize: '0.58rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>{label}</p>
               <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: bg, border: `1px solid ${border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -105,7 +120,7 @@ export default function AdminCustomersPage() {
             <p style={{ fontSize: '1.7rem', fontWeight: '800', color, fontFamily: 'monospace', lineHeight: 1 }}>{value}</p>
             <p style={{ fontSize: '0.67rem', color: 'rgba(255,255,255,0.35)', marginTop: '4px' }}>{desc}</p>
           </div>
-        ))}
+        )})}
       </div>
 
       {/* ─ Search & Filter Bar ─ */}

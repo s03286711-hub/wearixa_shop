@@ -146,6 +146,7 @@ export default function FinancePage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   useEffect(() => {
     orderService.getAllOrders()
@@ -206,14 +207,29 @@ export default function FinancePage() {
 
       {/* ─ Financial KPIs ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-        {financials.map(({ label, value, desc, Icon, color, bg, border }, i) => (
-          <div key={label} className={`glass animate-fade-in-stagger ${getCardColorClass(color)}`} style={{ animationDelay: `${i * 0.1}s`,
-            borderRadius: '12px', padding: '1.5rem',
-            background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
-            clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
-            position: 'relative', overflow: 'hidden'
-          }}>
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '70px', height: '70px', background: bg, borderRadius: '0 0 0 70px', opacity: 0.6 }} />
+        {financials.map(({ label, value, desc, Icon, color, bg, border }, i) => {
+          const isHovered = hoveredCard === i;
+          return (
+            <div 
+              key={label} 
+              className="glass animate-fade-in-stagger"
+              onMouseEnter={() => setHoveredCard(i)}
+              onMouseLeave={() => setHoveredCard(null)}
+              style={{ 
+                animationDelay: `${i * 0.1}s`,
+                borderRadius: '12px', padding: '1.5rem',
+                background: isHovered ? 'rgba(20, 20, 20, 0.65)' : 'rgba(13,13,13,0.5)',
+                border: `1px solid ${isHovered ? color : border}`,
+                boxShadow: isHovered 
+                  ? `0 10px 25px -5px ${color}22, 0 8px 16px -6px ${color}11, inset 0 0 12px ${color}0a`
+                  : '0 4px 20px rgba(0, 0, 0, 0.4)',
+                transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                position: 'relative', overflow: 'hidden',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '70px', height: '70px', background: bg, borderRadius: '0 0 0 70px', opacity: 0.6 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <p style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.07em' }}>{label}</p>
               <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: bg, border: `1px solid ${border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -226,7 +242,7 @@ export default function FinancePage() {
               <TrendingUp size={10} /> +8.2% MTD
             </p>
           </div>
-        ))}
+        )})}
       </div>
 
       {/* ─ Revenue Split + Payout Ledger ─ */}

@@ -144,10 +144,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         padding: sidebarOpen ? '0.65rem 1.25rem' : '0.75rem',
                         margin: '1px 8px',
                         borderRadius: '8px',
-                        background: active ? 'rgba(201,168,76,0.12)' : 'transparent',
-                        border: active ? '1px solid rgba(201,168,76,0.2)' : '1px solid transparent',
-                        color: active ? 'var(--color-accent)' : 'rgba(255,255,255,0.45)',
-                        fontWeight: active ? '600' : '400', fontSize: '0.82rem',
+                        fontSize: '0.82rem',
                         whiteSpace: 'nowrap', textDecoration: 'none',
                         position: 'relative'
                       }}
