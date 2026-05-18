@@ -217,7 +217,19 @@ export default function AdminDashboard() {
                   {label}
                 </p>
               </div>
-              <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: bg, border: `1px solid ${border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ 
+                width: '38px', 
+                height: '38px', 
+                borderRadius: '8px', 
+                background: bg, 
+                border: `1px solid ${isHovered ? color : border}`, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                flexShrink: 0,
+                transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}>
                 <Icon size={18} style={{ color }} />
               </div>
             </div>

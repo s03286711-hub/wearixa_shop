@@ -349,7 +349,18 @@ export default function AnalyticsPage() {
               <div style={{ position: 'absolute', top: 0, right: 0, width: '60px', height: '60px', background: bg, borderRadius: '0 0 0 60px', opacity: 0.5 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <p style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em' }}>{label}</p>
-              <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: bg, border: `1px solid ${border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ 
+                width: '30px', 
+                height: '30px', 
+                borderRadius: '8px', 
+                background: bg, 
+                border: `1px solid ${isHovered ? color : border}`, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}>
                 <Icon size={15} style={{ color }} />
               </div>
             </div>

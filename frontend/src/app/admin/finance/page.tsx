@@ -232,7 +232,18 @@ export default function FinancePage() {
               <div style={{ position: 'absolute', top: 0, right: 0, width: '70px', height: '70px', background: bg, borderRadius: '0 0 0 70px', opacity: 0.6 }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <p style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.07em' }}>{label}</p>
-              <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: bg, border: `1px solid ${border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ 
+                width: '34px', 
+                height: '34px', 
+                borderRadius: '8px', 
+                background: bg, 
+                border: `1px solid ${isHovered ? color : border}`, 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+              }}>
                 <Icon size={16} style={{ color }} />
               </div>
             </div>
