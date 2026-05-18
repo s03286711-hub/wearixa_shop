@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useEffect, useState, useMemo } from 'react';
 import { orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -123,7 +124,7 @@ export default function FinancePage() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
 
       {/* ─ Header ─ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
@@ -155,8 +156,8 @@ export default function FinancePage() {
 
       {/* ─ Financial KPIs ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-        {financials.map(({ label, value, desc, Icon, color, bg, border }) => (
-          <div key={label} className="glass" style={{
+        {financials.map(({ label, value, desc, Icon, color, bg, border }, i) => (
+          <div key={label} className="glass animate-fade-in-stagger" style={{ animationDelay: `${i * 0.1}s`,
             borderRadius: '12px', padding: '1.5rem',
             background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
             clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
@@ -179,7 +180,7 @@ export default function FinancePage() {
       </div>
 
       {/* ─ Revenue Split + Payout Ledger ─ */}
-      <div className="finance-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr', gap: '1.25rem' }}>
+      <div className="finance-grid animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1.8fr', gap: '1.25rem' }}>
 
         {/* Donut Ring */}
         <div className="glass" style={{ borderRadius: '14px', padding: '1.5rem', background: 'rgba(13,13,13,0.5)', border: '1px solid rgba(201,168,76,0.12)' }}>

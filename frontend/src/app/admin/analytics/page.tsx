@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useEffect, useState, useMemo } from 'react';
 import { orderService, authService, productService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -174,7 +175,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
 
       {/* ─ Header ─ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
@@ -201,8 +202,8 @@ export default function AnalyticsPage() {
 
       {/* ─ Metrics Grid ─ */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-        {metrics.map(({ label, value, desc, Icon, color, bg, border }) => (
-          <div key={label} className="glass" style={{
+        {metrics.map(({ label, value, desc, Icon, color, bg, border }, i) => (
+          <div key={label} className="glass animate-fade-in-stagger" style={{ animationDelay: `${i * 0.1}s`,
             borderRadius: '12px', padding: '1.25rem',
             background: 'rgba(13,13,13,0.5)', border: `1px solid ${border}`,
             position: 'relative', overflow: 'hidden',
@@ -222,7 +223,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* ─ Session Graph + Funnel ─ */}
-      <div className="cyber-dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.25rem' }}>
+      <div className="cyber-dashboard-grid animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.25rem' }}>
 
         {/* Session Graph */}
         <div className="glass" style={{ borderRadius: '14px', padding: '1.5rem', background: 'rgba(13,13,13,0.5)', border: '1px solid rgba(6,182,212,0.15)' }}>

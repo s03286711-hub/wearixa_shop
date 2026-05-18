@@ -1,4 +1,5 @@
 'use client';
+import '@/app/admin/animations.css';
 import { useState } from 'react';
 import {
   Settings, CreditCard, Wallet, Truck, Percent, Tag, Shield,
@@ -42,7 +43,7 @@ function SettingCard({ title, subtitle, Icon, color, children }: {
   title: string; subtitle: string; Icon: any; color: string; children: React.ReactNode;
 }) {
   return (
-    <div className="glass" style={{ borderRadius: '14px', overflow: 'hidden', background: 'rgba(13,13,13,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}>
+    <div className="glass animate-fade-in-stagger" style={{ borderRadius: '14px', overflow: 'hidden', background: 'rgba(13,13,13,0.5)', border: '1px solid rgba(255,255,255,0.06)' }}>
       <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)', background: `rgba(${color},0.03)`, display: 'flex', alignItems: 'center', gap: '12px' }}>
         <div style={{ width: '36px', height: '36px', borderRadius: '9px', background: `rgba(${color},0.12)`, border: `1px solid rgba(${color},0.25)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon size={17} style={{ color: `rgb(${color})` }} />
@@ -95,7 +96,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', maxWidth: '900px' }}>
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', maxWidth: '900px' }}>
 
       {/* ─ Header ─ */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
