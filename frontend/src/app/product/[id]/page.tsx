@@ -62,7 +62,8 @@ export default function ProductDetailPage() {
       shippingCharges: product.shippingCharges || 0,
       applyShippingCharges: product.applyShippingCharges || false,
       size: selectedSize || undefined,
-      color: selectedColor || undefined
+      color: selectedColor || undefined,
+      isCodAvailable: product.isCodAvailable !== undefined ? product.isCodAvailable : true,
     });
     setAdded(true);
     showToast(`${product.title} added to cart`, 'success', product.images[0]);
@@ -78,6 +79,7 @@ export default function ProductDetailPage() {
       price: product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price,
       image: product.images[0],
       brand: product.brand || '',
+      isCodAvailable: product.isCodAvailable,
     });
     showToast(wishlisted ? 'Removed from favorites' : 'Added to favorites', 'success', product.images[0]);
   };
@@ -502,7 +504,7 @@ function YouMayAlsoLike({ currentId, categoryId }: { currentId: string; category
                 <p className="text-gold" style={{ fontWeight: '700', fontSize: '1rem' }}>${(p.discountPrice > 0 ? p.discountPrice : p.price).toFixed(2)}</p>
               </div>
             </Link>
-            <button onClick={() => { addToCart({ _id: p._id, title: p.title, price: p.discountPrice > 0 ? p.discountPrice : p.price, image: p.images[0], qty: 1, stock: p.stock, shippingCharges: p.shippingCharges || 0, applyShippingCharges: p.applyShippingCharges || false }); showToast(`${p.title} added to cart`, 'success', p.images[0]); }}
+            <button onClick={() => { addToCart({ _id: p._id, title: p.title, price: p.discountPrice > 0 ? p.discountPrice : p.price, image: p.images[0], qty: 1, stock: p.stock, shippingCharges: p.shippingCharges || 0, applyShippingCharges: p.applyShippingCharges || false, isCodAvailable: p.isCodAvailable !== undefined ? p.isCodAvailable : true }); showToast(`${p.title} added to cart`, 'success', p.images[0]); }}
               className="btn-primary" style={{ width: 'calc(100% - 2rem)', margin: '0 1rem 1rem', padding: '0.5rem', fontSize: '0.78rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
               <ShoppingBag size={14} /> Add to Cart
             </button>

@@ -29,6 +29,7 @@ export default function AdminProductsPage() {
     dealType: '',
     shippingCharges: '',
     applyShippingCharges: false,
+    isCodAvailable: true,
   });
 
   const fetchProducts = async () => {
@@ -56,7 +57,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '', applyShippingCharges: false });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '', applyShippingCharges: false, isCodAvailable: true });
   };
 
   const handleEdit = (p: any) => {
@@ -77,6 +78,7 @@ export default function AdminProductsPage() {
       dealType: p.dealType || '',
       shippingCharges: p.shippingCharges ? p.shippingCharges.toString() : '0',
       applyShippingCharges: p.applyShippingCharges || false,
+      isCodAvailable: p.isCodAvailable !== undefined ? p.isCodAvailable : true,
     });
     setShowModal(true);
   };
@@ -100,6 +102,7 @@ export default function AdminProductsPage() {
     formData.append('dealType', form.dealType);
     formData.append('shippingCharges', form.shippingCharges || '0');
     formData.append('applyShippingCharges', form.applyShippingCharges.toString());
+    formData.append('isCodAvailable', form.isCodAvailable.toString());
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -229,7 +232,7 @@ export default function AdminProductsPage() {
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Description</label>
                 <textarea className="input-field" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4} required disabled={submitting} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price ($)</label>
                   <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required disabled={submitting} />
@@ -253,17 +256,32 @@ export default function AdminProductsPage() {
                       style={{ width: '18px', height: '18px', accentColor: 'var(--color-accent)' }}
                     />
                     <label htmlFor="ship-toggle" style={{ fontSize: '0.85rem', cursor: 'pointer' }}>
-                      {form.applyShippingCharges ? 'Calculate by Distance' : 'Free Shipping'}
+                      {form.applyShippingCharges ? 'Charges Apply' : 'Free Shipping'}
                     </label>
                   </div>
                 </div>
-                {form.applyShippingCharges && (
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Base Rate ($)</label>
-                    <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>COD Status</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                    <input 
+                      type="checkbox" 
+                      id="cod-toggle"
+                      checked={form.isCodAvailable} 
+                      onChange={e => setForm(f => ({ ...f, isCodAvailable: e.target.checked }))} 
+                      style={{ width: '18px', height: '18px', accentColor: 'var(--color-accent)' }}
+                    />
+                    <label htmlFor="cod-toggle" style={{ fontSize: '0.85rem', cursor: 'pointer' }}>
+                      {form.isCodAvailable ? 'COD Allowed' : 'No COD'}
+                    </label>
                   </div>
-                )}
+                </div>
               </div>
+              {form.applyShippingCharges && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Base Shipping Rate ($)</label>
+                  <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
+                </div>
+              )}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Category</label>

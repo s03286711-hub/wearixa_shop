@@ -18,6 +18,7 @@ export default function WishlistPage() {
       stock: 99,
       shippingCharges: 0,
       applyShippingCharges: false,
+      isCodAvailable: item.isCodAvailable !== undefined ? item.isCodAvailable : true,
     });
     removeFromWishlist(item._id);
   };

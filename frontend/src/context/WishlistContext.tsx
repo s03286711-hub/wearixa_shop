@@ -7,6 +7,7 @@ interface WishlistItem {
   price: number;
   image: string;
   brand: string;
+  isCodAvailable?: boolean;
 }
 
 interface WishlistContextType {

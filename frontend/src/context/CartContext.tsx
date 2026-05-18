@@ -14,6 +14,7 @@ export interface CartItem {
   applyShippingCharges: boolean;
   size?: string;
   color?: string;
+  isCodAvailable?: boolean;
 }
 
 interface CartContextType {

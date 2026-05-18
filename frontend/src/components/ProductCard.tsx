@@ -18,6 +18,9 @@ interface Product {
   numReviews: number;
   stock: number;
   brand?: string;
+  shippingCharges?: number;
+  applyShippingCharges?: boolean;
+  isCodAvailable?: boolean;
 }
 
 export default function ProductCard({ product, onQuickView }: { product: Product, onQuickView?: (p: any) => void }) {
@@ -40,6 +43,7 @@ export default function ProductCard({ product, onQuickView }: { product: Product
       stock: product.stock,
       shippingCharges: (product as any).shippingCharges || 0,
       applyShippingCharges: (product as any).applyShippingCharges || false,
+      isCodAvailable: product.isCodAvailable !== undefined ? product.isCodAvailable : true,
     });
     setAdded(true);
     showToast(`${product.title} added to cart`, 'success', product.images[0]);
@@ -55,6 +59,7 @@ export default function ProductCard({ product, onQuickView }: { product: Product
       price: product.discountPrice ? product.discountPrice : product.price,
       image: product.images[0],
       brand: product.brand || '',
+      isCodAvailable: product.isCodAvailable,
     });
     showToast(wishlisted ? 'Removed from favorites' : 'Added to favorites', 'success', product.images[0]);
   };

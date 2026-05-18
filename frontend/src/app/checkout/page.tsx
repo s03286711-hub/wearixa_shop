@@ -47,6 +47,13 @@ export default function CheckoutPage() {
     }
   }, [user, authLoading, router]);
 
+  useEffect(() => {
+    const isCodDisabled = cartItems.some(item => item.isCodAvailable === false);
+    if (isCodDisabled && payment.method === 'cod') {
+      setPayment({ method: 'stripe' });
+    }
+  }, [cartItems, payment.method]);
+
   if (authLoading) return <div style={{ display: 'flex', justifyContent: 'center', padding: '5rem' }}><Loader2 className="animate-spin" size={32} /></div>;
   if (!user) return null;
 
@@ -180,6 +187,16 @@ export default function CheckoutPage() {
                       <CreditCard size={20} style={{ color: 'var(--color-accent)' }} />
                       <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem' }}>Payment Method</h2>
                     </div>
+
+                    {cartItems.some(item => item.isCodAvailable === false) && (
+                      <div className="glass" style={{ borderLeft: '4px solid #f59e0b', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', background: 'rgba(245,158,11,0.05)', borderTop: 'none', borderRight: 'none', borderBottom: 'none' }}>
+                        <p style={{ color: '#fbbf24', fontSize: '0.85rem', fontWeight: '600', margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '6px' }}>⚠️ Cash on Delivery (COD) Restricted</p>
+                        <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem', margin: 0, lineHeight: '1.4' }}>
+                          One or more items in your cart are prepaid-only and do not support COD. Please select a digital wallet or card payment method to proceed.
+                        </p>
+                      </div>
+                    )}
+
                     {[
                       { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet },
                       { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard },
@@ -187,7 +204,15 @@ export default function CheckoutPage() {
                       { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone },
                       { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle },
                     ].map((m) => {
-                      const disabled = m.id === 'wallet' && (walletBalance === null || walletBalance < grandTotal);
+                      const isCodDisabled = cartItems.some(item => item.isCodAvailable === false);
+                      const disabled = m.id === 'wallet' 
+                        ? (walletBalance === null || walletBalance < grandTotal)
+                        : (m.id === 'cod' ? isCodDisabled : false);
+
+                      const desc = m.id === 'cod' && isCodDisabled
+                        ? 'Disabled: This order contains items that are prepaid-only.'
+                        : m.desc;
+
                       return (
                         <div key={m.id} style={{ marginBottom: '0.75rem' }}>
                           <label style={{
@@ -202,12 +227,12 @@ export default function CheckoutPage() {
                               <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(201,168,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent)' }}>
                                 <m.icon size={16} />
                               </div>
-                              <div>
-                                <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled && m.id === 'wallet' ? '#ef4444' : 'var(--color-text)' }}>
-                                  {m.name} {disabled && m.id === 'wallet' && '(Insufficient)'}
+                              <div style={{ flex: 1 }}>
+                                <p style={{ fontWeight: '600', fontSize: '0.9rem', margin: 0, color: disabled ? '#ef4444' : 'var(--color-text)' }}>
+                                  {m.name} {disabled && m.id === 'wallet' && '(Insufficient)'} {disabled && m.id === 'cod' && '(Unavailable)'}
                                 </p>
                                 <p style={{ color: 'var(--color-muted)', fontSize: '0.78rem', margin: 0 }}>
-                                  {m.desc}
+                                  {desc}
                                 </p>
                               </div>
                             </div>

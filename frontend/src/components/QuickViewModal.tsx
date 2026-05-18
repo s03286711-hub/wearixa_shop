@@ -47,6 +47,7 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
       stock: product.stock,
       shippingCharges: product.shippingCharges || 0,
       applyShippingCharges: product.applyShippingCharges || false,
+      isCodAvailable: product.isCodAvailable !== undefined ? product.isCodAvailable : true,
     });
     setAdded(true);
     showToast(`${product.title} added to cart`, 'success', product.images[0]);
