@@ -83,12 +83,14 @@
 
 /* 3. Table Ledger Rows */
 .ledger-row {
-  transition: all 0.25s ease-in-out !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .ledger-row:hover {
-  background: rgba(201, 168, 76, 0.02) !important;
-  box-shadow: inset 0 0 12px rgba(201, 168, 76, 0.02);
+  background: rgba(255, 255, 255, 0.015) !important;
+  border-left-color: rgba(201, 168, 76, 0.35) !important;
+  box-shadow: inset 3px 0 10px rgba(201, 168, 76, 0.02) !important;
 }
 
 /* 4. Action Buttons and Interactive Elements */
@@ -116,10 +118,11 @@
 
 /* 5. General glassmorphic containers */
 .glass-container {
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
 .glass-container:hover {
-  border-color: rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), inset 0 0 12px rgba(255, 255, 255, 0.02);
+  transform: translateY(-5px);
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(201, 168, 76, 0.12) !important;
 }

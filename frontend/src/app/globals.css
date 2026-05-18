@@ -186,7 +186,7 @@ a {
 .card:hover {
   border-color: var(--color-accent);
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 18px rgba(201, 168, 76, 0.1) !important;
 }
 
 /* Input */
