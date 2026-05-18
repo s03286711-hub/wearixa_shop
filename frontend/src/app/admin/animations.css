@@ -68,7 +68,7 @@
 .kpi-card-orange:hover,
 .kpi-card-rose:hover,
 .kpi-card-blue:hover {
-  transform: translateY(-5px) scale(1.015);
+  transform: translateY(-5px) scale(1.015) !important;
 }
 
 .kpi-card:hover {
