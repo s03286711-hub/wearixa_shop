@@ -2,13 +2,30 @@
 import { useEffect, useState } from 'react';
 import { authService, productService, orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Users, Package, ShoppingCart, DollarSign, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { 
+  Users, Package, ShoppingCart, DollarSign, TrendingUp, 
+  ArrowUpRight, Cpu, Clock, Activity, ShieldCheck 
+} from 'lucide-react';
+import { SalesTrendMatrix, CategoryDistributionRing, LiveActivityConsole } from '@/components/DigitalCharts';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ users: 0, products: 0, orders: 0, revenue: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [utcTime, setUtcTime] = useState('');
 
+  // Live UTC Clock for high-tech digital telemetry feel
+  useEffect(() => {
+    const updateTime = () => {
+      const d = new Date();
+      setUtcTime(d.toUTCString().replace('GMT', 'UTC'));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch db data
   useEffect(() => {
     const load = async () => {
       try {
@@ -26,83 +43,355 @@ export default function AdminDashboard() {
     load();
   }, []);
 
-  const cards = [
-    { label: 'Total Revenue', value: `$${stats.revenue.toFixed(2)}`, Icon: DollarSign, color: '#c9a84c', bg: 'rgba(201,168,76,0.1)' },
-    { label: 'Total Orders', value: stats.orders, Icon: ShoppingCart, color: '#60a5fa', bg: 'rgba(96,165,250,0.1)' },
-    { label: 'Products', value: stats.products, Icon: Package, color: '#a78bfa', bg: 'rgba(167,139,250,0.1)' },
-    { label: 'Users', value: stats.users, Icon: Users, color: '#4ade80', bg: 'rgba(74,222,128,0.1)' },
-  ];
-
   if (loading) return <LoadingSpinner />;
 
+  // Cyber metric cards with micro sparklines
+  const cards = [
+    { 
+      label: 'Total Accumulated Revenue', 
+      value: `$${stats.revenue.toFixed(2)}`, 
+      sub: '[METRIC_REV_USD]',
+      Icon: DollarSign, 
+      color: '#c9a84c', 
+      bg: 'rgba(201,168,76,0.06)', 
+      border: 'rgba(201,168,76,0.2)',
+      sparkline: 'M0 20 L20 18 L40 25 L60 10 L80 15 L100 5 L120 12'
+    },
+    { 
+      label: 'Total Orders Compiled', 
+      value: stats.orders, 
+      sub: '[METRIC_ORD_LATEST]',
+      Icon: ShoppingCart, 
+      color: '#60a5fa', 
+      bg: 'rgba(96,165,250,0.06)', 
+      border: 'rgba(96,165,250,0.2)',
+      sparkline: 'M0 22 L20 20 L40 12 L60 25 L80 8 L100 12 L120 4'
+    },
+    { 
+      label: 'Database Products Ledger', 
+      value: stats.products, 
+      sub: '[METRIC_PRD_INVENTORY]',
+      Icon: Package, 
+      color: '#a78bfa', 
+      bg: 'rgba(167,139,250,0.06)', 
+      border: 'rgba(167,139,250,0.2)',
+      sparkline: 'M0 15 L20 22 L40 18 L60 20 L80 12 L100 10 L120 6'
+    },
+    { 
+      label: 'Registered Network Users', 
+      value: stats.users, 
+      sub: '[METRIC_USR_CONNECTIONS]',
+      Icon: Users, 
+      color: '#4ade80', 
+      bg: 'rgba(74,222,128,0.06)', 
+      border: 'rgba(74,222,128,0.2)',
+      sparkline: 'M0 25 L20 20 L40 15 L60 12 L80 18 L100 8 L120 5'
+    },
+  ];
+
   return (
-    <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600', marginBottom: '4px' }}>Dashboard Overview</h1>
-        <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem' }}>Welcome back! Here's what's happening with your store.</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      
+      {/* 1. Cybernetic Telemetry Header */}
+      <div className="glass" style={{
+        borderRadius: '16px',
+        padding: '1.25rem 2rem',
+        background: 'rgba(13, 13, 13, 0.45)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Neon accent grid corner lines */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '10px', height: '10px', borderTop: '2px solid var(--color-accent)', borderLeft: '2px solid var(--color-accent)' }} />
+        <div style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderBottom: '2px solid var(--color-accent)', borderRight: '2px solid var(--color-accent)' }} />
+
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Activity size={18} className="text-gold" style={{ filter: 'drop-shadow(0 0 5px rgba(201,168,76,0.6))' }} />
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: '700', letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase' }}>
+              Wearixa Command Deck
+            </h1>
+          </div>
+          <p style={{ color: 'var(--color-muted)', fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '4px', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>LAT: 40.7128° N // LON: 74.0060° W</span>
+            <span style={{ color: 'rgba(255,255,255,0.15)' }}>|</span>
+            <span style={{ color: '#4ade80', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <ShieldCheck size={12} /> SECURE_NODE_ONLINE
+            </span>
+          </p>
+        </div>
+
+        {/* Telemetry metadata section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+          {/* Uptime and latency info */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontFamily: 'monospace', fontSize: '0.68rem', color: 'var(--color-muted)' }}>
+            <span>SYS_CORE_SECURE // V.2.4</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+              API_LATENCY: <span style={{ color: '#4ade80' }}>14ms</span>
+            </span>
+          </div>
+          
+          {/* Real-time UTC clock */}
+          <div style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: '8px',
+            padding: '6px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontFamily: 'monospace',
+            fontSize: '0.78rem',
+            color: 'var(--color-accent-light)',
+            boxShadow: 'inset 0 0 10px rgba(0,0,0,0.5)'
+          }}>
+            <Clock size={13} />
+            <span>{utcTime || 'SYNCHRONIZING...'}</span>
+          </div>
+        </div>
       </div>
 
-      {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
-        {cards.map(({ label, value, Icon, color, bg }) => (
-          <div key={label} className="glass" style={{ borderRadius: '12px', padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <p style={{ fontSize: '0.78rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>{label}</p>
-              <p style={{ fontSize: '1.75rem', fontWeight: '700', color }}>{value}</p>
-              <p style={{ fontSize: '0.72rem', color: '#4ade80', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                <TrendingUp size={11} /> +12% this month
-              </p>
+      {/* 2. Cyber-Notched Stat Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '1.25rem' }}>
+        {cards.map(({ label, value, sub, Icon, color, bg, border, sparkline }) => (
+          <div 
+            key={label} 
+            className="glass" 
+            style={{ 
+              borderRadius: '16px', 
+              padding: '1.5rem', 
+              display: 'flex', 
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              position: 'relative',
+              background: 'rgba(13, 13, 13, 0.4)',
+              border: `1px solid ${border}`,
+              boxShadow: `0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.01)`,
+              overflow: 'hidden',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+              // The diagonal notch design: cut out the top right corner
+              clipPath: 'polygon(0px 0px, calc(100% - 16px) 0px, 100% 16px, 100% 100%, 0% 100%)'
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = `0 12px 30px rgba(0,0,0,0.6), 0 0 15px ${color}25`;
+              e.currentTarget.style.borderColor = color;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 12px rgba(255, 255, 255, 0.01)';
+              e.currentTarget.style.borderColor = border;
+            }}
+          >
+            {/* Background grid texture overlay */}
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundImage: 'linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px)',
+              backgroundSize: '12px 12px',
+              pointerEvents: 'none',
+              opacity: 0.4
+            }} />
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
+              <div>
+                <p style={{ fontSize: '0.62rem', color: 'var(--color-muted)', fontFamily: 'monospace', letterSpacing: '0.05em' }}>
+                  {sub}
+                </p>
+                <p style={{ fontSize: '0.72rem', color: '#fff', fontWeight: '500', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  {label}
+                </p>
+              </div>
+              <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: bg, border: `1px solid ${border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Icon size={18} style={{ color }} />
+              </div>
             </div>
-            <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Icon size={20} style={{ color }} />
+
+            {/* Sparkline & Values bottom container */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '1.5rem', position: 'relative', zIndex: 2 }}>
+              <div>
+                <p style={{ fontSize: '1.75rem', fontWeight: '700', color, fontFamily: 'monospace', lineHeight: 1.1 }}>{value}</p>
+                <p style={{ fontSize: '0.68rem', color: '#4ade80', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'monospace' }}>
+                  <TrendingUp size={11} /> +12% DELTA
+                </p>
+              </div>
+
+              {/* Sparkline micro-graph */}
+              <div style={{ width: '80px', height: '30px', opacity: 0.7 }}>
+                <svg width="100%" height="100%" viewBox="0 0 120 30" style={{ overflow: 'visible' }}>
+                  <path
+                    d={sparkline}
+                    fill="none"
+                    stroke={color}
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ filter: `drop-shadow(0 0 3px ${color}40)` }}
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Recent Orders */}
-      <div className="glass" style={{ borderRadius: '12px', overflow: 'hidden' }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem' }}>Recent Orders</h2>
-          <a href="/admin/orders" style={{ fontSize: '0.8rem', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}>
-            View All <ArrowUpRight size={13} />
-          </a>
+      {/* 3. High-Tech Visual Charts Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.25rem' }}>
+        <div style={{ gridColumn: 'span 1' }}>
+          <SalesTrendMatrix stats={stats} />
         </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                {['Order ID', 'Customer', 'Date', 'Total', 'Paid', 'Delivered'].map(h => (
-                  <th key={h} style={{ padding: '0.875rem 1.25rem', textAlign: 'left', color: 'var(--color-muted)', fontWeight: '500', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {recentOrders.map((order: any) => (
-                <tr key={order._id} style={{ borderBottom: '1px solid var(--color-border)' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
-                  <td style={{ padding: '1rem 1.25rem', fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--color-accent)' }}>#{order._id.slice(-8).toUpperCase()}</td>
-                  <td style={{ padding: '1rem 1.25rem' }}>{order.user?.name || 'N/A'}</td>
-                  <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{new Date(order.createdAt).toLocaleDateString()}</td>
-                  <td style={{ padding: '1rem 1.25rem', fontWeight: '600', color: 'var(--color-accent)' }}>${order.totalPrice.toFixed(2)}</td>
-                  <td style={{ padding: '1rem 1.25rem' }}>
-                    <span style={{ padding: '2px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: '600', background: order.isPaid ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)', color: order.isPaid ? '#4ade80' : '#f87171', border: `1px solid ${order.isPaid ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)'}` }}>
-                      {order.isPaid ? 'Yes' : 'No'}
-                    </span>
-                  </td>
-                  <td style={{ padding: '1rem 1.25rem' }}>
-                    <span style={{ padding: '2px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: '600', background: order.isDelivered ? 'rgba(74,222,128,0.1)' : 'rgba(255,165,0,0.1)', color: order.isDelivered ? '#4ade80' : '#ffa500', border: `1px solid ${order.isDelivered ? 'rgba(74,222,128,0.3)' : 'rgba(255,165,0,0.3)'}` }}>
-                      {order.isDelivered ? 'Yes' : 'Pending'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {recentOrders.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-muted)' }}>No orders yet.</p>}
+        <div style={{ gridColumn: 'span 1' }}>
+          <CategoryDistributionRing stats={stats} />
         </div>
       </div>
+
+      {/* Responsive adjustments for graphs */}
+      <style>{`
+        @media (max-width: 1024px) {
+          div[style*="gridTemplateColumns: 1.5fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+
+      {/* 4. Database Ledger (Recent Orders) & Live Logging Console */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '1.25rem' }}>
+        
+        {/* Recent Orders LEDGER */}
+        <div className="glass" style={{
+          borderRadius: '16px',
+          overflow: 'hidden',
+          background: 'rgba(13, 13, 13, 0.45)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          position: 'relative'
+        }}>
+          {/* Cyber accents */}
+          <div style={{ position: 'absolute', top: 0, right: 0, opacity: 0.15, pointerEvents: 'none', fontFamily: 'monospace', fontSize: '0.6rem', padding: '6px' }}>
+            TRANSACTION_LEDGER_SYSTEM
+          </div>
+
+          <div>
+            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Cpu size={16} className="text-gold" /> System Orders Ledger
+                </h2>
+                <p style={{ fontSize: '0.68rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>
+                  REALTIME_TRANSACTION_RECORD
+                </p>
+              </div>
+              <a href="/admin/orders" style={{
+                fontSize: '0.72rem',
+                fontFamily: 'monospace',
+                color: 'var(--color-accent)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                textDecoration: 'none',
+                background: 'rgba(201,168,76,0.05)',
+                border: '1px solid rgba(201,168,76,0.2)',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                transition: 'all 0.2s'
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.12)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.05)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)'; }}
+              >
+                COMPILE_ALL <ArrowUpRight size={12} />
+              </a>
+            </div>
+            
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(0,0,0,0.15)' }}>
+                    {['TX_ID', 'Customer ID', 'Date', 'Gross Vol', 'Paid', 'Dispatched'].map(h => (
+                      <th key={h} style={{ padding: '0.875rem 1.25rem', textAlign: 'left', color: 'var(--color-muted)', fontWeight: '600', fontSize: '0.68rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOrders.map((order: any) => (
+                    <tr key={order._id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'background 0.2s' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(201,168,76,0.02)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+                      <td style={{ padding: '0.9rem 1.25rem', fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--color-accent-light)' }}>
+                        #{order._id.slice(-8).toUpperCase()}
+                      </td>
+                      <td style={{ padding: '0.9rem 1.25rem', color: '#eaeaea', fontWeight: '500' }}>
+                        {order.user?.name || 'GUEST_USER'}
+                      </td>
+                      <td style={{ padding: '0.9rem 1.25rem', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.72rem' }}>
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </td>
+                      <td style={{ padding: '0.9rem 1.25rem', fontWeight: '700', color: '#fff', fontFamily: 'monospace' }}>
+                        ${order.totalPrice.toFixed(2)}
+                      </td>
+                      <td style={{ padding: '0.9rem 1.25rem' }}>
+                        <span style={{ 
+                          padding: '2px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '0.68rem', 
+                          fontWeight: '700', 
+                          fontFamily: 'monospace',
+                          background: order.isPaid ? 'rgba(74,222,128,0.08)' : 'rgba(239,68,68,0.08)', 
+                          color: order.isPaid ? '#4ade80' : '#f87171', 
+                          border: `1px solid ${order.isPaid ? 'rgba(74,222,128,0.2)' : 'rgba(239,68,68,0.2)'}` 
+                        }}>
+                          {order.isPaid ? 'VAL_TRUE' : 'VAL_FALSE'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '0.9rem 1.25rem' }}>
+                        <span style={{ 
+                          padding: '2px 8px', 
+                          borderRadius: '4px', 
+                          fontSize: '0.68rem', 
+                          fontWeight: '700', 
+                          fontFamily: 'monospace',
+                          background: order.isDelivered ? 'rgba(74,222,128,0.08)' : 'rgba(255,165,0,0.08)', 
+                          color: order.isDelivered ? '#4ade80' : '#ffa500', 
+                          border: `1px solid ${order.isDelivered ? 'rgba(74,222,128,0.2)' : 'rgba(255,165,0,0.2)'}` 
+                        }}>
+                          {order.isDelivered ? 'TRUE' : 'WAITING'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {recentOrders.length === 0 && <p style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.78rem' }}>BUFFER_EMPTY: NO_TRANSACTION_RECORDS</p>}
+            </div>
+          </div>
+        </div>
+
+        {/* Live Terminal Output Console */}
+        <div style={{ gridColumn: 'span 1' }}>
+          <LiveActivityConsole recentOrders={recentOrders} />
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 1024px) {
+          div[style*="gridTemplateColumns: 1.5fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
+
     </div>
   );
 }
