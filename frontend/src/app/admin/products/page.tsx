@@ -231,7 +231,8 @@ export default function AdminProductsPage() {
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Description</label>
                 <textarea className="input-field" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} rows={4} required disabled={submitting} />
               </div>
-              <div className="admin-form-grid-5">
+
+              <div className="admin-form-grid-3">
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price ($)</label>
                   <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required disabled={submitting} />
@@ -244,6 +245,9 @@ export default function AdminProductsPage() {
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Stock</label>
                   <input className="input-field" type="number" value={form.stock} onChange={e => setForm(f => ({ ...f, stock: e.target.value }))} required disabled={submitting} />
                 </div>
+              </div>
+
+              <div className="admin-form-grid-2">
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Shipping</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
@@ -270,11 +274,12 @@ export default function AdminProductsPage() {
                       style={{ width: '18px', height: '18px', accentColor: 'var(--color-accent)' }}
                     />
                     <label htmlFor="cod-toggle" style={{ fontSize: '0.85rem', cursor: 'pointer' }}>
-                      {form.isCodAvailable ? 'COD Allowed' : 'No COD'}
+                      {form.isCodAvailable ? 'COD Allowed' : 'Prepaid Only'}
                     </label>
                   </div>
                 </div>
               </div>
+
               {form.applyShippingCharges && (
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Base Shipping Rate ($)</label>
@@ -452,12 +457,16 @@ export default function AdminProductsPage() {
           gap: 1rem;
         }
 
+        .admin-form-grid-2 {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.5rem;
+        }
+
         @media (max-width: 768px) {
-          .admin-form-grid-5 {
-            grid-template-columns: 1fr !important;
-            gap: 0.75rem !important;
-          }
-          .admin-form-grid-3 {
+          .admin-form-grid-5,
+          .admin-form-grid-3,
+          .admin-form-grid-2 {
             grid-template-columns: 1fr !important;
             gap: 0.75rem !important;
           }
