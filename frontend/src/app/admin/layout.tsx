@@ -456,12 +456,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       <style>{`
         /* Collapsed desktop sidebar brand layout */
-        .admin-sidebar.closed .sidebar-brand-logo > div:last-child {
-          display: none;
-        }
         .admin-sidebar.closed .sidebar-brand-logo {
-          justify-content: center;
-          width: 100%;
+          display: none;
         }
 
         @media (max-width: 768px) {
