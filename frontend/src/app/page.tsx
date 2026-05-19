@@ -550,20 +550,55 @@ export default function HomePage() {
           background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)',
           borderRadius: '50%',
         }} />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1rem' }}>
-            Limited Time Offer
-          </p>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: '700', marginBottom: '1rem' }}>
-            Up to <span className="text-gold">40% Off</span><br />New Season Styles
-          </h2>
-          <p style={{ color: 'var(--color-muted)', fontSize: '1rem', marginBottom: '2.5rem', maxWidth: '450px', margin: '0 auto 2.5rem' }}>
-            Don&apos;t miss out on our seasonal sale. Premium fashion at unbeatable prices.
-          </p>
-          <Link href="/shop" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '1rem 2.5rem' }}>
-            Shop the Sale <ArrowRight size={18} />
-          </Link>
-        </div>
+        {(() => {
+          const featuredPromo = activePromos[0];
+          return (
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <p style={{ fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1rem', fontWeight: 'bold' }}>
+                {featuredPromo ? 'ACTIVE CAMPAIGN DISPATCHED' : 'Limited Time Offer'}
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: '700', marginBottom: '1rem', textTransform: 'uppercase', lineHeight: '1.2' }}>
+                {featuredPromo ? (
+                  <>
+                    Unlock <span className="text-gold">{featuredPromo.discountType === 'percentage' ? `${featuredPromo.discountValue}%` : `$${featuredPromo.discountValue}`} Off</span><br />
+                    With Code: <span style={{ color: '#fff', borderBottom: '2px dashed var(--color-accent)', paddingBottom: '2px', fontFamily: 'monospace' }}>{featuredPromo.code}</span>
+                  </>
+                ) : (
+                  <>
+                    Up to <span className="text-gold">40% Off</span><br />New Season Styles
+                  </>
+                )}
+              </h2>
+              <p style={{ color: 'var(--color-muted)', fontSize: '1rem', marginBottom: '2.5rem', maxWidth: '480px', margin: '0 auto 2.5rem', lineHeight: '1.6' }}>
+                {featuredPromo ? (
+                  <>
+                    Initiate the {featuredPromo.code} protocol. Apply coupon code at checkout to unlock savings.
+                    {featuredPromo.minOrderAmount > 0 ? ` Valid for order aggregates exceeding $${featuredPromo.minOrderAmount}.` : ''}
+                  </>
+                ) : (
+                  "Don't miss out on our seasonal sale. Premium fashion at unbeatable prices."
+                )}
+              </p>
+              {featuredPromo ? (
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(featuredPromo.code);
+                    setCopiedCode(featuredPromo.code);
+                    setTimeout(() => setCopiedCode(null), 2000);
+                  }}
+                  className="btn-primary" 
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '1rem 2.5rem', boxShadow: '0 15px 30px rgba(201,168,76,0.2)', cursor: 'pointer' }}
+                >
+                  {copiedCode === featuredPromo.code ? 'Copied to Clipboard! ✓' : `Copy Code: ${featuredPromo.code}`}
+                </button>
+              ) : (
+                <Link href="/shop" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '1rem 2.5rem' }}>
+                  Shop the Sale <ArrowRight size={18} />
+                </Link>
+              )}
+            </div>
+          );
+        })()}
       </section>
     </>
   );
