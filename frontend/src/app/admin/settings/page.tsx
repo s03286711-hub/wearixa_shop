@@ -1,6 +1,8 @@
 'use client';
 import '@/app/admin/animations.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useToast } from '@/context/ToastContext';
+import { settingsService } from '@/services';
 import {
   Settings, CreditCard, Wallet, Truck, Percent, Tag, Shield,
   Bell, Globe, Database, RefreshCw, CheckCircle, Save, Zap, AlertTriangle
@@ -61,6 +63,8 @@ function SettingCard({ title, subtitle, Icon, color, children }: {
 }
 
 export default function SettingsPage() {
+  const { showToast } = useToast();
+
   // ── Payment Gateway Toggles ──
   const [stripeEnabled, setStripeEnabled] = useState(true);
   const [walletEnabled, setWalletEnabled] = useState(true);
@@ -84,9 +88,62 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
+  // Fetch settings on load
+  useEffect(() => {
+    let active = true;
+    const loadSettings = async () => {
+      try {
+        const data = await settingsService.getSettings();
+        if (active && data) {
+          setStripeEnabled(!!data.stripeEnabled);
+          setWalletEnabled(!!data.walletEnabled);
+          setCodEnabled(!!data.codEnabled);
+          setJazzEnabled(!!data.jazzEnabled);
+          setEasyEnabled(!!data.easyEnabled);
+          setTaxRate(String(data.taxRate ?? '8'));
+          setShippingFlat(String(data.shippingFlat ?? '12.99'));
+          setFreeShipThreshold(String(data.freeShipThreshold ?? '100'));
+          setWalletCashback(String(data.walletCashback ?? '5'));
+          setMaintenanceMode(!!data.maintenanceMode);
+          setEmailNotify(!!data.emailNotify);
+          setOrderAlerts(!!data.orderAlerts);
+          setAutoApprove(!!data.autoApprove);
+        }
+      } catch (err) {
+        console.error('Failed to load system settings:', err);
+      }
+    };
+    loadSettings();
+    return () => { active = false; };
+  }, []);
+
+  const handleSave = async () => {
     setSaving(true);
-    setTimeout(() => { setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 3000); }, 1200);
+    try {
+      await settingsService.updateSettings({
+        stripeEnabled,
+        walletEnabled,
+        codEnabled,
+        jazzEnabled,
+        easyEnabled,
+        taxRate: Number(taxRate),
+        shippingFlat: Number(shippingFlat),
+        freeShipThreshold: Number(freeShipThreshold),
+        walletCashback: Number(walletCashback),
+        maintenanceMode,
+        emailNotify,
+        orderAlerts,
+        autoApprove,
+      });
+      setSaved(true);
+      showToast('Settings updated successfully', 'success');
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err: any) {
+      console.error('Failed to save settings:', err);
+      showToast(err?.response?.data?.message || 'Failed to save settings', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const inputStyle: React.CSSProperties = {

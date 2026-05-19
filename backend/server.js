@@ -6,7 +6,15 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
 
-connectDB();
+connectDB().then(() => {
+    // Auto-seed settings on startup if database is empty
+    const Setting = require('./models/Setting');
+    Setting.countDocuments().then(count => {
+        if (count === 0) {
+            Setting.create({}).then(() => console.log('🌱 Default system settings successfully seeded!'));
+        }
+    }).catch(err => console.error('Error auto-seeding settings:', err));
+});
 
 const app = express();
 
@@ -32,6 +40,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const promoRoutes = require('./routes/promoRoutes');
+const settingRoutes = require('./routes/settingRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -40,6 +49,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/promo', promoRoutes);
+app.use('/api/settings', settingRoutes);
 
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

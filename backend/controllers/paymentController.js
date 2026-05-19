@@ -225,13 +225,16 @@ const stripeWebhook = async (req, res) => {
     res.json({ received: true });
 };
 
-// @desc    Process wallet cashback (5% reward on wallet payments)
+// @desc    Process wallet cashback (reward on wallet payments)
 // @route   POST /api/payments/cashback
 // @access  Private
 const processCashback = async (req, res) => {
     try {
         const { orderTotal } = req.body;
-        const CASHBACK_RATE = 0.05; // 5%
+        const Setting = require('../models/Setting');
+        let settings = await Setting.findOne();
+        const cashbackPercent = settings ? settings.walletCashback : 5;
+        const CASHBACK_RATE = cashbackPercent / 100;
         const cashbackAmount = Math.round(orderTotal * CASHBACK_RATE * 100) / 100;
 
         if (cashbackAmount <= 0) {
@@ -247,7 +250,7 @@ const processCashback = async (req, res) => {
             paymentGateway: 'CASHBACK',
             status: 'COMPLETED',
             referenceId,
-            description: `5% cashback on wallet order ($${orderTotal.toFixed(2)})`,
+            description: `${cashbackPercent}% cashback on wallet order ($${orderTotal.toFixed(2)})`,
         });
 
         const user = await User.findById(req.user._id);

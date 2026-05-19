@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
-import { orderService, promoService, cashbackService } from '@/services';
+import { orderService, promoService, cashbackService, settingsService } from '@/services';
 import api from '@/services/api';
 import { MapPin, CreditCard, CheckCircle, ArrowRight, Wallet, Smartphone, Tag, Loader2 } from 'lucide-react';
 import PaymentForms from '@/components/PaymentForms';
@@ -33,6 +33,42 @@ export default function CheckoutPage() {
   const [promoApplied, setPromoApplied] = useState<{ code: string; discount: number; message: string } | null>(null);
   const [promoError, setPromoError] = useState('');
 
+  // Global settings state loaded from backend
+  const [settings, setSettings] = useState<any>({
+    stripeEnabled: true,
+    walletEnabled: true,
+    codEnabled: true,
+    jazzEnabled: true,
+    easyEnabled: true,
+    taxRate: 8,
+    shippingFlat: 12.99,
+    freeShipThreshold: 100,
+    walletCashback: 5,
+  });
+
+  useEffect(() => {
+    let active = true;
+    const fetchSettings = async () => {
+      try {
+        const data = await settingsService.getSettings();
+        if (active && data) {
+          setSettings(data);
+          // Set default payment method if stripe is disabled but another is enabled
+          if (!data.stripeEnabled) {
+            if (data.walletEnabled) setPayment({ method: 'wallet' });
+            else if (data.codEnabled) setPayment({ method: 'cod' });
+            else if (data.jazzEnabled) setPayment({ method: 'jazzcash' });
+            else if (data.easyEnabled) setPayment({ method: 'easypaisa' });
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load settings in checkout:', err);
+      }
+    };
+    fetchSettings();
+    return () => { active = false; };
+  }, []);
+
   useEffect(() => {
     if (user) {
       api.get('/payments/transactions')
@@ -59,11 +95,11 @@ export default function CheckoutPage() {
 
   // Pricing
   const subtotal = totalPrice - totalShipping;
-  const shippingCost = subtotal > 100 ? 0 : 12.99;
+  const shippingCost = subtotal > (settings.freeShipThreshold ?? 100) ? 0 : (settings.shippingFlat ?? 12.99);
   const promoDiscount = promoApplied?.discount || 0;
-  const tax = (subtotal - promoDiscount) * 0.08;
+  const tax = (subtotal - promoDiscount) * ((settings.taxRate ?? 8) / 100);
   const grandTotal = Math.max(0, subtotal - promoDiscount + shippingCost + tax);
-  const walletCashback = payment.method === 'wallet' ? Math.round(grandTotal * 0.05 * 100) / 100 : 0;
+  const walletCashback = payment.method === 'wallet' ? Math.round(grandTotal * ((settings.walletCashback ?? 5) / 100) * 100) / 100 : 0;
 
   const handlePlaceOrder = async () => {
     setLoading(true);
@@ -198,12 +234,12 @@ export default function CheckoutPage() {
                     )}
 
                     {[
-                      { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet },
-                      { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard },
-                      { id: 'jazzcash', name: 'JazzCash Mobile Wallet', desc: 'Pay instantly via JazzCash', icon: Smartphone },
-                      { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone },
-                      { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle },
-                    ].map((m) => {
+                      { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet, enabled: settings.walletEnabled },
+                      { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard, enabled: settings.stripeEnabled },
+                      { id: 'jazzcash', name: 'JazzCash Mobile Wallet', desc: 'Pay instantly via JazzCash', icon: Smartphone, enabled: settings.jazzEnabled },
+                      { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone, enabled: settings.easyEnabled },
+                      { id: 'cod', name: 'Cash on Delivery', desc: 'Pay when you receive', icon: CheckCircle, enabled: settings.codEnabled },
+                    ].filter(m => m.enabled !== false).map((m) => {
                       const isCodDisabled = cartItems.some(item => item.isCodAvailable === false);
                       const disabled = m.id === 'wallet' 
                         ? (walletBalance === null || walletBalance < grandTotal)
@@ -366,7 +402,7 @@ export default function CheckoutPage() {
                 </div>
                 {walletCashback > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', padding: '0.5rem 0.75rem', background: 'rgba(201,168,76,0.08)', borderRadius: '6px', marginTop: '0.5rem' }}>
-                    <span style={{ color: 'var(--color-accent)' }}>🎉 Wallet Cashback (5%)</span>
+                    <span style={{ color: 'var(--color-accent)' }}>🎉 Wallet Cashback ({settings.walletCashback ?? 5}%)</span>
                     <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>+${walletCashback.toFixed(2)}</span>
                   </div>
                 )}

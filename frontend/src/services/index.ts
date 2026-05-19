@@ -166,3 +166,15 @@ export const cashbackService = {
     return data;
   },
 };
+
+export const settingsService = {
+  getSettings: async () => {
+    const { data } = await api.get('/settings');
+    return data;
+  },
+
+  updateSettings: async (settingsData: Record<string, unknown>) => {
+    const { data } = await api.put('/settings', settingsData);
+    return data;
+  },
+};
