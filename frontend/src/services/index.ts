@@ -158,6 +158,21 @@ export const promoService = {
     const { data } = await api.post('/promo/use', { code });
     return data;
   },
+
+  getAll: async () => {
+    const { data } = await api.get('/promo');
+    return data;
+  },
+
+  create: async (promoData: Record<string, unknown>) => {
+    const { data } = await api.post('/promo', promoData);
+    return data;
+  },
+
+  delete: async (id: string) => {
+    const { data } = await api.delete(`/promo/${id}`);
+    return data;
+  },
 };
 
 export const cashbackService = {

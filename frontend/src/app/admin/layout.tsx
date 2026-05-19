@@ -8,7 +8,7 @@ import Link from 'next/link';
 import {
   LayoutDashboard, Package, ShoppingCart, Users, Tag,
   LogOut, Menu, X, BarChart3, DollarSign, Settings,
-  Activity, Bell, ChevronRight, Zap
+  Activity, Bell, ChevronRight, Zap, Percent
 } from 'lucide-react';
 
 const NAV_GROUPS = [
@@ -20,6 +20,7 @@ const NAV_GROUPS = [
       { href: '/admin/products', label: 'Products', Icon: Package },
       { href: '/admin/users', label: 'Customers', Icon: Users },
       { href: '/admin/categories', label: 'Categories', Icon: Tag },
+      { href: '/admin/promos', label: 'Campaigns', Icon: Percent },
     ]
   },
   {
