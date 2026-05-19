@@ -319,15 +319,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 {notifDropdownOpen && (
                   <div
+                    className="glass"
                     style={{
                       position: 'absolute', right: 0, top: 'calc(100% + 8px)',
-                      width: '320px', borderRadius: '16px', overflow: 'hidden',
+                      width: '320px', borderRadius: '12px', overflow: 'hidden',
                       animation: 'fadeIn 0.2s ease',
-                      background: 'rgba(15, 15, 15, 0.88)',
-                      backdropFilter: 'blur(30px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-                      border: '1px solid rgba(201, 168, 76, 0.25)',
-                      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.65)',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
                       zIndex: 100
                     }}
                   >
@@ -420,15 +417,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 {profileDropdownOpen && (
                   <div
+                    className="glass"
                     style={{
                       position: 'absolute', right: 0, top: 'calc(100% + 8px)',
-                      width: '180px', borderRadius: '12px', overflow: 'hidden',
-                      animation: 'fadeIn 0.2s ease', 
-                      background: 'rgba(15, 15, 15, 0.88)',
-                      backdropFilter: 'blur(30px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(30px) saturate(180%)',
-                      border: '1px solid rgba(201, 168, 76, 0.25)',
-                      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.65)',
+                      width: '180px', borderRadius: '8px', overflow: 'hidden',
+                      animation: 'fadeIn 0.2s ease',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
                       zIndex: 100
                     }}
                   >
