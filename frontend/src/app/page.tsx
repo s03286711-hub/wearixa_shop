@@ -320,55 +320,83 @@ export default function HomePage() {
               </span>
             </div>
             
-            <div style={{ display: 'flex', gap: '1.5rem', overflowX: 'auto', padding: '4px 0', maxWidth: '100%', scrollbarWidth: 'none' }} className="no-scrollbar">
-              {activePromos.map((promo) => {
-                const isCopied = copiedCode === promo.code;
-                return (
-                  <div 
-                    key={promo._id}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px dashed rgba(201, 168, 76, 0.25)',
-                      borderRadius: '8px',
-                      padding: '6px 16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      flexShrink: 0
-                    }}
-                  >
-                    <span style={{ fontSize: '0.82rem', color: 'var(--color-muted)' }}>
-                      {promo.discountType === 'percentage' ? `${promo.discountValue}% OFF` : `$${promo.discountValue} OFF`}
-                      {promo.minOrderAmount > 0 && ` on orders over $${promo.minOrderAmount}`}
-                    </span>
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(promo.code);
-                        setCopiedCode(promo.code);
-                        setTimeout(() => setCopiedCode(null), 2000);
-                      }}
+            <div 
+              style={{ 
+                overflow: 'hidden', 
+                whiteSpace: 'nowrap', 
+                flex: 1, 
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <style dangerouslySetInnerHTML={{__html: `
+                @keyframes marquee {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+                .marquee-container {
+                  display: flex;
+                  gap: 1.5rem;
+                  animation: marquee 35s linear infinite;
+                  width: max-content;
+                  padding-right: 1.5rem;
+                }
+                .marquee-container:hover {
+                  animation-play-state: paused;
+                }
+              `}} />
+              
+              <div className="marquee-container">
+                {[...activePromos, ...activePromos, ...activePromos].map((promo, idx) => {
+                  const isCopied = copiedCode === promo.code;
+                  return (
+                    <div 
+                      key={`${promo._id}-${idx}`}
                       style={{
-                        background: isCopied ? 'rgba(74, 222, 128, 0.1)' : 'rgba(201, 168, 76, 0.1)',
-                        border: `1px solid ${isCopied ? '#4ade80' : 'rgba(201, 168, 76, 0.3)'}`,
-                        borderRadius: '4px',
-                        padding: '4px 10px',
-                        fontFamily: 'monospace',
-                        fontSize: '0.8rem',
-                        fontWeight: 'bold',
-                        color: isCopied ? '#4ade80' : 'var(--color-accent)',
-                        cursor: 'pointer',
-                        display: 'inline-flex',
+                        background: 'rgba(255, 255, 255, 0.02)',
+                        border: '1px dashed rgba(201, 168, 76, 0.25)',
+                        borderRadius: '8px',
+                        padding: '6px 16px',
+                        display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        transition: 'all 0.2s'
+                        gap: '12px',
+                        flexShrink: 0
                       }}
                     >
-                      {promo.code}
-                      {isCopied ? <Check size={12} /> : <Copy size={12} />}
-                    </button>
-                  </div>
-                );
-              })}
+                      <span style={{ fontSize: '0.82rem', color: 'var(--color-muted)' }}>
+                        {promo.discountType === 'percentage' ? `${promo.discountValue}% OFF` : `$${promo.discountValue} OFF`}
+                        {promo.minOrderAmount > 0 && ` on orders over $${promo.minOrderAmount}`}
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(promo.code);
+                          setCopiedCode(promo.code);
+                          setTimeout(() => setCopiedCode(null), 2000);
+                        }}
+                        style={{
+                          background: isCopied ? 'rgba(74, 222, 128, 0.1)' : 'rgba(201, 168, 76, 0.1)',
+                          border: `1px solid ${isCopied ? '#4ade80' : 'rgba(201, 168, 76, 0.3)'}`,
+                          borderRadius: '4px',
+                          padding: '4px 10px',
+                          fontFamily: 'monospace',
+                          fontSize: '0.8rem',
+                          fontWeight: 'bold',
+                          color: isCopied ? '#4ade80' : 'var(--color-accent)',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        {promo.code}
+                        {isCopied ? <Check size={12} /> : <Copy size={12} />}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </motion.section>
