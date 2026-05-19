@@ -3,7 +3,11 @@ import '@/app/admin/animations.css';
 import { useEffect, useState } from 'react';
 import { productService, categoryService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { Trash2, Edit, Plus, X, Upload, Search, Loader2, CheckCircle } from 'lucide-react';
+import { 
+  Trash2, Edit, Plus, X, Upload, Search, Loader2, CheckCircle, 
+  Package, DollarSign, AlertTriangle, Layers, ArrowRight, ShieldCheck, Tag 
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -12,6 +16,7 @@ export default function AdminProductsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [keyword, setKeyword] = useState('');
+  const [activeFilter, setActiveFilter] = useState('all');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -129,69 +134,239 @@ export default function AdminProductsPage() {
     }
   };
 
+  // Telemetry metric computations
+  const totalProducts = products.length;
+  const totalInventoryValue = products.reduce((acc, p) => acc + (p.price * p.stock), 0);
+  const outOfStockCount = products.filter(p => p.stock === 0).length;
+  const lowStockCount = products.filter(p => p.stock > 0 && p.stock < 10).length;
+
+  // Filter products by segment
+  const filteredProducts = products.filter(p => {
+    if (activeFilter === 'low') return p.stock > 0 && p.stock < 10;
+    if (activeFilter === 'out') return p.stock === 0;
+    if (activeFilter === 'free') return !p.applyShippingCharges;
+    return true;
+  });
+
   return (
     <div>
-      <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      {/* Upper header action area */}
+      <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600' }}>Products Management</h1>
-          <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>{products.length} products total</p>
+          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            Products Management <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>PORTAL_V2</span>
+          </h1>
+          <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>Real-time inventory and catalog status telemetry</p>
         </div>
-        <button onClick={() => { setEditingProduct(null); setSubmitError(''); setSuccessMsg(''); setShowModal(true); }} className="btn-primary hover-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <button onClick={() => { setEditingProduct(null); setSubmitError(''); setSuccessMsg(''); setShowModal(true); }} className="btn-primary hover-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(201, 168, 76, 0.25)' }}>
           <Plus size={18} /> Add Product
         </button>
       </div>
 
-      <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+      {/* Telemetry KPI Stats Summary Section */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
+        {[
+          { title: 'Catalog Volume', val: totalProducts, label: 'Active listings', color: 'var(--color-accent)', icon: Package },
+          { title: 'Inventory Val', val: `$${totalInventoryValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, label: 'Asset appraisal', color: '#10b981', icon: DollarSign },
+          { title: 'Critical Stock', val: outOfStockCount, label: 'Depleted entries', color: '#ef4444', icon: AlertTriangle, pulse: outOfStockCount > 0 },
+          { title: 'Low Allocations', val: lowStockCount, label: 'Restock advised', color: '#f59e0b', icon: Layers, pulse: lowStockCount > 0 },
+        ].map((card, idx) => {
+          const Icon = card.icon;
+          return (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              className="glass"
+              style={{
+                borderRadius: '12px',
+                padding: '1.5rem',
+                border: '1px solid rgba(255, 255, 255, 0.06)',
+                position: 'relative',
+                overflow: 'hidden',
+                background: 'rgba(255, 255, 255, 0.015)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.2)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '0.7rem', color: 'var(--color-muted)', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{card.title}</span>
+                <h3 style={{ fontSize: '1.75rem', fontWeight: 'bold', margin: '0.5rem 0 0.25rem 0', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {card.val}
+                  {card.pulse && (
+                    <div style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: card.color,
+                      boxShadow: `0 0 8px ${card.color}`,
+                      animation: 'pulse 1.8s infinite alternate'
+                    }} />
+                  )}
+                </h3>
+                <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)' }}>{card.label}</span>
+              </div>
+              <div style={{
+                background: `rgba(255, 255, 255, 0.03)`,
+                borderRadius: '8px',
+                padding: '0.75rem',
+                border: '1px solid rgba(255, 255, 255, 0.04)',
+                color: card.color
+              }}>
+                <Icon size={24} style={{ filter: `drop-shadow(0 0 4px ${card.color}44)` }} />
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Cyber Search & Segment Toolbar */}
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
           <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-muted)' }} />
-          <input className="input-field" placeholder="Search products..." value={keyword} onChange={e => setKeyword(e.target.value)} style={{ paddingLeft: '40px' }} />
+          <input className="input-field" placeholder="Search product serials, category name..." value={keyword} onChange={e => setKeyword(e.target.value)} style={{ paddingLeft: '40px' }} />
+        </div>
+
+        {/* Quick Filter Pill Buttons */}
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {[
+            { id: 'all', label: 'All Catalog', count: totalProducts },
+            { id: 'low', label: 'Low Allocations', count: lowStockCount, color: '#f59e0b' },
+            { id: 'out', label: 'Depleted Stock', count: outOfStockCount, color: '#ef4444' },
+            { id: 'free', label: 'Complimentary Shipping', count: products.filter(p => !p.applyShippingCharges).length },
+          ].map(filt => (
+            <button
+              key={filt.id}
+              onClick={() => setActiveFilter(filt.id)}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                border: activeFilter === filt.id ? '1px solid var(--color-accent)' : '1px solid rgba(255, 255, 255, 0.06)',
+                background: activeFilter === filt.id ? 'rgba(201, 168, 76, 0.15)' : 'rgba(255, 255, 255, 0.02)',
+                color: activeFilter === filt.id ? 'var(--color-accent)' : 'var(--color-muted)',
+                cursor: 'pointer',
+                fontSize: '0.78rem',
+                fontFamily: 'monospace',
+                fontWeight: activeFilter === filt.id ? '700' : '400',
+                transition: 'all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              onMouseEnter={e => {
+                if (activeFilter !== filt.id) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.color = '#fff';
+                }
+              }}
+              onMouseLeave={e => {
+                if (activeFilter !== filt.id) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                  e.currentTarget.style.color = 'var(--color-muted)';
+                }
+              }}
+            >
+              {filt.label}
+              <span style={{
+                background: activeFilter === filt.id ? 'var(--color-accent)' : 'rgba(255, 255, 255, 0.08)',
+                color: activeFilter === filt.id ? '#0d0d0d' : 'var(--color-muted)',
+                padding: '2px 8px',
+                borderRadius: '10px',
+                fontSize: '0.7rem',
+                fontWeight: '700'
+              }}>{filt.count}</span>
+            </button>
+          ))}
         </div>
       </div>
 
       {loading ? <LoadingSpinner /> : (
-        <div className="glass" style={{ borderRadius: '12px', overflow: 'hidden' }}>
+        <div className="glass" style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  {['Product', 'Category', 'Price', 'Stock', 'Brand', 'Actions'].map(h => (
+                  {['Product', 'Category', 'Price', 'Stock Status', 'Brand', 'Actions'].map(h => (
                     <th key={h} style={{ padding: '0.875rem 1.25rem', textAlign: 'left', color: 'var(--color-muted)', fontWeight: '500', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {products.map((p) => (
-                  <tr key={p._id} className="ledger-row" style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    <td style={{ padding: '1rem 1.25rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={{ width: '40px', height: '52px', borderRadius: '4px', overflow: 'hidden', background: 'var(--color-surface-2)', flexShrink: 0 }}>
-                          <img src={p.images[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <AnimatePresence>
+                  {filteredProducts.map((p, idx) => (
+                    <motion.tr 
+                      key={p._id} 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3, delay: idx * 0.03 }}
+                      className="ledger-row" 
+                      style={{ borderBottom: '1px solid var(--color-border)' }}
+                    >
+                      <td style={{ padding: '1rem 1.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div style={{ width: '40px', height: '52px', borderRadius: '4px', overflow: 'hidden', background: 'var(--color-surface-2)', flexShrink: 0, border: '1px solid rgba(255,255,255,0.04)' }}>
+                            <img src={p.images[0]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          </div>
+                          <span style={{ fontWeight: '500' }}>{p.title}</span>
                         </div>
-                        <span style={{ fontWeight: '500' }}>{p.title}</span>
-                      </div>
-                    </td>
-                    <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{p.category?.name || 'N/A'}</td>
-                    <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>${p.price.toFixed(2)}</td>
-                    <td style={{ padding: '1rem 1.25rem' }}>
-                      <span style={{ color: p.stock < 10 ? '#f87171' : 'inherit' }}>{p.stock}</span>
-                    </td>
-                    <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{p.brand}</td>
-                    <td style={{ padding: '1rem 1.25rem' }}>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <button onClick={() => handleEdit(p)} style={{ background: 'none', border: '1px solid var(--color-border)', color: 'var(--color-muted)', padding: '6px', borderRadius: '4px', cursor: 'pointer' }}
-                          onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-accent)')}
-                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}>
-                          <Edit size={14} />
-                        </button>
-                        <button onClick={() => handleDelete(p._id, p.title)} style={{ background: 'none', border: '1px solid var(--color-border)', color: 'var(--color-muted)', padding: '6px', borderRadius: '4px', cursor: 'pointer' }}
-                          onMouseEnter={e => (e.currentTarget.style.color = '#f87171')}
-                          onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-muted)')}>
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{p.category?.name || 'N/A'}</td>
+                      <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>${p.price.toFixed(2)}</td>
+                      <td style={{ padding: '1rem 1.25rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <div style={{
+                            width: '6px',
+                            height: '6px',
+                            borderRadius: '50%',
+                            background: p.stock === 0 ? '#ef4444' : p.stock < 10 ? '#f59e0b' : '#10b981',
+                            boxShadow: p.stock === 0 
+                              ? '0 0 8px #ef4444' 
+                              : p.stock < 10 
+                                ? '0 0 8px #f59e0b' 
+                                : '0 0 8px #10b981',
+                          }} />
+                          <span style={{
+                            fontFamily: 'monospace',
+                            fontSize: '0.78rem',
+                            fontWeight: 'bold',
+                            color: p.stock === 0 ? '#f87171' : p.stock < 10 ? '#fbbf24' : '#34d399'
+                          }}>
+                            {p.stock === 0 ? 'OUT_OF_STOCK' : p.stock < 10 ? `LOW_STOCK (${p.stock})` : `STABLE (${p.stock})`}
+                          </span>
+                        </div>
+                      </td>
+                      <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{p.brand}</td>
+                      <td style={{ padding: '1rem 1.25rem' }}>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button onClick={() => handleEdit(p)} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-muted)', padding: '6px', borderRadius: '4px', cursor: 'pointer', transition: 'all 0.2s' }}
+                            onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-accent)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; e.currentTarget.style.background = 'rgba(201, 168, 76, 0.08)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}>
+                            <Edit size={14} />
+                          </button>
+                          <button onClick={() => handleDelete(p._id, p.title)} style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-muted)', padding: '6px', borderRadius: '4px', cursor: 'pointer', transition: 'all 0.2s' }}
+                            onMouseEnter={e => { e.currentTarget.style.color = '#f87171'; e.currentTarget.style.borderColor = '#f87171'; e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}>
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
               </tbody>
             </table>
           </div>
@@ -444,6 +619,10 @@ export default function AdminProductsPage() {
 
       <style>{`
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse {
+          0% { transform: scale(0.92); opacity: 0.6; }
+          100% { transform: scale(1.1); opacity: 1; }
+        }
         
         .admin-form-grid-5 {
           display: grid;
