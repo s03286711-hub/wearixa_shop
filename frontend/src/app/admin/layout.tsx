@@ -1,8 +1,9 @@
 'use client';
 import './animations.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { notificationService } from '@/services';
 import Link from 'next/link';
 import {
   LayoutDashboard, Package, ShoppingCart, Users, Tag,
@@ -41,6 +42,55 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const { user, isAdmin, logout, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchNotifs = async () => {
+      try {
+        const data = await notificationService.getNotifications();
+        setNotifications(data || []);
+      } catch (err) {
+        console.error('Error loading admin notifications:', err);
+      }
+    };
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 20000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  useEffect(() => {
+    const handleClickOutsideNotif = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutsideNotif);
+    return () => document.removeEventListener('mousedown', handleClickOutsideNotif);
+  }, []);
+
+  const handleMarkAsRead = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await notificationService.markAsRead(id);
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
+    } catch (err) {
+      console.error('Failed to mark read:', err);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error('Failed to mark all read:', err);
+    }
+  };
 
   useEffect(() => {
     if (!loading && user === null) { router.push('/auth/login'); return; }
@@ -231,10 +281,96 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 SYS_STATUS: <span style={{ color: '#4ade80' }}>ONLINE</span>
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <button style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '8px', padding: '6px', color: 'var(--color-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                <Bell size={15} />
-              </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} ref={notifRef}>
+              <div style={{ position: 'relative' }}>
+                <button
+                  onClick={() => setNotifDropdownOpen(!notifDropdownOpen)}
+                  style={{
+                    background: 'rgba(255,255,255,0.04)', border: notifDropdownOpen ? '1px solid var(--color-accent)' : '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: '8px', padding: '6px', color: notifDropdownOpen ? 'var(--color-accent)' : 'var(--color-muted)',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', position: 'relative', transition: 'all 0.2s'
+                  }}
+                >
+                  <Bell size={15} />
+                  {unreadCount > 0 && (
+                    <span style={{
+                      position: 'absolute', top: '-4px', right: '-4px', fontSize: '0.58rem',
+                      background: 'var(--color-accent)', color: '#000', fontWeight: 'bold',
+                      borderRadius: '50%', minWidth: '13px', height: '13px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1px 3px'
+                    }}>
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {notifDropdownOpen && (
+                  <div
+                    className="glass"
+                    style={{
+                      position: 'absolute', right: 0, top: 'calc(100% + 8px)',
+                      width: '320px', borderRadius: '12px', overflow: 'hidden',
+                      animation: 'fadeIn 0.2s ease', border: '1px solid rgba(255,255,255,0.08)',
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.6)', zIndex: 100
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em' }}>SYS_NOTIFICATIONS</span>
+                      {unreadCount > 0 && (
+                        <button onClick={handleMarkAllAsRead} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '500' }}
+                          onMouseEnter={e => e.currentTarget.style.color = 'var(--color-accent)'}
+                          onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
+                        >
+                          Clear all
+                        </button>
+                      )}
+                    </div>
+
+                    <div style={{ maxHeight: '260px', overflowY: 'auto' }}>
+                      {notifications.length === 0 ? (
+                        <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+                          NO SYSTEM EVENTS RECORDED
+                        </div>
+                      ) : (
+                        notifications.map((notif) => (
+                          <div
+                            key={notif._id}
+                            style={{
+                              padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                              background: notif.isRead ? 'transparent' : 'rgba(201,168,76,0.04)',
+                              transition: 'background 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '3px',
+                              textAlign: 'left'
+                            }}
+                            onClick={async () => {
+                              if (!notif.isRead) {
+                                await notificationService.markAsRead(notif._id);
+                                setNotifications(prev => prev.map(n => n._id === notif._id ? { ...n, isRead: true } : n));
+                              }
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = notif.isRead ? 'transparent' : 'rgba(201,168,76,0.04)')}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '6px' }}>
+                              <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: notif.isRead ? '#fff' : 'var(--color-accent)' }}>
+                                {notif.title}
+                              </span>
+                              {!notif.isRead && (
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--color-accent)', display: 'inline-block' }} />
+                              )}
+                            </div>
+                            <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)', margin: 0, lineHeight: 1.4 }}>
+                              {notif.message}
+                            </p>
+                            <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace', marginTop: '1px' }}>
+                              {new Date(notif.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div style={{
                   width: '30px', height: '30px', borderRadius: '50%',

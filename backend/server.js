@@ -41,6 +41,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const promoRoutes = require('./routes/promoRoutes');
 const settingRoutes = require('./routes/settingRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -50,6 +51,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/promo', promoRoutes);
 app.use('/api/settings', settingRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

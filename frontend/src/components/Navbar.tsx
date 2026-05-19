@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
-import { ShoppingBag, Search, User, Menu, X, ChevronDown, Heart } from 'lucide-react';
+import { ShoppingBag, Search, User, Menu, X, ChevronDown, Heart, Bell } from 'lucide-react';
+import { notificationService } from '@/services';
 
 export default function Navbar() {
   const { user, logout, isAdmin } = useAuth();
@@ -15,7 +16,56 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchNotifs = async () => {
+      try {
+        const data = await notificationService.getNotifications();
+        setNotifications(data || []);
+      } catch (err) {
+        console.error('Error loading customer notifications:', err);
+      }
+    };
+    fetchNotifs();
+    const interval = setInterval(fetchNotifs, 20000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  useEffect(() => {
+    const handleClickOutsideNotif = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutsideNotif);
+    return () => document.removeEventListener('mousedown', handleClickOutsideNotif);
+  }, []);
+
+  const handleMarkAsRead = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await notificationService.markAsRead(id);
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
+    } catch (err) {
+      console.error('Failed to mark read:', err);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error('Failed to mark all read:', err);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -141,6 +191,93 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+
+            {/* Dynamic Notification Bell */}
+            {user && (
+              <div ref={notifRef} style={{ position: 'relative' }}>
+                <button
+                  onClick={() => setNotifDropdownOpen(!notifDropdownOpen)}
+                  style={{ background: 'none', border: 'none', color: notifDropdownOpen ? 'var(--color-accent)' : 'var(--color-text)', cursor: 'pointer', padding: '4px', position: 'relative', transition: 'color 0.3s' }}
+                  onMouseEnter={(e) => { if (!notifDropdownOpen) e.currentTarget.style.color = 'var(--color-accent)'; }}
+                  onMouseLeave={(e) => { if (!notifDropdownOpen) e.currentTarget.style.color = 'var(--color-text)'; }}
+                >
+                  <Bell size={20} />
+                  {unreadCount > 0 && (
+                    <span className="badge" style={{ position: 'absolute', top: '-2px', right: '-2px', fontSize: '0.6rem', padding: '2px 5px', minWidth: '16px', height: '16px' }}>
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {notifDropdownOpen && (
+                  <div
+                    className="glass"
+                    style={{
+                      position: 'absolute', right: '-80px', top: 'calc(100% + 12px)',
+                      width: '320px', borderRadius: '12px', overflow: 'hidden',
+                      animation: 'fadeIn 0.2s ease', border: '1px solid rgba(201,168,76,0.15)',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)', zIndex: 1001
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: '1px solid var(--color-border)', background: 'rgba(255,255,255,0.02)' }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 'bold', letterSpacing: '0.05em' }}>NOTIFICATIONS</span>
+                      {unreadCount > 0 && (
+                        <button onClick={handleMarkAllAsRead} style={{ fontSize: '0.75rem', color: 'var(--color-accent)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '500' }}>
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+
+                    <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                      {notifications.length === 0 ? (
+                        <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--color-muted)', fontSize: '0.8rem' }}>
+                          No notifications yet
+                        </div>
+                      ) : (
+                        notifications.map((notif) => (
+                          <div
+                            key={notif._id}
+                            style={{
+                              padding: '0.9rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.05)',
+                              background: notif.isRead ? 'transparent' : 'rgba(201,168,76,0.04)',
+                              transition: 'background 0.3s', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '4px',
+                              textAlign: 'left'
+                            }}
+                            onClick={async () => {
+                              if (!notif.isRead) {
+                                await notificationService.markAsRead(notif._id);
+                                setNotifications(prev => prev.map(n => n._id === notif._id ? { ...n, isRead: true } : n));
+                              }
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.background = notif.isRead ? 'transparent' : 'rgba(201,168,76,0.04)')}
+                          >
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                              <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: notif.isRead ? 'var(--color-text)' : 'var(--color-accent)' }}>
+                                {notif.title}
+                              </span>
+                              {!notif.isRead && (
+                                <button
+                                  onClick={(e) => handleMarkAsRead(notif._id, e)}
+                                  style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-accent)', border: 'none', padding: 0, cursor: 'pointer' }}
+                                  title="Mark as read"
+                                />
+                              )}
+                            </div>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)', margin: 0, lineHeight: 1.4 }}>
+                              {notif.message}
+                            </p>
+                            <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace', marginTop: '2px' }}>
+                              {new Date(notif.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* User dropdown */}
             <div ref={dropdownRef} style={{ position: 'relative' }}>

@@ -2,6 +2,7 @@ const Transaction = require('../models/Transaction');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
+const Notification = require('../models/Notification');
 
 if (!stripe) {
     console.warn('⚠️  WARNING: STRIPE_SECRET_KEY is missing. Stripe payments will not work.');
@@ -162,6 +163,26 @@ const verifyPayment = async (req, res) => {
             const user = await User.findById(transaction.user);
             user.walletBalance += transaction.amount;
             await user.save();
+
+            try {
+                // Customer Notification
+                await Notification.create({
+                    user: transaction.user,
+                    title: '🔋 Wallet Top-Up Completed',
+                    message: `Successfully deposited $${transaction.amount.toFixed(2)} into your digital wallet via ${transaction.paymentGateway || 'Mock Gateway'}.`,
+                    type: 'WALLET_DEPOSIT'
+                });
+                // Admin Notification
+                await Notification.create({
+                    user: transaction.user,
+                    title: '💵 Wallet Deposit Received',
+                    message: `User completed deposit of $${transaction.amount.toFixed(2)} via ${transaction.paymentGateway || 'Mock Gateway'}.`,
+                    type: 'WALLET_DEPOSIT',
+                    isAdminNotification: true
+                });
+            } catch (err) {
+                console.error('Failed to create mock wallet deposit notifications:', err.message);
+            }
         }
 
         // Redirect back to the frontend wallet page
@@ -204,6 +225,26 @@ const stripeWebhook = async (req, res) => {
                 user.walletBalance += transaction.amount;
                 await user.save();
                 console.log(`Wallet Deposit successful for Ref: ${referenceId}`);
+
+                try {
+                    // Customer Notification
+                    await Notification.create({
+                        user: transaction.user,
+                        title: '🔋 Wallet Top-Up Completed',
+                        message: `Successfully deposited $${transaction.amount.toFixed(2)} into your digital wallet via Stripe.`,
+                        type: 'WALLET_DEPOSIT'
+                    });
+                    // Admin Notification
+                    await Notification.create({
+                        user: transaction.user,
+                        title: '💵 Wallet Deposit Received',
+                        message: `User completed deposit of $${transaction.amount.toFixed(2)} via Stripe.`,
+                        type: 'WALLET_DEPOSIT',
+                        isAdminNotification: true
+                    });
+                } catch (err) {
+                    console.error('Failed to create stripe wallet deposit notifications:', err.message);
+                }
             }
         } else if (orderId) {
             // Direct Order Payment logic
@@ -218,6 +259,26 @@ const stripeWebhook = async (req, res) => {
                 };
                 await order.save();
                 console.log(`Order Payment successful for Order ID: ${orderId}`);
+
+                try {
+                    // Customer Notification
+                    await Notification.create({
+                        user: order.user,
+                        title: '💳 Stripe Payment Confirmed',
+                        message: `Your payment of $${order.totalPrice.toFixed(2)} for order #${order._id} was successfully verified via Stripe.`,
+                        type: 'PAYMENT_RECEIVED'
+                    });
+                    // Admin Notification
+                    await Notification.create({
+                        user: order.user,
+                        title: '💰 Stripe Payment Received',
+                        message: `Stripe payment of $${order.totalPrice.toFixed(2)} processed successfully for order #${order._id}.`,
+                        type: 'PAYMENT_RECEIVED',
+                        isAdminNotification: true
+                    });
+                } catch (err) {
+                    console.error('Failed to create stripe order payment notifications:', err.message);
+                }
             }
         }
     }

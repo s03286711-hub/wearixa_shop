@@ -4,6 +4,7 @@ const Transaction = require('../models/Transaction');
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
 const sendEmail = require('../utils/sendEmail');
 const Setting = require('../models/Setting');
+const Notification = require('../models/Notification');
 
 if (!stripe) {
     console.warn('⚠️  WARNING: STRIPE_SECRET_KEY is missing in Order Controller.');
@@ -73,6 +74,56 @@ const addOrderItems = async (req, res) => {
         });
 
         const createdOrder = await order.save();
+
+        // ─── PERSISTENT NOTIFICATIONS ─────────────────────────────────
+        try {
+            // Customer notification
+            await Notification.create({
+                user: req.user._id,
+                title: '🎉 Order Placed Successfully',
+                message: `Your order #${createdOrder._id} for $${totalPrice.toFixed(2)} has been placed successfully and is now being processed.`,
+                type: 'ORDER_PLACED'
+            });
+
+            // Admin notification
+            await Notification.create({
+                user: req.user._id,
+                title: '🚨 New Order Placed',
+                message: `Customer ${user.name} placed a new order #${createdOrder._id} totaling $${totalPrice.toFixed(2)} using ${paymentMethod.toUpperCase()}.`,
+                type: 'ORDER_PLACED',
+                isAdminNotification: true
+            });
+
+            if (autoApprove) {
+                await Notification.create({
+                    user: req.user._id,
+                    title: '📦 Order Approved & Delivered',
+                    message: `Your order #${createdOrder._id} has been automatically approved and marked as delivered.`,
+                    type: 'ORDER_DELIVERED'
+                });
+            }
+
+            if (paymentMethod === 'wallet') {
+                // Wallet customer payment notification
+                await Notification.create({
+                    user: req.user._id,
+                    title: '💳 Payment Done via Wallet',
+                    message: `Payment of $${totalPrice.toFixed(2)} has been successfully debited from your Wearixa digital wallet.`,
+                    type: 'PAYMENT_RECEIVED'
+                });
+
+                // Wallet admin payment notification
+                await Notification.create({
+                    user: req.user._id,
+                    title: '💰 Wallet Payment Received',
+                    message: `Successfully received payment of $${totalPrice.toFixed(2)} via Digital Wallet for order #${createdOrder._id}.`,
+                    type: 'PAYMENT_RECEIVED',
+                    isAdminNotification: true
+                });
+            }
+        } catch (notifErr) {
+            console.error('Failed to create order placement notifications:', notifErr.message);
+        }
 
         // ─── NOTIFICATIONS & ALERTS ──────────────────────────────────
         // Send email to customer if enabled
