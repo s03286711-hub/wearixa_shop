@@ -107,6 +107,10 @@ const addOrderItems = async (req, res) => {
         const orderAlerts = settings ? settings.orderAlerts : true;
         if (orderAlerts) {
             try {
+                // Find admin user dynamically from database
+                const adminUser = await User.findOne({ role: 'admin' });
+                const adminEmail = adminUser ? adminUser.email : 'admin@wearixa.com';
+
                 const adminEmailMessage = `
                     <div style="font-family: 'Playfair Display', serif; color: #1a1a2e; padding: 20px; border: 1px solid #c9a84c; border-radius: 10px;">
                         <h1 style="color: #c9a84c; text-align: center;">WEARIXA ADMIN ALERT</h1>
@@ -122,7 +126,7 @@ const addOrderItems = async (req, res) => {
                     </div>
                 `;
                 await sendEmail({
-                    email: process.env.EMAIL_USER || 'admin@wearixa.com',
+                    email: adminEmail,
                     subject: '🚨 WEARIXA ALERT: New Order Placed',
                     message: adminEmailMessage,
                 });
