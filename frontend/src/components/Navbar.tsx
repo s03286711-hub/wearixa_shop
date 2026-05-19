@@ -102,8 +102,7 @@ export default function Navbar() {
           right: 0,
           zIndex: 1000,
           transition: 'all 0.3s ease',
-          background: scrolled ? 'rgba(13,13,13,0.95)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          background: scrolled ? 'rgba(13,13,13,0.98)' : 'transparent',
           borderBottom: scrolled ? '1px solid rgba(201,168,76,0.2)' : '1px solid transparent',
           padding: '0 2rem',
         }}

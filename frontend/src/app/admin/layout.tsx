@@ -282,7 +282,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           {/* Top Header Bar */}
           <header className="admin-header" style={{
-            background: 'rgba(13,13,13,0.95)', backdropFilter: 'blur(12px)',
+            background: 'rgba(13, 13, 13, 0.98)',
             borderBottom: '1px solid rgba(255,255,255,0.05)',
             padding: '0 1.5rem', height: '56px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
