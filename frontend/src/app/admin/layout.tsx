@@ -32,6 +32,7 @@ const NAV_GROUPS = [
   {
     label: 'SYSTEM',
     items: [
+      { href: '/admin/notifications', label: 'Notifications', Icon: Bell },
       { href: '/admin/settings', label: 'Settings', Icon: Settings },
     ]
   }
@@ -44,7 +45,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -71,6 +74,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     };
     document.addEventListener('mousedown', handleClickOutsideNotif);
     return () => document.removeEventListener('mousedown', handleClickOutsideNotif);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutsideProfile = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutsideProfile);
+    return () => document.removeEventListener('mousedown', handleClickOutsideProfile);
   }, []);
 
   const handleMarkAsRead = async (id: string, e: React.MouseEvent) => {
@@ -306,16 +319,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 {notifDropdownOpen && (
                   <div
-                    className="glass"
                     style={{
                       position: 'absolute', right: 0, top: 'calc(100% + 8px)',
-                      width: '320px', borderRadius: '12px', overflow: 'hidden',
-                      animation: 'fadeIn 0.2s ease', border: '1px solid rgba(255,255,255,0.08)',
-                      boxShadow: '0 10px 40px rgba(0,0,0,0.6)', zIndex: 100
+                      width: '320px', borderRadius: '16px', overflow: 'hidden',
+                      animation: 'fadeIn 0.2s ease',
+                      background: 'rgba(13, 13, 13, 0.45)',
+                      backdropFilter: 'blur(30px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+                      border: '1px solid rgba(201, 168, 76, 0.25)',
+                      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.65)',
+                      zIndex: 100
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em' }}>SYS_NOTIFICATIONS</span>
+                      <Link href="/admin/notifications" style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em', textDecoration: 'underline' }}
+                        onClick={() => setNotifDropdownOpen(false)}
+                      >
+                        SYS_NOTIFICATIONS ↗
+                      </Link>
                       {unreadCount > 0 && (
                         <button onClick={handleMarkAllAsRead} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '500' }}
                           onMouseEnter={e => e.currentTarget.style.color = 'var(--color-accent)'}
@@ -371,19 +392,67 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   </div>
                 )}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '30px', height: '30px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontWeight: '700', fontSize: '0.8rem', color: '#0d0d0d'
-                }}>
-                  {user.name.charAt(0)}
-                </div>
-                <div>
-                  <p style={{ fontSize: '0.8rem', fontWeight: '600', color: '#fff' }}>{user.name}</p>
-                  <p style={{ fontSize: '0.6rem', color: 'var(--color-accent)', fontFamily: 'monospace' }}>ADMINISTRATOR</p>
-                </div>
+              <div style={{ position: 'relative' }} ref={profileRef}>
+                <button
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.05)', borderRadius: '10px', padding: '4px 10px',
+                    cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)'}
+                  onMouseLeave={e => { if (!profileDropdownOpen) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)'; }}
+                >
+                  <div style={{
+                    width: '28px', height: '28px', borderRadius: '50%',
+                    background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: '700', fontSize: '0.8rem', color: '#0d0d0d'
+                  }}>
+                    {user.name.charAt(0)}
+                  </div>
+                  <div className="hidden-mobile" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '0.78rem', fontWeight: '600', color: '#fff', lineHeight: 1.2 }}>{user.name}</span>
+                    <span style={{ fontSize: '0.58rem', color: 'var(--color-accent)', fontFamily: 'monospace' }}>ADMINISTRATOR</span>
+                  </div>
+                  <ChevronRight size={12} style={{ transform: profileDropdownOpen ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', color: 'rgba(255,255,255,0.4)' }} />
+                </button>
+
+                {profileDropdownOpen && (
+                  <div
+                    style={{
+                      position: 'absolute', right: 0, top: 'calc(100% + 8px)',
+                      width: '180px', borderRadius: '12px', overflow: 'hidden',
+                      animation: 'fadeIn 0.2s ease', 
+                      background: 'rgba(13, 13, 13, 0.45)',
+                      backdropFilter: 'blur(30px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+                      border: '1px solid rgba(201, 168, 76, 0.25)',
+                      boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.65)',
+                      zIndex: 100
+                    }}
+                  >
+                    <Link href="/" style={{ display: 'block', padding: '0.75rem 1rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(201,168,76,0.1)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                      onClick={() => setProfileDropdownOpen(false)}
+                    >Storefront Home</Link>
+                    <Link href="/profile" style={{ display: 'block', padding: '0.75rem 1rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(201,168,76,0.1)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                      onClick={() => setProfileDropdownOpen(false)}
+                    >My Account</Link>
+                    <Link href="/admin/settings" style={{ display: 'block', padding: '0.75rem 1rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(201,168,76,0.1)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                      onClick={() => setProfileDropdownOpen(false)}
+                    >System Settings</Link>
+                    <button onClick={logout} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.8rem', background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.1)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                    >Logout</button>
+                  </div>
+                )}
               </div>
             </div>
           </header>
