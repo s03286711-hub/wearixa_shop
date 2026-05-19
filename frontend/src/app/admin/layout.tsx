@@ -53,6 +53,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const profileRef = useRef<HTMLDivElement>(null);
   const mobileNotifRef = useRef<HTMLDivElement>(null);
   const mobileProfileRef = useRef<HTMLDivElement>(null);
+  const mobileNotifModalRef = useRef<HTMLDivElement>(null);
+  const mobileProfileModalRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
