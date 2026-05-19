@@ -457,7 +457,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <style>{`
         /* Collapsed desktop sidebar brand layout */
         .admin-sidebar.closed .sidebar-brand-logo {
-          display: none;
+          display: none !important;
         }
 
         @media (max-width: 768px) {
