@@ -112,13 +112,7 @@ export default function ProductDetailPage() {
   if (!product) return <div style={{ textAlign: 'center', padding: '6rem', color: 'var(--color-muted)' }}>Product not found.</div>;
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="container" 
-      style={{ padding: '3rem 1.5rem' }}
-    >
+    <div className="container" style={{ padding: '3rem 1.5rem' }}>
       <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
 
         {/* ── Images ── */}
@@ -127,8 +121,8 @@ export default function ProductDetailPage() {
         {/* ── Info ── */}
         <div>
           {product.brand && (
-            <p style={{ fontSize: '0.75rem', letterSpacing: '0.25em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'monospace', fontWeight: 'bold' }}>
-              {product.brand} // LUX_BRAND
+            <p style={{ fontSize: '0.75rem', letterSpacing: '0.2em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+              {product.brand}
             </p>
           )}
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.75rem, 3vw, 2.5rem)', fontWeight: '600', marginBottom: '1rem', lineHeight: '1.2' }}>
@@ -140,145 +134,38 @@ export default function ProductDetailPage() {
             <div style={{ display: 'flex', gap: '3px' }}>
               {[1,2,3,4,5].map(s => <Star key={s} size={16} fill={s <= product.rating ? '#c9a84c' : 'none'} color={s <= product.rating ? '#c9a84c' : '#444'} />)}
             </div>
-            <span style={{ color: 'var(--color-muted)', fontSize: '0.875rem', fontFamily: 'monospace' }}>[{product.numReviews} VERIFIED_REVIEWS]</span>
+            <span style={{ color: 'var(--color-muted)', fontSize: '0.875rem' }}>{product.numReviews} reviews</span>
           </div>
 
-          <div style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {product.discountPrice && product.discountPrice > 0 ? (
               <>
-                <span className="text-gold" style={{ filter: 'drop-shadow(0 0 8px rgba(201,168,76,0.3))' }}>${product.discountPrice.toFixed(2)}</span>
+                <span className="text-gold">${product.discountPrice.toFixed(2)}</span>
                 <span style={{ fontSize: '1.25rem', color: 'var(--color-muted)', textDecoration: 'line-through', fontWeight: '500' }}>
                   ${product.price.toFixed(2)}
                 </span>
-                <span style={{ fontSize: '0.75rem', padding: '4px 10px', background: 'var(--color-accent)', color: '#0d0d0d', borderRadius: '4px', fontWeight: '800', letterSpacing: '0.05em', fontFamily: 'monospace' }}>
-                  SAVE {Math.round(((product.price - product.discountPrice) / product.price) * 100)}%
+                <span style={{ fontSize: '0.9rem', padding: '4px 10px', background: 'var(--color-accent)', color: '#0d0d0d', borderRadius: '20px', fontWeight: '700', letterSpacing: '0.05em' }}>
+                  -{Math.round(((product.price - product.discountPrice) / product.price) * 100)}%
                 </span>
               </>
             ) : (
-              <span className="text-gold" style={{ filter: 'drop-shadow(0 0 8px rgba(201,168,76,0.3))' }}>${product.price.toFixed(2)}</span>
+              <span className="text-gold">${product.price.toFixed(2)}</span>
             )}
           </div>
 
-          {/* Live Inventory Telemetry Pulse */}
-          <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div 
-              style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: product.stock > 5 ? '#4ade80' : product.stock > 0 ? '#fbbf24' : '#ef4444',
-                boxShadow: product.stock > 5 
-                  ? '0 0 8px #4ade80, 0 0 4px #4ade80' 
-                  : product.stock > 0 
-                    ? '0 0 8px #fbbf24, 0 0 4px #fbbf24' 
-                    : '0 0 8px #ef4444, 0 0 4px #ef4444',
-                animation: 'pulse 2s infinite alternate'
-              }} 
-            />
+          {/* Stock */}
+          <div style={{ marginBottom: '1.5rem' }}>
             <span style={{
-              fontSize: '0.72rem',
-              fontFamily: 'monospace',
-              fontWeight: 'bold',
-              letterSpacing: '0.08em',
-              color: product.stock > 5 ? '#4ade80' : product.stock > 0 ? '#fbbf24' : '#ef4444',
-              textTransform: 'uppercase'
+              display: 'inline-block', padding: '4px 12px', borderRadius: '20px', fontSize: '0.78rem', fontWeight: '600',
+              background: product.stock > 0 ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)',
+              color: product.stock > 0 ? '#4ade80' : '#f87171',
+              border: `1px solid ${product.stock > 0 ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)'}`,
             }}>
-              {product.stock > 5 
-                ? `LIVE_INVENTORY // ${product.stock} UNITS_READY` 
-                : product.stock > 0 
-                  ? `LIMITED_OFFER // ONLY ${product.stock} UNITS_LEFTOVER` 
-                  : 'INVENTORY_LOCKED // OUT_OF_STOCK'}
+              {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
             </span>
           </div>
 
-          {/* Sizes Swatches */}
-          {product.sizes && product.sizes.length > 0 && (
-            <div style={{ marginBottom: '1.5rem' }}>
-              <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'monospace' }}>
-                Size Selector <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{selectedSize && `[${selectedSize}]`}</span>
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                {product.sizes.map((size: string) => (
-                  <button
-                    key={size}
-                    type="button"
-                    onClick={() => setSelectedSize(size === selectedSize ? '' : size)}
-                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.04)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(201,168,76,0.15)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; e.currentTarget.style.boxShadow = 'none'; }}
-                    style={{
-                      padding: '8px 20px',
-                      borderRadius: '6px',
-                      border: selectedSize === size ? '2px solid var(--color-accent)' : '2px solid rgba(255,255,255,0.06)',
-                      background: selectedSize === size ? 'rgba(201,168,76,0.15)' : 'rgba(255,255,255,0.02)',
-                      color: selectedSize === size ? 'var(--color-accent)' : '#fff',
-                      fontWeight: selectedSize === size ? '700' : '400',
-                      cursor: 'pointer',
-                      fontSize: '0.875rem',
-                      transition: 'all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1)',
-                      minWidth: '54px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-              {!selectedSize && (
-                <p style={{ fontSize: '0.7rem', color: '#f87171', marginTop: '0.5rem', fontFamily: 'monospace' }}>* SIZE_CHOICE_REQUIRED</p>
-              )}
-            </div>
-          )}
-
-          {/* Colors Swatches */}
-          {product.colors && product.colors.length > 0 && (
-            <div style={{ marginBottom: '2rem' }}>
-              <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'monospace' }}>
-                Color Way <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{selectedColor && `[${selectedColor}]`}</span>
-              </p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                {product.colors.map((color: string) => {
-                  const colorMap: {[key: string]: string} = {
-                    'Black': '#000000', 'White': '#FFFFFF', 'Red': '#FF0000', 
-                    'Blue': '#0000FF', 'Green': '#008000', 'Gray': '#808080', 
-                    'Beige': '#F5F5DC', 'Gold': '#D4AF37'
-                  };
-                  const hex = colorMap[color] || '#333';
-                  const isWhite = color === 'White';
-                  
-                  return (
-                    <button
-                      key={color}
-                      type="button"
-                      title={color}
-                      onClick={() => setSelectedColor(color === selectedColor ? '' : color)}
-                      onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.15)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        borderRadius: '50%',
-                        background: hex,
-                        border: selectedColor === color ? '2px solid var(--color-accent)' : '1px solid rgba(255,255,255,0.1)',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: selectedColor === color ? '0 0 0 2px #0f0f0f, 0 0 0 4px var(--color-accent)' : 'none',
-                      }}
-                    >
-                      {isWhite && !selectedColor && <div style={{ width: '100%', height: '100%', border: '1px solid #ddd', borderRadius: '50%' }} />}
-                    </button>
-                  );
-                })}
-              </div>
-              {!selectedColor && (
-                <p style={{ fontSize: '0.7rem', color: '#f87171', marginTop: '0.5rem', fontFamily: 'monospace' }}>* COLOR_WAY_REQUIRED</p>
-              )}
-            </div>
-          )}
-
-          {/* Luxury Glassmorphic Technical Specs Grid */}
+          {/* Shipping Info */}
           {(() => {
             const userAddress = { city: user?.city || '', country: user?.country || '' };
             const shipping = calculateShippingCharge(userAddress, { 
@@ -287,78 +174,127 @@ export default function ProductDetailPage() {
             });
 
             return (
-              <div className="glass" style={{
-                borderRadius: '12px',
-                padding: '1.25rem',
-                background: 'rgba(13, 13, 13, 0.4)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-                marginBottom: '2rem',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '1rem'
-              }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <span style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'var(--color-muted)', letterSpacing: '0.05em' }}>SHIPPING_PROTOCOL</span>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: !product.applyShippingCharges ? '#4ade80' : 'var(--color-accent)', textTransform: 'uppercase' }}>
-                    {!product.applyShippingCharges ? 'COMPLIMENTARY' : `$${shipping.toFixed(2)} FLAT_RATE`}
-                  </span>
+              <div style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ 
+                  padding: '4px 10px', 
+                  background: !product.applyShippingCharges ? 'rgba(34,197,94,0.1)' : 'rgba(201,168,76,0.1)', 
+                  border: `1px solid ${!product.applyShippingCharges ? 'rgba(34,197,94,0.2)' : 'rgba(201,168,76,0.2)'}`, 
+                  borderRadius: '4px', fontSize: '0.8rem', 
+                  color: !product.applyShippingCharges ? '#4ade80' : 'var(--color-accent)', 
+                  fontWeight: '600' 
+                }}>
+                  {!product.applyShippingCharges ? 'FREE SHIPPING' : `Shipping: $${shipping.toFixed(2)}`}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <span style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'var(--color-muted)', letterSpacing: '0.05em' }}>DELIVERY_TIMELINE</span>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase' }}>3 - 5 BUSINESS DAYS</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <span style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'var(--color-muted)', letterSpacing: '0.05em' }}>PAYMENT_ENCRYPT</span>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#4ade80', textTransform: 'uppercase' }}>SECURED_SSL // 100%</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                  <span style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'var(--color-muted)', letterSpacing: '0.05em' }}>COD_PROTOCOL</span>
-                  <span style={{ fontSize: '0.8rem', fontWeight: 'bold', color: product.isCodAvailable !== false ? '#4ade80' : '#f87171', textTransform: 'uppercase' }}>
-                    {product.isCodAvailable !== false ? 'COD_SUPPORTED' : 'PREPAID_ONLY'}
-                  </span>
-                </div>
+                <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>
+                  {product.applyShippingCharges && !user ? 'Final cost calculated at checkout' : 'Estimated delivery: 3-5 business days'}
+                </p>
               </div>
             );
           })()}
 
+          {/* Sizes */}
+          {product.sizes && product.sizes.length > 0 && (
+            <div style={{ marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                Size <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{selectedSize && `— ${selectedSize}`}</span>
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {product.sizes.map((size: string) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => setSelectedSize(size === selectedSize ? '' : size)}
+                    style={{
+                      padding: '8px 20px',
+                      borderRadius: '6px',
+                      border: selectedSize === size ? '2px solid var(--color-accent)' : '2px solid var(--color-border)',
+                      background: selectedSize === size ? 'rgba(201,168,76,0.15)' : 'transparent',
+                      color: selectedSize === size ? 'var(--color-accent)' : 'var(--color-text)',
+                      fontWeight: selectedSize === size ? '700' : '400',
+                      cursor: 'pointer',
+                      fontSize: '0.875rem',
+                      transition: 'all 0.2s',
+                      minWidth: '52px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+              {!selectedSize && (
+                <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.5rem' }}>Please select a size</p>
+              )}
+            </div>
+          )}
+
+          {/* Colors */}
+          {product.colors && product.colors.length > 0 && (
+            <div style={{ marginBottom: '2rem' }}>
+              <p style={{ fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+                Color <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>{selectedColor && `— ${selectedColor}`}</span>
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                {product.colors.map((color: string) => {
+                  // Map color names to hex codes for the UI
+                  const colorMap: {[key: string]: string} = {
+                    'Black': '#000000', 'White': '#FFFFFF', 'Red': '#FF0000', 
+                    'Blue': '#0000FF', 'Green': '#008000', 'Gray': '#808080', 
+                    'Beige': '#F5F5DC', 'Gold': '#D4AF37'
+                  };
+                  const hex = colorMap[color] || '#333';
+                  
+                  return (
+                    <button
+                      key={color}
+                      type="button"
+                      title={color}
+                      onClick={() => setSelectedColor(color === selectedColor ? '' : color)}
+                      style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: hex,
+                        border: selectedColor === color ? '2px solid var(--color-accent)' : '1px solid var(--color-border)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: selectedColor === color ? '0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent)' : 'none',
+                      }}
+                    >
+                      {color === 'White' && !selectedColor && <div style={{ width: '100%', height: '100%', border: '1px solid #ddd', borderRadius: '50%' }} />}
+                    </button>
+                  );
+                })}
+              </div>
+              {!selectedColor && (
+                <p style={{ fontSize: '0.75rem', color: '#f87171', marginTop: '0.5rem' }}>Please select a color</p>
+              )}
+            </div>
+          )}
+
           {/* Qty selector */}
           {product.stock > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
-              <label style={{ fontSize: '0.8rem', letterSpacing: '0.15em', color: 'var(--color-muted)', textTransform: 'uppercase', fontFamily: 'monospace' }}>Quantity</label>
-              <div style={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+              <label style={{ fontSize: '0.85rem', letterSpacing: '0.1em', color: 'var(--color-muted)', textTransform: 'uppercase' }}>Qty</label>
+              <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--color-border)', borderRadius: '6px', overflow: 'hidden' }}>
                 <button onClick={() => setQty(q => Math.max(1, q - 1))}
-                  style={{ width: '40px', height: '40px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '1.2rem', transition: 'background 0.2s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'none'}>−</button>
-                <span style={{ width: '48px', textAlign: 'center', fontSize: '0.95rem', fontWeight: '600', fontFamily: 'monospace' }}>{qty}</span>
+                  style={{ width: '40px', height: '40px', background: 'var(--color-surface)', border: 'none', color: 'var(--color-text)', cursor: 'pointer', fontSize: '1.2rem' }}>−</button>
+                <span style={{ width: '48px', textAlign: 'center', fontSize: '0.95rem' }}>{qty}</span>
                 <button onClick={() => setQty(q => Math.min(product.stock, q + 1))}
-                  style={{ width: '40px', height: '40px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '1.2rem', transition: 'background 0.2s' }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'none'}>+</button>
+                  style={{ width: '40px', height: '40px', background: 'var(--color-surface)', border: 'none', color: 'var(--color-text)', cursor: 'pointer', fontSize: '1.2rem' }}>+</button>
               </div>
             </div>
           )}
 
           {/* CTA buttons */}
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
-            <button 
-              onClick={handleAddToCart} 
-              disabled={product.stock === 0} 
-              className="btn-primary hover-btn"
-              style={{ 
-                flex: 1, 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                gap: '8px', 
-                opacity: product.stock === 0 ? 0.5 : 1, 
-                background: added ? 'linear-gradient(135deg,#4ade80,#22c55e)' : undefined,
-                boxShadow: '0 4px 15px rgba(201, 168, 76, 0.2)'
-              }}
-            >
+          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            <button onClick={handleAddToCart} disabled={product.stock === 0} className="btn-primary"
+              style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: product.stock === 0 ? 0.5 : 1, background: added ? 'linear-gradient(135deg,#4ade80,#22c55e)' : undefined }}>
               <ShoppingBag size={18} />
-              {added ? 'ADDED TO BAG ✓' : 'ADD TO SHOPPING BAG'}
+              {added ? 'Added to Cart!' : 'Add to Cart'}
             </button>
             <button 
               onClick={handleWishlist}
@@ -366,43 +302,24 @@ export default function ProductDetailPage() {
               style={{ 
                 display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.75rem 1.25rem',
                 color: wishlisted ? '#f87171' : undefined,
-                borderColor: wishlisted ? '#f87171' : 'rgba(255,255,255,0.1)',
-                background: wishlisted ? 'rgba(239,68,68,0.05)' : 'rgba(255,255,255,0.02)',
-                transition: 'all 0.2s'
+                borderColor: wishlisted ? '#f87171' : undefined,
+                background: wishlisted ? 'rgba(239,68,68,0.05)' : undefined
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; if(!wishlisted) e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; if(!wishlisted) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
             >
               <Heart size={18} fill={wishlisted ? '#f87171' : 'none'} />
             </button>
           </div>
 
-          {/* Premium trust badges */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          {/* Trust badges */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', paddingTop: '1.5rem', borderTop: '1px solid var(--color-border)' }}>
             {[
-              { Icon: Truck, text: 'Complimentary Shipping' },
-              { Icon: Shield, text: 'Enforced Encryption' },
-              { Icon: RefreshCw, text: 'Flex Return Scheme' },
+              { Icon: Truck, text: 'Free Shipping' },
+              { Icon: Shield, text: 'Secure Checkout' },
+              { Icon: RefreshCw, text: 'Easy Returns' },
             ].map(({ Icon, text }) => (
-              <div 
-                key={text} 
-                style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center', 
-                  gap: '0.5rem', 
-                  textAlign: 'center',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  background: 'rgba(255,255,255,0.01)',
-                  border: '1px solid rgba(255,255,255,0.02)',
-                  transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.15)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.background = 'rgba(255,255,255,0.01)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.02)'; }}
-              >
-                <Icon size={18} style={{ color: 'var(--color-accent)', filter: 'drop-shadow(0 0 4px rgba(201,168,76,0.4))' }} />
-                <span style={{ fontSize: '0.68rem', color: 'var(--color-muted)', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.02em' }}>{text}</span>
+              <div key={text} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', textAlign: 'center' }}>
+                <Icon size={20} style={{ color: 'var(--color-accent)' }} />
+                <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)' }}>{text}</span>
               </div>
             ))}
           </div>
@@ -410,8 +327,8 @@ export default function ProductDetailPage() {
       </div>
 
       {/* ── Tabs: Description / Reviews ── */}
-      <div style={{ marginTop: '5rem', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '3rem' }}>
-        <div style={{ display: 'flex', gap: '0', marginBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ marginTop: '4rem', borderTop: '1px solid var(--color-border)', paddingTop: '3rem' }}>
+        <div style={{ display: 'flex', gap: '0', marginBottom: '2rem', borderBottom: '1px solid var(--color-border)' }}>
           {(['description', 'reviews'] as const).map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{
               padding: '0.75rem 2rem', background: 'none', border: 'none',
@@ -426,25 +343,15 @@ export default function ProductDetailPage() {
         </div>
 
         {tab === 'description' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.4 }}
-            style={{ color: 'var(--color-muted)', lineHeight: '1.8', maxWidth: '680px', fontSize: '0.95rem' }}
-          >
+          <div style={{ color: 'var(--color-muted)', lineHeight: '1.8', maxWidth: '680px', fontSize: '0.95rem' }}>
             {product.description}
-          </motion.div>
+          </div>
         )}
 
         {tab === 'reviews' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 15 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ duration: 0.4 }}
-            style={{ maxWidth: '680px' }}
-          >
+          <div style={{ maxWidth: '680px' }}>
             {product.reviews.length === 0 ? (
-              <p style={{ color: 'var(--color-muted)' }}>No reviews yet. Be the first to share your thoughts!</p>
+              <p style={{ color: 'var(--color-muted)' }}>No reviews yet. Be the first!</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2.5rem' }}>
                 {product.reviews.map((r: any) => (
@@ -473,7 +380,7 @@ export default function ProductDetailPage() {
             )}
 
             {/* Write a review */}
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '2rem' }}>
+            <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '2rem' }}>
               <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginBottom: '1.5rem' }}>Write a Review</h3>
               {!user ? (
                 <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem' }}>
@@ -540,7 +447,7 @@ export default function ProductDetailPage() {
                 </form>
               )}
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
 
@@ -548,10 +455,6 @@ export default function ProductDetailPage() {
       <YouMayAlsoLike currentId={product._id} categoryId={product.category?._id || product.category} />
 
       <style>{`
-        @keyframes pulse {
-          0% { transform: scale(0.9); opacity: 0.6; }
-          100% { transform: scale(1.15); opacity: 1; }
-        }
         @media (max-width: 768px) {
           .product-grid { 
             grid-template-columns: 1fr !important; 
@@ -559,7 +462,7 @@ export default function ProductDetailPage() {
           }
         }
       `}</style>
-    </motion.div>
+    </div>
   );
 }
 
