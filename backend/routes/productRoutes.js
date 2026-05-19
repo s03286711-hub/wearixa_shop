@@ -7,10 +7,12 @@ const {
     updateProduct,
     deleteProduct,
     createProductReview,
+    getRecommendations,
 } = require('../controllers/productController');
 const { protect, admin } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 
+router.route('/recommendations').get(getRecommendations);
 router.route('/').get(getProducts).post(protect, admin, upload.array('images', 5), createProduct);
 router.route('/:id/reviews').post(protect, upload.array('images', 3), createProductReview);
 router.route('/:id')

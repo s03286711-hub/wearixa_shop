@@ -5,9 +5,10 @@ import ProductCard from '@/components/ProductCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { ProductSkeleton } from '@/components/Skeleton';
 import { productService, categoryService, promoService } from '@/services';
-import { Truck, RefreshCw, Shield, Sparkles, ArrowRight, Star, Ticket, Copy, Check } from 'lucide-react';
+import { Truck, RefreshCw, Shield, Sparkles, ArrowRight, Star, Ticket, Copy, Check, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuickViewModal from '@/components/QuickViewModal';
+import { useCart } from '@/context/CartContext';
 
 const HERO_SLIDES = [
   {
@@ -27,8 +28,10 @@ const HERO_SLIDES = [
 ];
 
 export default function HomePage() {
+  const { cartItems } = useCart();
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [recommendedProducts, setRecommendedProducts] = useState<any[]>([]);
   const [seasonalData, setSeasonalData] = useState<{ [key: string]: any[] }>({});
   const [loading, setLoading] = useState(true);
   const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
@@ -37,6 +40,28 @@ export default function HomePage() {
   const [hasMounted, setHasMounted] = useState(false);
   const [activePromos, setActivePromos] = useState<any[]>([]);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const cartProductIds = cartItems.map(item => item._id).join(',');
+        const recentlyViewedCategories = typeof window !== 'undefined' 
+          ? localStorage.getItem('wearixaRecentlyViewedCategories') || '' 
+          : '';
+        const recs = await productService.getRecommendations({
+          cartProductIds,
+          recentlyViewedCategories
+        });
+        setRecommendedProducts(recs || []);
+      } catch (err) {
+        console.error('Failed to fetch recommendations', err);
+      }
+    };
+
+    if (!loading) {
+      fetchRecommendations();
+    }
+  }, [loading, cartItems]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -460,7 +485,19 @@ export default function HomePage() {
               <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', color: 'var(--color-muted)' }}>No categories available.</div>
             ) : (
               categories.map((cat: any) => (
-                <Link key={cat._id} href={`/shop?category=${cat.name.toLowerCase()}`} style={{ display: 'block' }}>
+                <Link 
+                  key={cat._id} 
+                  href={`/shop?category=${cat.name.toLowerCase()}`} 
+                  style={{ display: 'block' }}
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      const existing = localStorage.getItem('wearixaRecentlyViewedCategories');
+                      let list = existing ? existing.split(',').filter(Boolean) : [];
+                      list = [cat._id, ...list.filter(id => id !== cat._id)].slice(0, 5);
+                      localStorage.setItem('wearixaRecentlyViewedCategories', list.join(','));
+                    }
+                  }}
+                >
                   <motion.div 
                     whileHover={{ y: -5 }}
                     style={{
@@ -480,6 +517,69 @@ export default function HomePage() {
           </div>
         </div>
       </motion.section>
+
+      {/* ── Tailored For You (AI Recommendations) ── */}
+      {hasMounted && recommendedProducts.length > 0 && (
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="section"
+          style={{
+            background: 'linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.02) 50%, transparent 100%)',
+            borderTop: '1px solid var(--color-border)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Subtle glowing radial background for recommendations AI vibe */}
+          <div style={{
+            position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
+            width: '800px', height: '300px',
+            background: 'radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)',
+            pointerEvents: 'none',
+            zIndex: 0
+          }} />
+
+          <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <p style={{ 
+                fontSize: '0.75rem', 
+                letterSpacing: '0.3em', 
+                color: 'var(--color-accent)', 
+                textTransform: 'uppercase', 
+                marginBottom: '0.75rem', 
+                fontWeight: 'bold',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                <Sparkles size={14} className="text-gold" /> Personalized Curation
+              </p>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600', textTransform: 'uppercase' }}>
+                Tailored <span className="text-gold">For You</span>
+              </h2>
+              <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', maxWidth: '480px', margin: '0.5rem auto 0', lineHeight: '1.5' }}>
+                Our hybrid intelligence recommendations deck, dynamically styled based on your active cart and browsing intent.
+              </p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+              {recommendedProducts.map((p) => (
+                <ProductCard 
+                  key={p._id} 
+                  product={p} 
+                  onQuickView={(p) => { 
+                    setQuickViewProduct(p); 
+                    setIsQuickViewOpen(true); 
+                  }} 
+                />
+              ))}
+            </div>
+          </div>
+        </motion.section>
+      )}
 
       {/* ── Seasonal Deal Sections ── */}
       {!loading && Object.keys(seasonalData).map((season, idx) => (

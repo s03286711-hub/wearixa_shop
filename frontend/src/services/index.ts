@@ -87,6 +87,11 @@ export const productService = {
     });
     return data;
   },
+
+  getRecommendations: async (params?: Record<string, string | number>) => {
+    const { data } = await api.get('/products/recommendations', { params });
+    return data;
+  },
 };
 
 export const orderService = {

@@ -229,10 +229,102 @@ const createProductReview = async (req, res) => {
 
         await product.save();
         res.status(201).json({ message: 'Review added' });
-    } else {
-        res.status(404);
-        throw new Error('Product not found');
-    }
-};
+// @desc    Get product recommendations (hybrid collaborative/content-based filtering)
+// @route   GET /api/products/recommendations
+// @access  Public
+const getRecommendations = asyncHandler(async (req, res) => {
+    const { currentProductId, cartProductIds, recentlyViewedCategories } = req.query;
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct, createProductReview };
+    const cartIds = cartProductIds ? cartProductIds.split(',').filter(Boolean) : [];
+    const viewedCats = recentlyViewedCategories ? recentlyViewedCategories.split(',').filter(Boolean) : [];
+
+    // 1. Manually parse optional Bearer token to get logged-in user order history
+    let favoriteCategories = [];
+    const jwt = require('jsonwebtoken');
+    const Order = require('../models/Order');
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        try {
+            const token = req.headers.authorization.split(' ')[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
+            const userOrders = await Order.find({ user: decoded.id });
+            const categoriesBought = [];
+            for (const order of userOrders) {
+                for (const item of order.orderItems) {
+                    const prod = await Product.findById(item.product);
+                    if (prod && prod.category) {
+                        categoriesBought.push(prod.category.toString());
+                    }
+                }
+            }
+            favoriteCategories = [...new Set(categoriesBought)];
+        } catch (err) {
+            // Silence auth failures to fallback gracefully
+        }
+    }
+
+    // 2. Fetch all active products
+    const products = await Product.find({ stock: { $gt: 0 } }).populate('category', 'name');
+
+    // 3. Find current product's category if provided
+    let currentCategory = null;
+    if (currentProductId) {
+        const currentProd = await Product.findById(currentProductId);
+        if (currentProd && currentProd.category) {
+            currentCategory = currentProd.category.toString();
+        }
+    }
+
+    // 4. Calculate recommendation score for each product
+    const scoredProducts = products.map((product) => {
+        let score = 0;
+        const prodIdStr = product._id.toString();
+        const catIdStr = product.category ? product.category._id.toString() : '';
+
+        // Exclusions: Do not recommend product currently viewed or already in cart
+        if (currentProductId && prodIdStr === currentProductId) {
+            score -= 100;
+        }
+        if (cartIds.includes(prodIdStr)) {
+            score -= 100;
+        }
+
+        // Feature 1: Category similarity (strong match)
+        if (currentCategory && catIdStr === currentCategory) {
+            score += 5;
+        }
+
+        // Feature 2: Past purchased categories boost (personalized loyalty signal)
+        if (favoriteCategories.includes(catIdStr)) {
+            score += 4;
+        }
+
+        // Feature 3: Recently viewed categories boost (active session session intent)
+        if (viewedCats.includes(catIdStr)) {
+            score += 3;
+        }
+
+        // Feature 4: Active deals and campaigns boost
+        if (product.discountPrice > 0 || product.dealType) {
+            score += 1.5;
+        }
+
+        // Feature 5: Popularity & rating score boost
+        if (product.rating) {
+            score += product.rating * 0.5; // Scale: max rating of 5 adds 2.5 points
+        }
+
+        return { product, score };
+    });
+
+    // 5. Filter out low score/excluded items and sort by recommendation score descending
+    const recommendations = scoredProducts
+        .filter(item => item.score > -50)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.product)
+        .slice(0, 6);
+
+    res.json(recommendations);
+});
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct, createProductReview, getRecommendations };

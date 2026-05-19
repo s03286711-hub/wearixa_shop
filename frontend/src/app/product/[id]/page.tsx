@@ -42,6 +42,18 @@ export default function ProductDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (product && product.category) {
+      const catId = product.category._id || product.category;
+      if (typeof window !== 'undefined' && catId) {
+        const existing = localStorage.getItem('wearixaRecentlyViewedCategories');
+        let list = existing ? existing.split(',').filter(Boolean) : [];
+        list = [catId, ...list.filter((id: string) => id !== catId)].slice(0, 5);
+        localStorage.setItem('wearixaRecentlyViewedCategories', list.join(','));
+      }
+    }
+  }, [product]);
+
   const handleAddToCart = () => {
     if (!product) return;
     if (product.sizes && product.sizes.length > 0 && !selectedSize) {
@@ -468,15 +480,34 @@ export default function ProductDetailPage() {
 
 function YouMayAlsoLike({ currentId, categoryId }: { currentId: string; categoryId: string }) {
   const [recs, setRecs] = useState<any[]>([]);
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
   const { showToast } = useToast();
 
   useEffect(() => {
-    if (!categoryId) return;
-    productService.getAll({ category: categoryId, pageSize: 5 })
-      .then(data => setRecs((data.products || []).filter((p: any) => p._id !== currentId).slice(0, 4)))
-      .catch(console.error);
-  }, [categoryId, currentId]);
+    const fetchRecommendations = async () => {
+      try {
+        const cartProductIds = cartItems.map(item => item._id).join(',');
+        const recentlyViewedCategories = typeof window !== 'undefined' 
+          ? localStorage.getItem('wearixaRecentlyViewedCategories') || '' 
+          : '';
+        const data = await productService.getRecommendations({
+          currentProductId: currentId,
+          cartProductIds,
+          recentlyViewedCategories
+        });
+        setRecs((data || []).slice(0, 4));
+      } catch (err) {
+        console.error('Failed to load details recommendations', err);
+        if (categoryId) {
+          productService.getAll({ category: categoryId, pageSize: 5 })
+            .then(res => setRecs((res.products || []).filter((p: any) => p._id !== currentId).slice(0, 4)))
+            .catch(console.error);
+        }
+      }
+    };
+
+    fetchRecommendations();
+  }, [currentId, categoryId, cartItems]);
 
   if (recs.length === 0) return null;
 
