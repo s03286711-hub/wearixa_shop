@@ -173,8 +173,8 @@ export default function AdminNotificationsPage() {
           { label: 'Unresolved Alerts', value: unreadCount, sub: '[ACTIVE_THREAT_QUEUE]', color: '#f87171', bg: 'rgba(239,68,68,0.05)', border: 'rgba(239,68,68,0.2)' },
           { label: 'Logged Incidents', value: notifications.length, sub: '[TOTAL_SYSTEM_LOGS]', color: '#60a5fa', bg: 'rgba(96,165,250,0.05)', border: 'rgba(96,165,250,0.2)' },
           { label: 'System Healthy', value: '100%', sub: '[CORE_NODE_STATUS]', color: '#4ade80', bg: 'rgba(74,222,128,0.05)', border: 'rgba(74,222,128,0.2)' }
-        ].map((card) => (
-          <div key={card.label} className="glass" style={{
+        ].map((card, index) => (
+          <div key={card.label} className="glass notif-stat-card animate-fade-in-stagger" style={{
             borderRadius: '16px',
             padding: '1.25rem 1.5rem',
             background: 'rgba(13, 13, 13, 0.4)',
@@ -182,7 +182,8 @@ export default function AdminNotificationsPage() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            height: '110px'
+            height: '110px',
+            animationDelay: `${index * 0.1}s`
           }}>
             <div>
               <span style={{ fontSize: '0.6rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>{card.sub}</span>
@@ -274,10 +275,10 @@ export default function AdminNotificationsPage() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   gap: '1.5rem',
-                  transition: 'background 0.2s',
-                  position: 'relative'
+                  position: 'relative',
+                  animationDelay: `${index * 0.05}s`
                 }}
-                className="hover:bg-white/[0.015]"
+                className="notif-timeline-item animate-fade-in-stagger"
               >
                 {/* Visual Unread Strip Indicator */}
                 {!notif.isRead && (
