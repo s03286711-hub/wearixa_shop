@@ -130,7 +130,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="admin-layout" style={{ display: 'flex', minHeight: '100vh', background: 'var(--color-bg)' }}>
 
         {/* ── Sidebar ── */}
-        <aside className="admin-sidebar" style={{
+        <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`} style={{
           width: sidebarOpen ? '240px' : '68px', flexShrink: 0,
           background: 'linear-gradient(180deg, rgba(13,13,13,0.98) 0%, rgba(18,18,18,0.98) 100%)',
           borderRight: '1px solid rgba(201,168,76,0.1)',
@@ -145,26 +145,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: '64px',
             background: 'rgba(201,168,76,0.03)'
           }}>
-            {sidebarOpen && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '28px', height: '28px', borderRadius: '6px',
-                  background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 0 10px rgba(201,168,76,0.4)'
-                }}>
-                  <Zap size={14} color="#0d0d0d" fill="#0d0d0d" />
-                </div>
-                <div>
-                  <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: '800', letterSpacing: '0.12em', whiteSpace: 'nowrap', color: '#fff' }}>
-                    WEARIXA
-                  </span>
-                  <p style={{ fontSize: '0.55rem', color: 'var(--color-accent)', fontFamily: 'monospace', letterSpacing: '0.1em', lineHeight: 1 }}>
-                    ADMIN ERP v2.4
-                  </p>
-                </div>
-              </div>
-            )}
+             <div className="sidebar-brand-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+               <div style={{
+                 width: '28px', height: '28px', borderRadius: '6px',
+                 background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
+                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                 boxShadow: '0 0 10px rgba(201,168,76,0.4)'
+               }}>
+                 <Zap size={14} color="#0d0d0d" fill="#0d0d0d" />
+               </div>
+               <div>
+                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: '800', letterSpacing: '0.12em', whiteSpace: 'nowrap', color: '#fff' }}>
+                   WEARIXA
+                 </span>
+                 <p style={{ fontSize: '0.55rem', color: 'var(--color-accent)', fontFamily: 'monospace', letterSpacing: '0.1em', lineHeight: 1 }}>
+                   ADMIN ERP v2.4
+                 </p>
+               </div>
+             </div>
             <button onClick={() => setSidebarOpen(!sidebarOpen)}
               style={{
                 background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
@@ -239,7 +237,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           {/* User / Logout footer */}
-          <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+          <div className="sidebar-footer" style={{ padding: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
             {sidebarOpen && (
               <div style={{
                 display: 'flex', alignItems: 'center', gap: '10px',
@@ -457,11 +455,44 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       <style>{`
+        /* Collapsed desktop sidebar brand layout */
+        .admin-sidebar.closed .sidebar-brand-logo > div:last-child {
+          display: none;
+        }
+        .admin-sidebar.closed .sidebar-brand-logo {
+          justify-content: center;
+          width: 100%;
+        }
+
         @media (max-width: 768px) {
           .admin-layout { flex-direction: column !important; }
-          .admin-sidebar { width: 100% !important; height: auto !important; position: sticky !important; top: 0 !important; z-index: 100 !important; }
+          .admin-sidebar { 
+            width: 100% !important; 
+            height: auto !important; 
+            position: sticky !important; 
+            top: 0 !important; 
+            z-index: 100 !important; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+            border-right: none !important;
+            border-bottom: 1px solid rgba(201,168,76,0.15) !important;
+          }
+          .admin-sidebar.closed .sidebar-brand-logo {
+            display: flex !important;
+          }
+          .admin-sidebar.closed .sidebar-brand-logo > div:last-child {
+            display: block !important;
+          }
+          .admin-sidebar.closed .sidebar-footer {
+            display: none !important;
+          }
+          .admin-sidebar.closed .sidebar-brand-logo {
+            display: flex !important;
+          }
+          .admin-sidebar.closed .sidebar-footer {
+            display: none !important;
+          }
           .admin-nav.closed { display: none !important; }
-          .admin-sidebar > div:last-child { border-top: none !important; padding: 0.5rem !important; }
+          .sidebar-footer { border-top: 1px solid rgba(255,255,255,0.05) !important; padding: 0.75rem !important; }
           .admin-header { display: none !important; }
           main { padding: 1rem !important; }
         }
