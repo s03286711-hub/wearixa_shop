@@ -2,6 +2,8 @@ const Order = require('../models/Order');
 const User = require('../models/User');
 const Transaction = require('../models/Transaction');
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
+const sendEmail = require('../utils/sendEmail');
+const Setting = require('../models/Setting');
 
 if (!stripe) {
     console.warn('⚠️  WARNING: STRIPE_SECRET_KEY is missing in Order Controller.');
@@ -39,6 +41,9 @@ const addOrderItems = async (req, res) => {
             });
         }
 
+        const settings = await Setting.findOne();
+        const autoApprove = settings ? settings.autoApprove : false;
+
         const order = new Order({
             orderItems,
             user: req.user._id,
@@ -47,19 +52,85 @@ const addOrderItems = async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
-            isPaid: paymentMethod === 'wallet',
-            paidAt: paymentMethod === 'wallet' ? new Date() : undefined,
+            isPaid: (paymentMethod === 'wallet' || autoApprove),
+            paidAt: (paymentMethod === 'wallet' || autoApprove) ? new Date() : undefined,
             expectedDelivery: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // Default 4 days
+            status: autoApprove ? 'Delivered' : 'Processing',
+            isDelivered: autoApprove ? true : false,
+            deliveredAt: autoApprove ? new Date() : undefined,
             statusTimeline: [
                 {
                     status: 'Processing',
                     message: 'Order placed successfully and is being processed.',
                     timestamp: new Date(),
-                }
+                },
+                ...(autoApprove ? [{
+                    status: 'Delivered',
+                    message: 'Order has been automatically approved and delivered.',
+                    timestamp: new Date(),
+                }] : [])
             ],
         });
 
         const createdOrder = await order.save();
+
+        // ─── NOTIFICATIONS & ALERTS ──────────────────────────────────
+        // Send email to customer if enabled
+        const emailNotify = settings ? settings.emailNotify : true;
+        if (emailNotify) {
+            try {
+                const emailMessage = `
+                    <div style="font-family: 'Playfair Display', serif; color: #1a1a2e; padding: 20px; border: 1px solid #c9a84c; border-radius: 10px;">
+                        <h1 style="color: #c9a84c; text-align: center;">WEARIXA</h1>
+                        <h2 style="text-align: center; color: #1a1a2e;">Order Confirmed!</h2>
+                        <p>Dear ${user.name},</p>
+                        <p>Thank you for shopping at Wearixa! Your order has been placed successfully and is now being processed.</p>
+                        <p><b>Order ID:</b> ${createdOrder._id}</p>
+                        <p><b>Total Amount:</b> $${totalPrice.toFixed(2)}</p>
+                        <p>We will notify you once your package is on its way.</p>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                        <p style="text-align: center; font-size: 0.75rem; color: #aaa;">&copy; 2026 Wearixa Fashion House. All rights reserved.</p>
+                    </div>
+                `;
+                await sendEmail({
+                    email: user.email,
+                    subject: 'Order Confirmation - Wearixa',
+                    message: emailMessage,
+                });
+                console.log('Order confirmation email sent successfully!');
+            } catch (emailErr) {
+                console.error('Failed to send order confirmation email:', emailErr.message);
+            }
+        }
+
+        // Send alert to admin if enabled
+        const orderAlerts = settings ? settings.orderAlerts : true;
+        if (orderAlerts) {
+            try {
+                const adminEmailMessage = `
+                    <div style="font-family: 'Playfair Display', serif; color: #1a1a2e; padding: 20px; border: 1px solid #c9a84c; border-radius: 10px;">
+                        <h1 style="color: #c9a84c; text-align: center;">WEARIXA ADMIN ALERT</h1>
+                        <h2 style="text-align: center; color: #ef4444;">🚨 New Order Placed!</h2>
+                        <p>A new order has been placed on the storefront.</p>
+                        <p><b>Order ID:</b> ${createdOrder._id}</p>
+                        <p><b>Customer:</b> ${user.name} (${user.email})</p>
+                        <p><b>Total Amount:</b> $${totalPrice.toFixed(2)}</p>
+                        <p><b>Payment Method:</b> ${paymentMethod.toUpperCase()}</p>
+                        <p>Please log in to the admin panel to review and manage this order.</p>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                        <p style="text-align: center; font-size: 0.75rem; color: #aaa;">&copy; 2026 Wearixa Admin Notification System. All rights reserved.</p>
+                    </div>
+                `;
+                await sendEmail({
+                    email: process.env.EMAIL_USER || 'admin@wearixa.com',
+                    subject: '🚨 WEARIXA ALERT: New Order Placed',
+                    message: adminEmailMessage,
+                });
+                console.log('Admin order alert email sent successfully!');
+            } catch (adminAlertErr) {
+                console.error('Failed to send admin order alert email:', adminAlertErr.message);
+            }
+        }
 
         // If Stripe, create a session
         if (paymentMethod === 'stripe') {
