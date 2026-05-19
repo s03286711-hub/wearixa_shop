@@ -176,6 +176,51 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
            {/* Mobile header controls */}
            <div className="mobile-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {/* 1. Notification Bell */}
+              <div style={{ position: 'relative' }} ref={mobileNotifRef}>
+                <button
+                  type="button"
+                  onClick={() => setMobileNotifOpen(!mobileNotifOpen)}
+                  style={{
+                    background: 'none', border: 'none', padding: '6px',
+                    color: 'var(--color-muted)', cursor: 'pointer', display: 'flex',
+                    alignItems: 'center', position: 'relative', transition: 'all 0.2s'
+                  }}
+                >
+                  <Bell size={16} />
+                  {unreadCount > 0 && (
+                    <span style={{
+                      position: 'absolute', top: '2px', right: '2px', fontSize: '0.5rem',
+                      background: 'var(--color-accent)', color: '#000', fontWeight: 'bold',
+                      borderRadius: '50%', minWidth: '10px', height: '10px',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }} />
+                  )}
+                </button>
+              </div>
+
+              {/* 2. User Profile button */}
+              <div style={{ position: 'relative' }} ref={mobileProfileRef}>
+                <button
+                  type="button"
+                  onClick={() => setMobileProfileOpen(!mobileProfileOpen)}
+                  style={{
+                    background: 'none', border: 'none', padding: '4px',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', transition: 'all 0.2s'
+                  }}
+                >
+                  <div style={{
+                    width: '26px', height: '26px', borderRadius: '50%',
+                    background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontWeight: '700', fontSize: '0.75rem', color: '#0d0d0d',
+                    border: '1px solid rgba(201,168,76,0.3)'
+                  }}>
+                    {user.name.charAt(0)}
+                  </div>
+                </button>
+              </div>
+
 
              {/* 3. Hamburger Menu button */}
              <button type="button" onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -537,6 +582,137 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           main { padding: 1rem !important; }
         }
       `}</style>
+        {/* ── Mobile Modals / Overlays ── */}
+        {mobileNotifOpen && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 9999, padding: '1rem'
+          }}
+          onClick={() => setMobileNotifOpen(false)}
+          >
+            <div className="glass" style={{
+              width: '100%', maxWidth: '340px', borderRadius: '16px',
+              background: 'rgba(15,15,15,0.95)', border: '1px solid rgba(201,168,76,0.15)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.6)', overflow: 'hidden'
+            }}
+            onClick={e => e.stopPropagation()}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em' }}>
+                  SYSTEM NOTIFICATIONS
+                </span>
+                <button onClick={() => setMobileNotifOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', padding: '4px' }}>
+                  <X size={16} />
+                </button>
+              </div>
+              <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                {notifications.length === 0 ? (
+                  <div style={{ padding: '3rem 1rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+                    NO EVENTS RECORDED
+                  </div>
+                ) : (
+                  notifications.map((notif) => (
+                    <div
+                      key={notif._id}
+                      style={{
+                        padding: '0.9rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                        background: notif.isRead ? 'transparent' : 'rgba(201,168,76,0.03)',
+                        textAlign: 'left'
+                      }}
+                      onClick={async () => {
+                        if (!notif.isRead) {
+                          await notificationService.markAsRead(notif._id);
+                          setNotifications(prev => prev.map(n => n._id === notif._id ? { ...n, isRead: true } : n));
+                        }
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '6px' }}>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 'bold', color: notif.isRead ? '#fff' : 'var(--color-accent)' }}>
+                          {notif.title}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)', margin: '4px 0 0', lineHeight: 1.4 }}>
+                        {notif.message}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+              <div style={{ padding: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.2)', textAlign: 'center' }}>
+                <Link href="/admin/notifications" style={{ fontSize: '0.7rem', color: 'var(--color-accent)', textDecoration: 'underline' }}
+                  onClick={() => setMobileNotifOpen(false)}
+                >
+                  View All Notifications History
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {mobileProfileOpen && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(10px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 9999, padding: '1rem'
+          }}
+          onClick={() => setMobileProfileOpen(false)}
+          >
+            <div className="glass" style={{
+              width: '100%', maxWidth: '280px', borderRadius: '16px',
+              background: 'rgba(15,15,15,0.95)', border: '1px solid rgba(201,168,76,0.15)',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.6)', overflow: 'hidden'
+            }}
+            onClick={e => e.stopPropagation()}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em' }}>
+                  USER ACCOUNT
+                </span>
+                <button onClick={() => setMobileProfileOpen(false)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', padding: '4px' }}>
+                  <X size={16} />
+                </button>
+              </div>
+              <div style={{ padding: '1.25rem 1rem', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(201,168,76,0.02)' }}>
+                <div style={{
+                  width: '48px', height: '48px', borderRadius: '50%',
+                  background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 10px', fontWeight: 'bold', fontSize: '1.2rem', color: '#0d0d0d',
+                  boxShadow: '0 0 15px rgba(201,168,76,0.3)'
+                }}>
+                  {user.name.charAt(0)}
+                </div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 'bold', color: '#fff', margin: '0 0 4px' }}>
+                  {user.name}
+                </h4>
+                <p style={{ fontSize: '0.65rem', color: 'var(--color-accent)', fontFamily: 'monospace', margin: 0 }}>
+                  ADMIN_CLEARANCE
+                </p>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <Link href="/" style={{ display: 'block', padding: '0.85rem 1.25rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.04)', textAlign: 'left' }}
+                  onClick={() => setMobileProfileOpen(false)}
+                >
+                  Storefront Home
+                </Link>
+                <Link href="/profile" style={{ display: 'block', padding: '0.85rem 1.25rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.04)', textAlign: 'left' }}
+                  onClick={() => setMobileProfileOpen(false)}
+                >
+                  My Account Settings
+                </Link>
+                <button type="button" onClick={() => { setMobileProfileOpen(false); logout(); }}
+                  style={{ display: 'block', width: '100%', textAlign: 'left', padding: '0.85rem 1.25rem', fontSize: '0.8rem', background: 'none', border: 'none', color: '#f87171', cursor: 'pointer', fontFamily: 'monospace', textTransform: 'uppercase' }}
+                >
+                  Logout Session
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
     </>
   );
 }
