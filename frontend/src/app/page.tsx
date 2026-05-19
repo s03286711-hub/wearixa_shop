@@ -52,7 +52,7 @@ export default function HomePage() {
         ]);
         setProducts(pData.products || []);
         setCategories(cData || []);
-        setActivePromos(promoData || []);
+        setActivePromos((promoData || []).sort((a: any, b: any) => b.discountValue - a.discountValue));
 
         // Fetch seasonal products
         const seasons = ['Summer Collection', 'Winter Collection', 'Eid Special', 'Christmas Offer'];
