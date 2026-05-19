@@ -204,7 +204,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                  <div
                    className="glass"
                    style={{
-                     position: 'absolute', right: '-50px', top: 'calc(100% + 8px)',
+                     position: 'absolute', right: '-80px', top: 'calc(100% + 8px)',
                      width: '280px', borderRadius: '12px', overflow: 'hidden',
                      animation: 'fadeIn 0.2s ease',
                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
@@ -282,7 +282,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                  <div
                    className="glass"
                    style={{
-                     position: 'absolute', right: '-20px', top: 'calc(100% + 8px)',
+                     position: 'absolute', right: '-40px', top: 'calc(100% + 8px)',
                      width: '160px', borderRadius: '8px', overflow: 'hidden',
                      animation: 'fadeIn 0.2s ease',
                      boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
@@ -609,18 +609,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       <style>{`
-        /* Collapsed desktop sidebar brand layout */
-        .admin-sidebar.closed .sidebar-brand-logo {
-          display: none !important;
-        }
-        .admin-sidebar.closed .desktop-toggle-btn {
-          margin: auto !important;
-        }
-        .admin-sidebar.open .desktop-toggle-btn {
-          display: flex !important;
-        }
-        .admin-sidebar.closed .desktop-toggle-btn {
-          display: flex !important;
+        @media (min-width: 769px) {
+          /* Collapsed desktop sidebar brand layout */
+          .admin-sidebar.closed .sidebar-brand-logo {
+            display: none !important;
+          }
+          .admin-sidebar.closed .desktop-toggle-btn {
+            margin: auto !important;
+            display: flex !important;
+          }
+          .admin-sidebar.open .desktop-toggle-btn {
+            display: flex !important;
+          }
         }
         .mobile-header-actions {
           display: none !important;
