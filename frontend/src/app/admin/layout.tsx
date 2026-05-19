@@ -47,8 +47,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [notifications, setNotifications] = useState<any[]>([]);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [mobileNotifOpen, setMobileNotifOpen] = useState(false);
+  const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const mobileNotifRef = useRef<HTMLDivElement>(null);
+  const mobileProfileRef = useRef<HTMLDivElement>(null);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
@@ -72,6 +76,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setNotifDropdownOpen(false);
       }
+      if (mobileNotifRef.current && !mobileNotifRef.current.contains(e.target as Node)) {
+        setMobileNotifOpen(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutsideNotif);
     return () => document.removeEventListener('mousedown', handleClickOutsideNotif);
@@ -81,6 +88,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const handleClickOutsideProfile = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
         setProfileDropdownOpen(false);
+      }
+      if (mobileProfileRef.current && !mobileProfileRef.current.contains(e.target as Node)) {
+        setMobileProfileOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutsideProfile);
@@ -146,36 +156,180 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             background: 'rgba(201,168,76,0.03)'
           }}>
              <div className="sidebar-brand-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-               <div style={{
-                 width: '28px', height: '28px', borderRadius: '6px',
-                 background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
-                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                 boxShadow: '0 0 10px rgba(201,168,76,0.4)'
-               }}>
-                 <Zap size={14} color="#0d0d0d" fill="#0d0d0d" />
-               </div>
-               <div>
-                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: '800', letterSpacing: '0.12em', whiteSpace: 'nowrap', color: '#fff' }}>
-                   WEARIXA
-                 </span>
-                 <p style={{ fontSize: '0.55rem', color: 'var(--color-accent)', fontFamily: 'monospace', letterSpacing: '0.1em', lineHeight: 1 }}>
-                   ADMIN ERP v2.4
-                 </p>
-               </div>
+             <div style={{
+               width: '28px', height: '28px', borderRadius: '6px',
+               background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
+               display: 'flex', alignItems: 'center', justifyContent: 'center',
+               boxShadow: '0 0 10px rgba(201,168,76,0.4)'
+             }}>
+               <Zap size={14} color="#0d0d0d" fill="#0d0d0d" />
              </div>
-            <button onClick={() => setSidebarOpen(!sidebarOpen)}
+             <div>
+               <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: '800', letterSpacing: '0.12em', whiteSpace: 'nowrap', color: '#fff' }}>
+                 WEARIXA
+               </span>
+               <p style={{ fontSize: '0.55rem', color: 'var(--color-accent)', fontFamily: 'monospace', letterSpacing: '0.1em', lineHeight: 1 }}>
+                 ADMIN ERP v2.4
+               </p>
+             </div>
+           </div>
+
+           {/* Mobile header controls */}
+           <div className="mobile-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+             {/* 1. Notification Bell */}
+             <div style={{ position: 'relative' }} ref={mobileNotifRef}>
+               <button
+                 type="button"
+                 onClick={() => setMobileNotifOpen(!mobileNotifOpen)}
+                 style={{
+                   background: 'rgba(255,255,255,0.04)', border: mobileNotifOpen ? '1px solid var(--color-accent)' : '1px solid rgba(255,255,255,0.06)',
+                   borderRadius: '8px', padding: '6px', color: mobileNotifOpen ? 'var(--color-accent)' : 'var(--color-muted)',
+                   cursor: 'pointer', display: 'flex', alignItems: 'center', position: 'relative', transition: 'all 0.2s'
+                 }}
+               >
+                 <Bell size={15} />
+                 {unreadCount > 0 && (
+                   <span style={{
+                     position: 'absolute', top: '-4px', right: '-4px', fontSize: '0.58rem',
+                     background: 'var(--color-accent)', color: '#000', fontWeight: 'bold',
+                     borderRadius: '50%', minWidth: '13px', height: '13px',
+                     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1px 3px'
+                   }}>
+                     {unreadCount}
+                   </span>
+                 )}
+               </button>
+
+               {mobileNotifOpen && (
+                 <div
+                   className="glass"
+                   style={{
+                     position: 'absolute', right: '-50px', top: 'calc(100% + 8px)',
+                     width: '280px', borderRadius: '12px', overflow: 'hidden',
+                     animation: 'fadeIn 0.2s ease',
+                     boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                     zIndex: 200
+                   }}
+                 >
+                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                     <Link href="/admin/notifications" style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em', textDecoration: 'underline' }}
+                       onClick={() => setMobileNotifOpen(false)}
+                     >
+                       NOTIFICATIONS ↗
+                     </Link>
+                   </div>
+
+                   <div style={{ maxHeight: '240px', overflowY: 'auto' }}>
+                     {notifications.length === 0 ? (
+                       <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', fontFamily: 'monospace' }}>
+                         NO EVENTS RECORDED
+                       </div>
+                     ) : (
+                       notifications.map((notif) => (
+                         <div
+                           key={notif._id}
+                           style={{
+                             padding: '0.85rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                             background: notif.isRead ? 'transparent' : 'rgba(201,168,76,0.04)',
+                             transition: 'background 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: '3px',
+                             textAlign: 'left'
+                           }}
+                           onClick={async () => {
+                             if (!notif.isRead) {
+                               await notificationService.markAsRead(notif._id);
+                               setNotifications(prev => prev.map(n => n._id === notif._id ? { ...n, isRead: true } : n));
+                             }
+                           }}
+                         >
+                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '6px' }}>
+                             <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: notif.isRead ? '#fff' : 'var(--color-accent)' }}>
+                               {notif.title}
+                             </span>
+                           </div>
+                           <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', margin: 0, lineHeight: 1.4 }}>
+                             {notif.message}
+                           </p>
+                         </div>
+                       ))
+                     )}
+                   </div>
+                 </div>
+               )}
+             </div>
+
+             {/* 2. User Profile button */}
+             <div style={{ position: 'relative' }} ref={mobileProfileRef}>
+               <button
+                 type="button"
+                 onClick={() => setMobileProfileOpen(!mobileProfileOpen)}
+                 style={{
+                   display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.03)',
+                   border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '4px 8px',
+                   cursor: 'pointer', transition: 'all 0.2s'
+                 }}
+               >
+                 <div style={{
+                   width: '24px', height: '24px', borderRadius: '50%',
+                   background: 'linear-gradient(135deg,#c9a84c,#e8c97a)',
+                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                   fontWeight: '700', fontSize: '0.75rem', color: '#0d0d0d'
+                 }}>
+                   {user.name.charAt(0)}
+                 </div>
+               </button>
+
+               {mobileProfileOpen && (
+                 <div
+                   className="glass"
+                   style={{
+                     position: 'absolute', right: '-20px', top: 'calc(100% + 8px)',
+                     width: '160px', borderRadius: '8px', overflow: 'hidden',
+                     animation: 'fadeIn 0.2s ease',
+                     boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                     zIndex: 200
+                   }}
+                 >
+                   <Link href="/" style={{ display: 'block', padding: '0.75rem 1rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                     onClick={() => setMobileProfileOpen(false)}
+                   >Storefront Home</Link>
+                   <Link href="/profile" style={{ display: 'block', padding: '0.75rem 1rem', fontSize: '0.8rem', color: '#fff', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                     onClick={() => setMobileProfileOpen(false)}
+                   >My Account</Link>
+                   <button type="button" onClick={logout} style={{ display: 'block', width: '100%', textAlign: 'left', padding: '0.75rem 1rem', fontSize: '0.8rem', background: 'none', border: 'none', color: '#f87171', cursor: 'pointer' }}
+                   >Logout</button>
+                 </div>
+               )}
+             </div>
+
+             {/* 3. Hamburger Menu button */}
+             <button type="button" onClick={() => setSidebarOpen(!sidebarOpen)}
               style={{
                 background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
                 color: 'var(--color-muted)', cursor: 'pointer', padding: '6px', borderRadius: '6px',
-                marginLeft: sidebarOpen ? 0 : 'auto', marginRight: sidebarOpen ? 0 : 'auto',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 transition: 'all 0.2s'
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; e.currentTarget.style.color = 'var(--color-accent)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'var(--color-muted)'; }}
-            >
-              {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
-            </button>
+             >
+               {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
+             </button>
+           </div>
+
+           {/* Desktop collapsed-only single hamburger button */}
+           <button className="desktop-toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}
+            style={{
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
+              color: 'var(--color-muted)', cursor: 'pointer', padding: '6px', borderRadius: '6px',
+              marginLeft: sidebarOpen ? 0 : 'auto', marginRight: sidebarOpen ? 0 : 'auto',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; e.currentTarget.style.color = 'var(--color-accent)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'var(--color-muted)'; }}
+          >
+            {sidebarOpen ? <X size={16} /> : <Menu size={16} />}
+          </button>
           </div>
 
           {/* Navigation Groups */}
@@ -459,9 +613,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         .admin-sidebar.closed .sidebar-brand-logo {
           display: none !important;
         }
+        .admin-sidebar.closed .desktop-toggle-btn {
+          margin: auto !important;
+        }
+        .admin-sidebar.open .desktop-toggle-btn {
+          display: flex !important;
+        }
+        .admin-sidebar.closed .desktop-toggle-btn {
+          display: flex !important;
+        }
+        .mobile-header-actions {
+          display: none !important;
+        }
 
         @media (max-width: 768px) {
           .admin-layout { flex-direction: column !important; }
+          .desktop-toggle-btn { display: none !important; }
+          .mobile-header-actions { display: flex !important; }
           .admin-sidebar { 
             width: 100% !important; 
             height: auto !important; 
