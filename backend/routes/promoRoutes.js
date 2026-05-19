@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { protect, admin } = require('../middleware/authMiddleware');
 const { validatePromoCode, usePromoCode, createPromoCode, getPromoCodes, deletePromoCode, getPublicPromoCodes } = require('../controllers/promoController');
 
 router.get('/active', getPublicPromoCodes);
