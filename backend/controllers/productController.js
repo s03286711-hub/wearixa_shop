@@ -229,6 +229,12 @@ const createProductReview = async (req, res) => {
 
         await product.save();
         res.status(201).json({ message: 'Review added' });
+    } else {
+        res.status(404);
+        throw new Error('Product not found');
+    }
+};
+
 // @desc    Get product recommendations (hybrid collaborative/content-based filtering)
 // @route   GET /api/products/recommendations
 // @access  Public
