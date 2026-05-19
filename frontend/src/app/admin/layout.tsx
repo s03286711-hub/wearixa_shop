@@ -78,6 +78,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setNotifDropdownOpen(false);
       }
+      if (mobileNotifModalRef.current && mobileNotifModalRef.current.contains(e.target as Node)) {
+        return;
+      }
       if (mobileNotifRef.current && !mobileNotifRef.current.contains(e.target as Node)) {
         setMobileNotifOpen(false);
       }
@@ -90,6 +93,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const handleClickOutsideProfile = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
         setProfileDropdownOpen(false);
+      }
+      if (mobileProfileModalRef.current && mobileProfileModalRef.current.contains(e.target as Node)) {
+        return;
       }
       if (mobileProfileRef.current && !mobileProfileRef.current.contains(e.target as Node)) {
         setMobileProfileOpen(false);
@@ -594,7 +600,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           }}
           onClick={() => setMobileNotifOpen(false)}
           >
-            <div className="glass" style={{
+            <div ref={mobileNotifModalRef} className="glass" style={{
               width: '100%', maxWidth: '340px', borderRadius: '16px',
               background: 'rgba(15,15,15,0.95)', border: '1px solid rgba(201,168,76,0.15)',
               boxShadow: '0 20px 40px rgba(0,0,0,0.6)', overflow: 'hidden'
@@ -662,7 +668,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           }}
           onClick={() => setMobileProfileOpen(false)}
           >
-            <div className="glass" style={{
+            <div ref={mobileProfileModalRef} className="glass" style={{
               width: '100%', maxWidth: '280px', borderRadius: '16px',
               background: 'rgba(15,15,15,0.95)', border: '1px solid rgba(201,168,76,0.15)',
               boxShadow: '0 20px 40px rgba(0,0,0,0.6)', overflow: 'hidden'
