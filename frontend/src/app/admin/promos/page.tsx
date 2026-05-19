@@ -122,6 +122,37 @@ export default function AdminPromosPage() {
 
   return (
     <div>
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes pulse-glow {
+          0% { box-shadow: 0 0 10px rgba(201, 168, 76, 0.2); }
+          100% { box-shadow: 0 0 25px rgba(201, 168, 76, 0.4); }
+        }
+        @media (max-width: 991px) {
+          .promo-dashboard-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .promo-telemetry-cards {
+            grid-template-columns: 1fr !important;
+          }
+          .neon-timer-box {
+            font-size: 1.1rem !important;
+            padding: 0.8rem 1rem !important;
+            gap: 8px !important;
+          }
+          .modal-padding {
+            padding: 1.25rem 1rem !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .form-grid-split {
+            grid-template-columns: 1fr !important;
+            gap: 1.25rem !important;
+          }
+        }
+      `}} />
+
       {/* Upper header controls */}
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
@@ -136,7 +167,7 @@ export default function AdminPromosPage() {
       </div>
 
       {/* Stats Cards Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
+      <div className="promo-telemetry-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
         {[
           { title: 'Active Campaigns', val: activeCampaigns, label: 'Running promotions', color: 'var(--color-accent)', icon: Ticket, kpiClass: 'kpi-card' },
           { title: 'Total Redeemed', val: totalRedeemed, label: 'Accumulated usages', color: '#10b981', icon: CheckCircle, kpiClass: 'kpi-card-green' },
@@ -191,7 +222,7 @@ export default function AdminPromosPage() {
       </div>
 
       {/* ⚡ High-tech Countdown Clocks & Active Neon Indicators ⚡ */}
-      <div style={{ display: 'grid', gridTemplateColumns: primaryExpiring ? '3fr 2fr' : '1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+      <div className="promo-dashboard-grid" style={{ display: 'grid', gridTemplateColumns: primaryExpiring ? '3fr 2fr' : '1fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
         
         {/* Campaign Neon Countdown Panel */}
         {primaryExpiring ? (
@@ -239,7 +270,7 @@ export default function AdminPromosPage() {
             {/* Glowing neon timer block */}
             <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', position: 'relative', zIndex: 2 }}>
               {timeRemaining[primaryExpiring._id] ? (
-                <div style={{
+                <div className="neon-timer-box" style={{
                   background: 'rgba(13,13,13,0.5)',
                   border: '1px solid rgba(201, 168, 76, 0.3)',
                   borderRadius: '12px',
@@ -447,7 +478,7 @@ export default function AdminPromosPage() {
       {/* Campaign Create Modal */}
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '2rem' }}>
-          <div className="glass animate-fade-in" style={{ width: '100%', maxWidth: '480px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="glass animate-fade-in" style={{ width: '100%', maxWidth: '480px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)', maxHeight: '90vh', overflowY: 'auto' }}>
             <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Ticket size={20} style={{ color: 'var(--color-accent)' }} /> Create Promo Campaign
@@ -455,7 +486,7 @@ export default function AdminPromosPage() {
               <button onClick={() => setShowModal(false)} disabled={submitting} style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: submitting ? 'not-allowed' : 'pointer' }}><X size={24} /></button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <form onSubmit={handleSubmit} className="modal-padding" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               
               {/* Error messages */}
               {submitError && (
@@ -476,7 +507,7 @@ export default function AdminPromosPage() {
                 <input className="input-field" value={form.code} onChange={e => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} placeholder="e.g. EIDSPECIAL" required disabled={submitting} style={{ fontFamily: 'monospace', letterSpacing: '0.1em', fontWeight: 'bold' }} />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-grid-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Type</label>
                   <select className="input-field" value={form.discountType} onChange={e => setForm(f => ({ ...f, discountType: e.target.value }))} disabled={submitting}>
@@ -490,7 +521,7 @@ export default function AdminPromosPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-grid-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Min Order ($)</label>
                   <input className="input-field" type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: e.target.value }))} placeholder="0 (Optional)" disabled={submitting} />
@@ -501,7 +532,7 @@ export default function AdminPromosPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-grid-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Usage Limit</label>
                   <input className="input-field" type="number" value={form.usageLimit} onChange={e => setForm(f => ({ ...f, usageLimit: e.target.value }))} placeholder="0 (Unlimited)" disabled={submitting} />
