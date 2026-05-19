@@ -166,10 +166,10 @@ export default function AdminProductsPage() {
       {/* Telemetry KPI Stats Summary Section */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
         {[
-          { title: 'Catalog Volume', val: totalProducts, label: 'Active listings', color: 'var(--color-accent)', icon: Package },
-          { title: 'Inventory Val', val: `$${totalInventoryValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, label: 'Asset appraisal', color: '#10b981', icon: DollarSign },
-          { title: 'Critical Stock', val: outOfStockCount, label: 'Depleted entries', color: '#ef4444', icon: AlertTriangle, pulse: outOfStockCount > 0 },
-          { title: 'Low Allocations', val: lowStockCount, label: 'Restock advised', color: '#f59e0b', icon: Layers, pulse: lowStockCount > 0 },
+          { title: 'Catalog Volume', val: totalProducts, label: 'Active listings', color: 'var(--color-accent)', icon: Package, kpiClass: 'kpi-card' },
+          { title: 'Inventory Val', val: `$${totalInventoryValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, label: 'Asset appraisal', color: '#10b981', icon: DollarSign, kpiClass: 'kpi-card-green' },
+          { title: 'Critical Stock', val: outOfStockCount, label: 'Depleted entries', color: '#ef4444', icon: AlertTriangle, pulse: outOfStockCount > 0, kpiClass: 'kpi-card-rose' },
+          { title: 'Low Allocations', val: lowStockCount, label: 'Restock advised', color: '#f59e0b', icon: Layers, pulse: lowStockCount > 0, kpiClass: 'kpi-card-orange' },
         ].map((card, idx) => {
           const Icon = card.icon;
           return (
@@ -178,7 +178,7 @@ export default function AdminProductsPage() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className="glass"
+              className={`glass ${card.kpiClass}`}
               style={{
                 borderRadius: '12px',
                 padding: '1.5rem',
@@ -189,17 +189,7 @@ export default function AdminProductsPage() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)'
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.2)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.06)';
-                e.currentTarget.style.boxShadow = 'none';
+                cursor: 'pointer'
               }}
             >
               <div>
@@ -219,13 +209,20 @@ export default function AdminProductsPage() {
                 </h3>
                 <span style={{ fontSize: '0.72rem', color: 'var(--color-muted)' }}>{card.label}</span>
               </div>
-              <div style={{
-                background: `rgba(255, 255, 255, 0.03)`,
-                borderRadius: '8px',
-                padding: '0.75rem',
-                border: '1px solid rgba(255, 255, 255, 0.04)',
-                color: card.color
-              }}>
+              <div 
+                className="kpi-icon-container"
+                style={{
+                  background: `rgba(255, 255, 255, 0.03)`,
+                  borderRadius: '8px',
+                  padding: '0.75rem',
+                  border: '1px solid rgba(255, 255, 255, 0.04)',
+                  color: card.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}
+              >
                 <Icon size={24} style={{ filter: `drop-shadow(0 0 4px ${card.color}44)` }} />
               </div>
             </motion.div>
