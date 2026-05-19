@@ -4,12 +4,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { ToastProvider } from '@/context/ToastContext';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import ChatWidget from '@/components/ChatWidget';
-import PageTransition from '@/components/PageTransition';
 import GoogleAuthProvider from '@/components/GoogleAuthProvider';
-import MaintenanceWrapper from '@/components/MaintenanceWrapper';
+import ClientLayoutWrapper from '@/components/ClientLayoutWrapper';
 
 export const metadata: Metadata = {
   title: 'Wearixa – Premium Fashion House',
@@ -35,16 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <CartProvider>
               <WishlistProvider>
                 <ToastProvider>
-                  <Navbar />
-                  <main style={{ minHeight: '100vh', paddingTop: '72px' }}>
-                    <PageTransition>
-                      <MaintenanceWrapper>
-                        {children}
-                      </MaintenanceWrapper>
-                    </PageTransition>
-                  </main>
-                  <Footer />
-                  <ChatWidget />
+                  <ClientLayoutWrapper>
+                    {children}
+                  </ClientLayoutWrapper>
                 </ToastProvider>
               </WishlistProvider>
             </CartProvider>
