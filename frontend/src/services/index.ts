@@ -173,6 +173,11 @@ export const promoService = {
     const { data } = await api.delete(`/promo/${id}`);
     return data;
   },
+
+  getActivePromos: async () => {
+    const { data } = await api.get('/promo/active');
+    return data;
+  },
 };
 
 export const cashbackService = {

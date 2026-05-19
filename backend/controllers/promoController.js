@@ -137,4 +137,23 @@ const deletePromoCode = async (req, res) => {
     }
 };
 
-module.exports = { validatePromoCode, usePromoCode, createPromoCode, getPromoCodes, deletePromoCode };
+// @desc    Get all active promo codes (Public)
+// @route   GET /api/promo/active
+// @access  Public
+const getPublicPromoCodes = async (req, res) => {
+    try {
+        const codes = await PromoCode.find({ 
+            isActive: true,
+            $or: [
+                { expiresAt: null },
+                { expiresAt: { $gt: new Date() } }
+            ]
+        }).select('code discountType discountValue minOrderAmount maxDiscount expiresAt');
+        res.json(codes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = { validatePromoCode, usePromoCode, createPromoCode, getPromoCodes, deletePromoCode, getPublicPromoCodes };

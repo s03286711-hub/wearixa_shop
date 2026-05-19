@@ -4,8 +4,8 @@ import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { ProductSkeleton } from '@/components/Skeleton';
-import { productService, categoryService } from '@/services';
-import { Truck, RefreshCw, Shield, Sparkles, ArrowRight, Star } from 'lucide-react';
+import { productService, categoryService, promoService } from '@/services';
+import { Truck, RefreshCw, Shield, Sparkles, ArrowRight, Star, Ticket, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QuickViewModal from '@/components/QuickViewModal';
 
@@ -35,6 +35,8 @@ export default function HomePage() {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [hasMounted, setHasMounted] = useState(false);
+  const [activePromos, setActivePromos] = useState<any[]>([]);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   useEffect(() => {
     setHasMounted(true);
@@ -43,12 +45,14 @@ export default function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [pData, cData] = await Promise.all([
+        const [pData, cData, promoData] = await Promise.all([
           productService.getAll({ pageSize: 8 }),
           categoryService.getAll(),
+          promoService.getActivePromos().catch(() => []),
         ]);
         setProducts(pData.products || []);
         setCategories(cData || []);
+        setActivePromos(promoData || []);
 
         // Fetch seasonal products
         const seasons = ['Summer Collection', 'Winter Collection', 'Eid Special', 'Christmas Offer'];
@@ -293,6 +297,82 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Active Broadcast Campaigns Banner ── */}
+      {activePromos.length > 0 && (
+        <motion.section
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{
+            background: 'linear-gradient(90deg, rgba(201,168,76,0.04) 0%, rgba(13,13,13,0.9) 50%, rgba(201,168,76,0.04) 100%)',
+            borderBottom: '1px solid rgba(201, 168, 76, 0.15)',
+            padding: '1.25rem 0',
+            position: 'relative',
+            overflow: 'hidden',
+            zIndex: 10
+          }}
+        >
+          <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Ticket size={18} style={{ color: 'var(--color-accent)', filter: 'drop-shadow(0 0 5px var(--color-accent))' }} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 'bold', letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase', fontFamily: 'var(--font-heading)' }}>
+                Active Offers
+              </span>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '1.5rem', overflowX: 'auto', padding: '4px 0', maxWidth: '100%', scrollbarWidth: 'none' }} className="no-scrollbar">
+              {activePromos.map((promo) => {
+                const isCopied = copiedCode === promo.code;
+                return (
+                  <div 
+                    key={promo._id}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px dashed rgba(201, 168, 76, 0.25)',
+                      borderRadius: '8px',
+                      padding: '6px 16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      flexShrink: 0
+                    }}
+                  >
+                    <span style={{ fontSize: '0.82rem', color: 'var(--color-muted)' }}>
+                      {promo.discountType === 'percentage' ? `${promo.discountValue}% OFF` : `$${promo.discountValue} OFF`}
+                      {promo.minOrderAmount > 0 && ` on orders over $${promo.minOrderAmount}`}
+                    </span>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(promo.code);
+                        setCopiedCode(promo.code);
+                        setTimeout(() => setCopiedCode(null), 2000);
+                      }}
+                      style={{
+                        background: isCopied ? 'rgba(74, 222, 128, 0.1)' : 'rgba(201, 168, 76, 0.1)',
+                        border: `1px solid ${isCopied ? '#4ade80' : 'rgba(201, 168, 76, 0.3)'}`,
+                        borderRadius: '4px',
+                        padding: '4px 10px',
+                        fontFamily: 'monospace',
+                        fontSize: '0.8rem',
+                        fontWeight: 'bold',
+                        color: isCopied ? '#4ade80' : 'var(--color-accent)',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {promo.code}
+                      {isCopied ? <Check size={12} /> : <Copy size={12} />}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.section>
+      )}
 
       {/* ── Feature Badges ── */}
       <motion.section 
