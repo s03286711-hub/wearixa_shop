@@ -6,6 +6,7 @@ import { WishlistProvider } from '@/context/WishlistContext';
 import { ToastProvider } from '@/context/ToastContext';
 import GoogleAuthProvider from '@/components/GoogleAuthProvider';
 import ClientLayoutWrapper from '@/components/ClientLayoutWrapper';
+import TrackingScripts from '@/components/TrackingScripts';
 
 export const metadata: Metadata = {
   title: 'Wearixa – Premium Fashion House',
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
+        <TrackingScripts />
         <AuthProvider>
           <GoogleAuthProvider>
             <CartProvider>
