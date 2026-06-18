@@ -197,7 +197,7 @@ const addOrderItems = async (req, res) => {
                     payment_method_types: ['card'],
                     line_items: orderItems.map(item => ({
                         price_data: {
-                            currency: 'usd',
+                            currency: 'pkr',
                             product_data: {
                                 name: item.name,
                                 images: [item.image.startsWith('http') ? item.image : `${process.env.BACKEND_URL || 'http://localhost:5000'}${item.image}`],

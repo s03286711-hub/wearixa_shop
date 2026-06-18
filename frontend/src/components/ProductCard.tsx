@@ -244,13 +244,13 @@ export default function ProductCard({ product, onQuickView }: { product: Product
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {product.discountPrice && product.discountPrice > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span className="price">${product.discountPrice.toFixed(2)}</span>
+                  <span className="price">Rs. {product.discountPrice.toFixed(2)}</span>
                   <span style={{ textDecoration: 'line-through', color: 'var(--color-muted)', fontSize: '0.75rem' }}>
-                    ${product.price.toFixed(2)}
+                    Rs. {product.price.toFixed(2)}
                   </span>
                 </div>
               ) : (
-                <span className="price">${product.price.toFixed(2)}</span>
+                <span className="price">Rs. {product.price.toFixed(2)}</span>
               )}
             </div>
             {/* Mobile Add to Cart Button */}

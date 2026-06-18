@@ -196,7 +196,7 @@ function WalletContent() {
               />
 
               <button type="submit" disabled={isDepositing || !isPaymentValid} className="btn-primary" style={{ marginTop: '1rem', padding: '1rem', display: 'flex', justifyContent: 'center' }}>
-                {isDepositing ? <Loader2 className="animate-spin" /> : `Deposit $${depositAmount}`}
+                {isDepositing ? <Loader2 className="animate-spin" /> : `Deposit Rs. ${depositAmount}`}
               </button>
             </form>
           </div>

@@ -133,7 +133,7 @@ export default function CheckoutPage() {
         try {
           const cb = await cashbackService.process(grandTotal);
           if (cb.cashback > 0) {
-            showToast(`🎉 $${cb.cashback.toFixed(2)} cashback added to your wallet!`, 'success');
+            showToast(`🎉 Rs. ${cb.cashback.toFixed(2)} cashback added to your wallet!`, 'success');
           }
         } catch(e) { /* non-critical */ }
       }
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
                     )}
 
                     {[
-                      { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: $${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet, enabled: settings.walletEnabled },
+                      { id: 'wallet', name: 'Wearixa Digital Wallet', desc: `Available Balance: Rs. ${walletBalance?.toFixed(2) || '0.00'}`, icon: Wallet, enabled: settings.walletEnabled },
                       { id: 'stripe', name: 'Credit / Debit Card', desc: 'Visa, Mastercard, Amex via Stripe', icon: CreditCard, enabled: settings.stripeEnabled },
                       { id: 'jazzcash', name: 'JazzCash Mobile Wallet', desc: 'Pay instantly via JazzCash', icon: Smartphone, enabled: settings.jazzEnabled },
                       { id: 'easypaisa', name: 'EasyPaisa', desc: 'Pay instantly via EasyPaisa', icon: Smartphone, enabled: settings.easyEnabled },
@@ -384,7 +384,7 @@ export default function CheckoutPage() {
               </div>
 
               <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {[['Subtotal', `$${subtotal.toFixed(2)}`], ['Shipping', shippingCost === 0 ? 'FREE' : `$${shippingCost.toFixed(2)}`], ['Tax', `$${tax.toFixed(2)}`]].map(([l, v]) => (
+                {[['Subtotal', `Rs. ${subtotal.toFixed(2)}`], ['Shipping', shippingCost === 0 ? 'FREE' : `Rs. ${shippingCost.toFixed(2)}`], ['Tax', `Rs. ${tax.toFixed(2)}`]].map(([l, v]) => (
                   <div key={l} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
                     <span style={{ color: 'var(--color-muted)' }}>{l}</span>
                     <span>{v}</span>

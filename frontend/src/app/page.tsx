@@ -390,8 +390,8 @@ export default function HomePage() {
                       }}
                     >
                       <span style={{ fontSize: '0.82rem', color: 'var(--color-muted)' }}>
-                        {promo.discountType === 'percentage' ? `${promo.discountValue}% OFF` : `$${promo.discountValue} OFF`}
-                        {promo.minOrderAmount > 0 && ` on orders over $${promo.minOrderAmount}`}
+                        {promo.discountType === 'percentage' ? `${promo.discountValue}% OFF` : `Rs. ${promo.discountValue} OFF`}
+                        {promo.minOrderAmount > 0 && ` on orders over Rs. ${promo.minOrderAmount}`}
                       </span>
                       <button
                         onClick={() => {
@@ -688,7 +688,7 @@ export default function HomePage() {
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: '700', marginBottom: '1rem', textTransform: 'uppercase', lineHeight: '1.2' }}>
                 {featuredPromo ? (
                   <>
-                    Unlock <span className="text-gold">{featuredPromo.discountType === 'percentage' ? `${featuredPromo.discountValue}%` : `$${featuredPromo.discountValue}`} Off</span><br />
+                    Unlock <span className="text-gold">{featuredPromo.discountType === 'percentage' ? `${featuredPromo.discountValue}%` : `Rs. ${featuredPromo.discountValue}`} Off</span><br />
                     With Code: <span style={{ color: '#fff', borderBottom: '2px dashed var(--color-accent)', paddingBottom: '2px', fontFamily: 'monospace' }}>{featuredPromo.code}</span>
                   </>
                 ) : (
@@ -701,7 +701,7 @@ export default function HomePage() {
                 {featuredPromo ? (
                   <>
                     Initiate the {featuredPromo.code} protocol. Apply coupon code at checkout to unlock savings.
-                    {featuredPromo.minOrderAmount > 0 ? ` Valid for order aggregates exceeding $${featuredPromo.minOrderAmount}.` : ''}
+                    {featuredPromo.minOrderAmount > 0 ? ` Valid for order aggregates exceeding Rs. ${featuredPromo.minOrderAmount}.` : ''}
                   </>
                 ) : (
                   "Don't miss out on our seasonal sale. Premium fashion at unbeatable prices."

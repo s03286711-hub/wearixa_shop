@@ -161,10 +161,10 @@ export default function FinancePage() {
   const pending = orders.filter(o => !o.isPaid).reduce((s, o) => s + o.totalPrice, 0);
 
   const financials = [
-    { label: 'GROSS_REVENUE', value: `$${grossRev.toFixed(2)}`, desc: 'Total paid revenue', Icon: DollarSign, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
-    { label: 'NET_SETTLED', value: `$${netRev.toFixed(2)}`, desc: 'After gateway fees', Icon: TrendingUp, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
-    { label: 'GATEWAY_FEES', value: `$${totalFees.toFixed(2)}`, desc: 'Stripe 2.9% + $0.30', Icon: CreditCard, color: '#f87171', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
-    { label: 'PENDING_CAPTURE', value: `$${pending.toFixed(2)}`, desc: 'Unpaid orders value', Icon: Wallet, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
+    { label: 'GROSS_REVENUE', value: `Rs. ${grossRev.toFixed(2)}`, desc: 'Total paid revenue', Icon: DollarSign, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
+    { label: 'NET_SETTLED', value: `Rs. ${netRev.toFixed(2)}`, desc: 'After gateway fees', Icon: TrendingUp, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
+    { label: 'GATEWAY_FEES', value: `Rs. ${totalFees.toFixed(2)}`, desc: 'Stripe 2.9% + Rs. 30', Icon: CreditCard, color: '#f87171', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
+    { label: 'PENDING_CAPTURE', value: `Rs. ${pending.toFixed(2)}`, desc: 'Unpaid orders value', Icon: Wallet, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
   ];
 
   // Mock split: 60% card, 25% wallet, 15% COD

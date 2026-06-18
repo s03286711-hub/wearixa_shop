@@ -280,7 +280,7 @@ export default function AnalyticsPage() {
   const metrics = [
     { label: 'CONV_RATE_INDEX', value: `${convRate}%`, desc: 'Paid / Total Orders', Icon: Target, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
     { label: 'PLATFORM_SESSIONS', value: `${(users.length * 42).toLocaleString()}`, desc: 'Est. Monthly Sessions', Icon: Globe, color: '#06b6d4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
-    { label: 'AVG_ORDER_VALUE', value: `$${avgOrder}`, desc: 'Revenue Per Order', Icon: ShoppingCart, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
+    { label: 'AVG_ORDER_VALUE', value: `Rs. ${avgOrder}`, desc: 'Revenue Per Order', Icon: ShoppingCart, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
     { label: 'REGISTERED_NODES', value: users.length, desc: 'Total User Accounts', Icon: Users, color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.2)' },
     { label: 'CATALOG_ENTRIES', value: products.total || 0, desc: 'Active Products', Icon: BarChart3, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
     { label: 'TOTAL_ORDERS', value: orders.length, desc: 'Lifetime Transactions', Icon: Activity, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)' },

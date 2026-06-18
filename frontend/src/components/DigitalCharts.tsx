@@ -378,7 +378,7 @@ export function SalesTrendMatrix({ stats }: { stats: DigitalChartsProps['stats']
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>VAL:</span>
                   <span style={{ color: 'var(--color-accent-light)', fontWeight: '700' }}>
-                    ${activePoint.value.toFixed(2)}
+                    Rs. {activePoint.value.toFixed(2)}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -659,7 +659,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
           id: `ord-${idx}`,
           time: new Date(ord.createdAt).toLocaleTimeString(),
           type: 'TRANS_LOG',
-          message: `Order #${orderIdShort} detected for customer ${ord.user?.name || 'Guest'}. Status: ${ord.isPaid ? 'PAID' : 'PENDING'}. Total: $${ord.totalPrice.toFixed(2)}.`,
+          message: `Order #${orderIdShort} detected for customer ${ord.user?.name || 'Guest'}. Status: ${ord.isPaid ? 'PAID' : 'PENDING'}. Total: Rs. ${ord.totalPrice.toFixed(2)}.`,
           severity: ord.isPaid ? ('success' as const) : ('warn' as const)
         });
       });

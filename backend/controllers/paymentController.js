@@ -60,7 +60,7 @@ const depositFunds = async (req, res) => {
                     payment_method_types: ['card'],
                     line_items: [{
                         price_data: {
-                            currency: 'usd', // Adjust currency as needed
+                            currency: 'pkr', // Adjust currency as needed
                             product_data: {
                                 name: 'Wallet Deposit',
                                 description: `Ref: ${referenceId}`,

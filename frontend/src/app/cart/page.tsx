@@ -98,9 +98,9 @@ export default function CartPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem' }}>
               {[
-                { label: 'Subtotal', value: `$${subtotal.toFixed(2)}` },
-                { label: 'Shipping', value: shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}` },
-                { label: 'Tax (8%)', value: `$${tax.toFixed(2)}` },
+                { label: 'Subtotal', value: `Rs. ${subtotal.toFixed(2)}` },
+                { label: 'Shipping', value: shipping === 0 ? 'FREE' : `Rs. ${shipping.toFixed(2)}` },
+                { label: 'Tax (8%)', value: `Rs. ${tax.toFixed(2)}` },
               ].map(({ label, value }) => (
                 <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
                   <span style={{ color: 'var(--color-muted)' }}>{label}</span>

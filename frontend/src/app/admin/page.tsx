@@ -57,8 +57,8 @@ export default function AdminDashboard() {
   const cards = [
     { 
       label: 'Total Accumulated Revenue', 
-      value: `$${stats.revenue.toFixed(2)}`, 
-      sub: '[METRIC_REV_USD]',
+      value: `Rs. ${stats.revenue.toFixed(2)}`, 
+      sub: '[METRIC_REV_PKR]',
       Icon: DollarSign, 
       color: '#c9a84c', 
       bg: 'rgba(201,168,76,0.06)', 

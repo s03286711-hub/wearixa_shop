@@ -167,7 +167,7 @@ export default function AdminProductsPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
         {[
           { title: 'Catalog Volume', val: totalProducts, label: 'Active listings', color: 'var(--color-accent)', icon: Package, kpiClass: 'kpi-card' },
-          { title: 'Inventory Val', val: `$${totalInventoryValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, label: 'Asset appraisal', color: '#10b981', icon: DollarSign, kpiClass: 'kpi-card-green' },
+          { title: 'Inventory Val', val: `Rs. ${totalInventoryValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, label: 'Asset appraisal', color: '#10b981', icon: DollarSign, kpiClass: 'kpi-card-green' },
           { title: 'Critical Stock', val: outOfStockCount, label: 'Depleted entries', color: '#ef4444', icon: AlertTriangle, pulse: outOfStockCount > 0, kpiClass: 'kpi-card-rose' },
           { title: 'Low Allocations', val: lowStockCount, label: 'Restock advised', color: '#f59e0b', icon: Layers, pulse: lowStockCount > 0, kpiClass: 'kpi-card-orange' },
         ].map((card, idx) => {

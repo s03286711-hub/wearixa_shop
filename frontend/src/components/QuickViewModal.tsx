@@ -133,9 +133,9 @@ export default function QuickViewModal({ product, isOpen, onClose }: QuickViewMo
                 </div>
 
                 <div style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <span className="text-gold">${(product.discountPrice || product.price).toFixed(2)}</span>
+                  <span className="text-gold">Rs. {(product.discountPrice || product.price).toFixed(2)}</span>
                   {product.discountPrice && (
-                    <span style={{ fontSize: '1rem', color: 'var(--color-muted)', textDecoration: 'line-through' }}>${product.price.toFixed(2)}</span>
+                    <span style={{ fontSize: '1rem', color: 'var(--color-muted)', textDecoration: 'line-through' }}>Rs. {product.price.toFixed(2)}</span>
                   )}
                 </div>
 

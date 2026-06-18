@@ -195,7 +195,7 @@ export default function ProductDetailPage() {
                   color: !product.applyShippingCharges ? '#4ade80' : 'var(--color-accent)', 
                   fontWeight: '600' 
                 }}>
-                  {!product.applyShippingCharges ? 'FREE SHIPPING' : `Shipping: $${shipping.toFixed(2)}`}
+                  {!product.applyShippingCharges ? 'FREE SHIPPING' : `Shipping: Rs. ${shipping.toFixed(2)}`}
                 </div>
                 <p style={{ fontSize: '0.75rem', color: 'var(--color-muted)' }}>
                   {product.applyShippingCharges && !user ? 'Final cost calculated at checkout' : 'Estimated delivery: 3-5 business days'}

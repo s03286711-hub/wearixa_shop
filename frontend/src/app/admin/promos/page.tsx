@@ -263,7 +263,7 @@ export default function AdminPromosPage() {
                 {primaryExpiring.code}
               </h2>
               <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', maxWidth: '480px', lineHeight: '1.6' }}>
-                Active special seasonal discount campaigns compiled. Restricting catalog prices by <span style={{ color: 'var(--color-accent)', fontWeight: 'bold' }}>{primaryExpiring.discountType === 'percentage' ? `${primaryExpiring.discountValue}%` : `$${primaryExpiring.discountValue}`}</span> off purchases.
+                Active special seasonal discount campaigns compiled. Restricting catalog prices by <span style={{ color: 'var(--color-accent)', fontWeight: 'bold' }}>{primaryExpiring.discountType === 'percentage' ? `${primaryExpiring.discountValue}%` : `Rs. ${primaryExpiring.discountValue}`}</span> off purchases.
               </p>
             </div>
 
@@ -366,7 +366,7 @@ export default function AdminPromosPage() {
                 </div>
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                   <span style={{ display: 'block', fontSize: '0.65rem', color: 'var(--color-muted)', textTransform: 'uppercase' }}>Max Cap discount</span>
-                  <span style={{ fontSize: '1.1rem', fontWeight: '700', color: '#fff' }}>{primaryExpiring.maxDiscount > 0 ? `$${primaryExpiring.maxDiscount}` : 'UNLIMITED'}</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: '700', color: '#fff' }}>{primaryExpiring.maxDiscount > 0 ? `Rs. ${primaryExpiring.maxDiscount}` : 'UNLIMITED'}</span>
                 </div>
               </div>
             </div>
@@ -415,7 +415,7 @@ export default function AdminPromosPage() {
                           {p.discountType}
                         </td>
                         <td style={{ padding: '1rem 1.25rem', fontWeight: '600', color: 'var(--color-accent)' }}>
-                          {p.discountType === 'percentage' ? `${p.discountValue}%` : `$${p.discountValue.toFixed(2)}`}
+                          {p.discountType === 'percentage' ? `${p.discountValue}%` : `Rs. ${p.discountValue.toFixed(2)}`}
                         </td>
                         <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>
                           {p.usedCount || 0}
