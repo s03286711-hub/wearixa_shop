@@ -322,7 +322,7 @@ export default function AdminProductsPage() {
                         </div>
                       </td>
                       <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{p.category?.name || 'N/A'}</td>
-                      <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>${p.price.toFixed(2)}</td>
+                      <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>Rs. {p.price.toFixed(2)}</td>
                       <td style={{ padding: '1rem 1.25rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{
@@ -406,11 +406,11 @@ export default function AdminProductsPage() {
 
               <div className="admin-form-grid-3">
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price ($)</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Price (Rs.)</label>
                   <input className="input-field" type="number" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required disabled={submitting} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Discount ($)</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Discount (Rs.)</label>
                   <input className="input-field" type="number" step="0.01" value={form.discountPrice} onChange={e => setForm(f => ({ ...f, discountPrice: e.target.value }))} placeholder="Optional" disabled={submitting} />
                 </div>
                 <div>
@@ -454,7 +454,7 @@ export default function AdminProductsPage() {
 
               {form.applyShippingCharges && (
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Base Shipping Rate ($)</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Base Shipping Rate (Rs.)</label>
                   <input className="input-field" type="number" step="0.01" value={form.shippingCharges} onChange={e => setForm(f => ({ ...f, shippingCharges: e.target.value }))} placeholder="0" disabled={submitting} />
                 </div>
               )}

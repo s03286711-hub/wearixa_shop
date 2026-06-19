@@ -349,7 +349,7 @@ export default function AdminDashboard() {
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td style={{ padding: '0.75rem 1rem', fontWeight: '700', color: '#fff', fontFamily: 'monospace', whiteSpace: 'nowrap' }}>
-                        ${order.totalPrice.toFixed(2)}
+                        Rs. {order.totalPrice.toFixed(2)}
                       </td>
                       <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
                         <span style={{ 

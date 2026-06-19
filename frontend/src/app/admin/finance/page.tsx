@@ -61,7 +61,7 @@ function RevenueSplitRing({ data }: { data: { label: string; value: number; colo
             </>
           ) : (
             <>
-              <p style={{ fontSize: '1.4rem', fontWeight: '800', color: '#fff', fontFamily: 'monospace', lineHeight: 1 }}>${total.toFixed(0)}</p>
+              <p style={{ fontSize: '1.4rem', fontWeight: '800', color: '#fff', fontFamily: 'monospace', lineHeight: 1 }}>Rs. {total.toFixed(0)}</p>
               <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>TOTAL_REV</p>
             </>
           )}

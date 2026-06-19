@@ -210,8 +210,8 @@ export default function SettingsPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1.25rem 0' }}>
           {[
             { label: 'Sales Tax Rate (%)', value: taxRate, onChange: setTaxRate, hint: 'e.g. 8 = 8%' },
-            { label: 'Flat Shipping Rate ($)', value: shippingFlat, onChange: setShippingFlat, hint: 'Default shipping cost' },
-            { label: 'Free Shipping Threshold ($)', value: freeShipThreshold, onChange: setFreeShipThreshold, hint: 'Orders above get free shipping' },
+            { label: 'Flat Shipping Rate (Rs.)', value: shippingFlat, onChange: setShippingFlat, hint: 'Default shipping cost' },
+            { label: 'Free Shipping Threshold (Rs.)', value: freeShipThreshold, onChange: setFreeShipThreshold, hint: 'Orders above get free shipping' },
             { label: 'Wallet Cashback Rate (%)', value: walletCashback, onChange: setWalletCashback, hint: '% cashback on wallet payment' },
           ].map(f => (
             <div key={f.label}>

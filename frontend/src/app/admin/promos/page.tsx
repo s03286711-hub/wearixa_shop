@@ -362,7 +362,7 @@ export default function AdminPromosPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.5rem' }}>
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                   <span style={{ display: 'block', fontSize: '0.65rem', color: 'var(--color-muted)', textTransform: 'uppercase' }}>Min Order Req</span>
-                  <span style={{ fontSize: '1.1rem', fontWeight: '700', color: '#fff' }}>${primaryExpiring.minOrderAmount || '0'}</span>
+                  <span style={{ fontSize: '1.1rem', fontWeight: '700', color: '#fff' }}>Rs. {primaryExpiring.minOrderAmount || '0'}</span>
                 </div>
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.04)' }}>
                   <span style={{ display: 'block', fontSize: '0.65rem', color: 'var(--color-muted)', textTransform: 'uppercase' }}>Max Cap discount</span>
@@ -512,7 +512,7 @@ export default function AdminPromosPage() {
                   <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Type</label>
                   <select className="input-field" value={form.discountType} onChange={e => setForm(f => ({ ...f, discountType: e.target.value }))} disabled={submitting}>
                     <option value="percentage">Percentage (%)</option>
-                    <option value="fixed">Fixed Amount ($)</option>
+                    <option value="fixed">Fixed Amount (Rs.)</option>
                   </select>
                 </div>
                 <div>
@@ -523,11 +523,11 @@ export default function AdminPromosPage() {
 
               <div className="form-grid-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Min Order ($)</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Min Order (Rs.)</label>
                   <input className="input-field" type="number" value={form.minOrderAmount} onChange={e => setForm(f => ({ ...f, minOrderAmount: e.target.value }))} placeholder="0 (Optional)" disabled={submitting} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Max Cap ($)</label>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Max Cap (Rs.)</label>
                   <input className="input-field" type="number" value={form.maxDiscount} onChange={e => setForm(f => ({ ...f, maxDiscount: e.target.value }))} placeholder="0 (Optional)" disabled={submitting} />
                 </div>
               </div>
