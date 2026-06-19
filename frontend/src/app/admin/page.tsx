@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { authService, productService, orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { 
-  Users, Package, ShoppingCart, DollarSign, TrendingUp, 
+  Users, Package, ShoppingCart, Banknote, TrendingUp, 
   ArrowUpRight, Cpu, Clock, Activity, ShieldCheck 
 } from 'lucide-react';
 import { SalesTrendMatrix, CategoryDistributionRing, LiveActivityConsole } from '@/components/DigitalCharts';
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
       label: 'Total Accumulated Revenue', 
       value: `Rs. ${stats.revenue.toFixed(2)}`, 
       sub: '[METRIC_REV_PKR]',
-      Icon: DollarSign, 
+      Icon: Banknote, 
       color: '#c9a84c', 
       bg: 'rgba(201,168,76,0.06)', 
       border: 'rgba(201,168,76,0.2)',
@@ -430,3 +430,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

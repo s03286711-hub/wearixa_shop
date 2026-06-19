@@ -7,7 +7,7 @@ import { notificationService } from '@/services';
 import Link from 'next/link';
 import {
   LayoutDashboard, Package, ShoppingCart, Users, Tag,
-  LogOut, Menu, X, BarChart3, DollarSign, Settings,
+  LogOut, Menu, X, BarChart3, Banknote, Settings,
   Activity, Bell, ChevronRight, Zap, Percent
 } from 'lucide-react';
 
@@ -27,7 +27,7 @@ const NAV_GROUPS = [
     label: 'INTELLIGENCE',
     items: [
       { href: '/admin/analytics', label: 'Analytics', Icon: BarChart3 },
-      { href: '/admin/finance', label: 'Finance', Icon: DollarSign },
+      { href: '/admin/finance', label: 'Finance', Icon: Banknote },
     ]
   },
   {
@@ -724,3 +724,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </>
   );
 }
+

@@ -5,7 +5,7 @@ import { orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { 
   CheckCircle, Truck, Package, Clock, ShieldCheck, XCircle,
-  Search, ChevronDown, ChevronUp, DollarSign, MapPin, 
+  Search, ChevronDown, ChevronUp, Banknote, MapPin, 
   CreditCard, Activity, Calendar
 } from 'lucide-react';
 
@@ -125,7 +125,7 @@ export default function AdminOrdersPage() {
   };
 
   const statCards = [
-    { label: 'Cumulative Revenue', value: `Rs. ${totalRevenue.toFixed(2)}`, sub: 'PAID_VOLUME_PKR', color: '#c9a84c', bg: 'rgba(201,168,76,0.06)', border: 'rgba(201,168,76,0.2)', icon: <DollarSign size={16} /> },
+    { label: 'Cumulative Revenue', value: `Rs. ${totalRevenue.toFixed(2)}`, sub: 'PAID_VOLUME_PKR', color: '#c9a84c', bg: 'rgba(201,168,76,0.06)', border: 'rgba(201,168,76,0.2)', icon: <Banknote size={16} /> },
     { label: 'Pending Queue', value: pendingCount, sub: 'PROCESSING_ORDERS', color: '#60a5fa', bg: 'rgba(96,165,250,0.06)', border: 'rgba(96,165,250,0.2)', icon: <Package size={16} /> },
     { label: 'Active Shipments', value: shippedCount, sub: 'IN_TRANSIT_CARRIERS', color: '#a78bfa', bg: 'rgba(167,139,250,0.06)', border: 'rgba(167,139,250,0.2)', icon: <Truck size={16} /> },
     { label: 'Completed Deliveries', value: completedCount, sub: 'LIFECYCLE_DELIVERED', color: '#4ade80', bg: 'rgba(74,222,128,0.06)', border: 'rgba(74,222,128,0.2)', icon: <CheckCircle size={16} /> }
@@ -623,3 +623,4 @@ export default function AdminOrdersPage() {
     </div>
   );
 }
+

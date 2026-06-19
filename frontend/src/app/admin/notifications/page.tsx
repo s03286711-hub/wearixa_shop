@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { 
   Bell, Search, Filter, CheckCircle2, Calendar, 
-  Trash2, DollarSign, Package, ShoppingCart, Info, Clock, RefreshCw
+  Trash2, Banknote, Package, ShoppingCart, Info, Clock, RefreshCw
 } from 'lucide-react';
 import { notificationService } from '@/services';
 import { useAuth } from '@/context/AuthContext';
@@ -12,7 +12,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 const getEventIcon = (title: string) => {
   const t = title.toLowerCase();
   if (t.includes('order')) return <ShoppingCart size={15} style={{ color: '#60a5fa' }} />;
-  if (t.includes('payment') || t.includes('deposit') || t.includes('wallet')) return <DollarSign size={15} style={{ color: '#4ade80' }} />;
+  if (t.includes('payment') || t.includes('deposit') || t.includes('wallet')) return <Banknote size={15} style={{ color: '#4ade80' }} />;
   if (t.includes('deliver') || t.includes('dispatch') || t.includes('shipped')) return <Package size={15} style={{ color: '#a78bfa' }} />;
   return <Info size={15} style={{ color: 'var(--color-accent)' }} />;
 };
@@ -368,3 +368,4 @@ export default function AdminNotificationsPage() {
     </div>
   );
 }
+

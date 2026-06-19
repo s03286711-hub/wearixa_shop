@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {
-  DollarSign, TrendingUp, CreditCard, Wallet, Package,
+  Banknote, TrendingUp, CreditCard, Wallet, Package,
   ArrowUpRight, ShieldCheck, RefreshCw, CheckCircle, XCircle
 } from 'lucide-react';
 
@@ -50,7 +50,7 @@ function RevenueSplitRing({ data }: { data: { label: string; value: number; colo
           {hoveredIdx !== null ? (
             <>
               <p style={{ fontSize: '1.2rem', fontWeight: '800', color: data[hoveredIdx].color, fontFamily: 'monospace', lineHeight: 1.1 }}>
-                ${data[hoveredIdx].value.toFixed(2)}
+                Rs. {data[hoveredIdx].value.toFixed(2)}
               </p>
               <p style={{ fontSize: '0.55rem', color: '#fff', fontFamily: 'monospace', marginTop: '3px', letterSpacing: '0.05em' }}>
                 {((data[hoveredIdx].value / total) * 100).toFixed(1)}%
@@ -89,7 +89,7 @@ function RevenueSplitRing({ data }: { data: { label: string; value: number; colo
                 {d.label}
               </span>
               <span style={{ fontSize: '0.78rem', fontWeight: '700', color: d.color, fontFamily: 'monospace', marginLeft: 'auto' }}>
-                ${d.value.toFixed(2)}
+                Rs. {d.value.toFixed(2)}
               </span>
             </div>
           );
@@ -112,13 +112,13 @@ function TxRow({ order }: { order: any }) {
         {new Date(order.createdAt).toLocaleDateString()}
       </td>
       <td style={{ padding: '0.85rem 1.25rem', fontWeight: '700', fontFamily: 'monospace', color: '#fff' }}>
-        ${order.totalPrice.toFixed(2)}
+        Rs. {order.totalPrice.toFixed(2)}
       </td>
       <td style={{ padding: '0.85rem 1.25rem', fontFamily: 'monospace', fontSize: '0.72rem', color: '#f87171' }}>
-        -${fee}
+        -Rs. {fee}
       </td>
       <td style={{ padding: '0.85rem 1.25rem', fontFamily: 'monospace', fontWeight: '700', color: '#4ade80' }}>
-        ${net}
+        Rs. {net}
       </td>
       <td style={{ padding: '0.85rem 1.25rem' }}>
         {order.isPaid ? (
@@ -161,7 +161,7 @@ export default function FinancePage() {
   const pending = orders.filter(o => !o.isPaid).reduce((s, o) => s + o.totalPrice, 0);
 
   const financials = [
-    { label: 'GROSS_REVENUE', value: `Rs. ${grossRev.toFixed(2)}`, desc: 'Total paid revenue', Icon: DollarSign, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
+    { label: 'GROSS_REVENUE', value: `Rs. ${grossRev.toFixed(2)}`, desc: 'Total paid revenue', Icon: Banknote, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
     { label: 'NET_SETTLED', value: `Rs. ${netRev.toFixed(2)}`, desc: 'After gateway fees', Icon: TrendingUp, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
     { label: 'GATEWAY_FEES', value: `Rs. ${totalFees.toFixed(2)}`, desc: 'Stripe 2.9% + Rs. 30', Icon: CreditCard, color: '#f87171', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
     { label: 'PENDING_CAPTURE', value: `Rs. ${pending.toFixed(2)}`, desc: 'Unpaid orders value', Icon: Wallet, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
@@ -181,7 +181,7 @@ export default function FinancePage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-            <DollarSign size={20} style={{ color: 'var(--color-accent)', filter: 'drop-shadow(0 0 6px rgba(201,168,76,0.5))' }} />
+            <Banknote size={20} style={{ color: 'var(--color-accent)', filter: 'drop-shadow(0 0 6px rgba(201,168,76,0.5))' }} />
             <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Finance Intelligence
             </h1>
@@ -299,3 +299,4 @@ export default function FinancePage() {
     </div>
   );
 }
+
