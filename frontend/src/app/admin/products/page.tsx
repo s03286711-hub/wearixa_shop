@@ -103,8 +103,8 @@ export default function AdminProductsPage() {
     formData.append('brand', form.brand);
     formData.append('category', form.category);
     formData.append('stock', form.stock);
-    form.sizes.forEach(s => formData.append('sizes', s));
-    form.colors.forEach(c => formData.append('colors', c));
+    formData.append('sizes', form.sizes.join(','));
+    formData.append('colors', form.colors.join(','));
     formData.append('dealType', form.dealType);
     formData.append('shippingCharges', form.shippingCharges || '0');
     formData.append('applyShippingCharges', form.applyShippingCharges.toString());
