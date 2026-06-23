@@ -136,9 +136,9 @@ export default function AdminProductsPage() {
 
   // Telemetry metric computations
   const totalProducts = products.length;
-  const totalInventoryValue = products.reduce((acc, p) => acc + (p.price * p.stock), 0);
-  const outOfStockCount = products.filter(p => p.stock === 0).length;
-  const lowStockCount = products.filter(p => p.stock > 0 && p.stock < 10).length;
+  const totalInventoryValue = products.reduce((acc, p) => acc + ((Number(p.discountPrice) || Number(p.price) || 0) * (Number(p.stock) || 0)), 0);
+  const outOfStockCount = products.filter(p => Number(p.stock) === 0).length;
+  const lowStockCount = products.filter(p => Number(p.stock) > 0 && Number(p.stock) < 10).length;
 
   // Filter products by segment
   const filteredProducts = products.filter(p => {
