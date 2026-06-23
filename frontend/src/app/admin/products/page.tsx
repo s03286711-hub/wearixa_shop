@@ -136,7 +136,7 @@ export default function AdminProductsPage() {
 
   // Telemetry metric computations
   const totalProducts = products.length;
-  const totalInventoryValue = products.reduce((acc, p) => acc + ((Number(p.discountPrice) || Number(p.price) || 0) * (Number(p.stock) || 0)), 0);
+  const totalInventoryValue = products.reduce((acc, p) => acc + ((Number(p.price) || 0) * (Number(p.stock) || 0)), 0);
   const outOfStockCount = products.filter(p => Number(p.stock) === 0).length;
   const lowStockCount = products.filter(p => Number(p.stock) > 0 && Number(p.stock) < 10).length;
 
@@ -167,7 +167,7 @@ export default function AdminProductsPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem', marginBottom: '2.5rem' }}>
         {[
           { title: 'Catalog Volume', val: totalProducts, label: 'Active listings', color: 'var(--color-accent)', icon: Package, kpiClass: 'kpi-card' },
-          { title: 'Inventory Val', val: `Rs. ${totalInventoryValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, label: 'Asset appraisal', color: '#10b981', icon: Banknote, kpiClass: 'kpi-card-green' },
+          { title: 'Inventory Val', val: `Rs. ${Math.round(totalInventoryValue).toLocaleString('en-PK')}`, label: 'Asset appraisal', color: '#10b981', icon: Banknote, kpiClass: 'kpi-card-green' },
           { title: 'Critical Stock', val: outOfStockCount, label: 'Depleted entries', color: '#ef4444', icon: AlertTriangle, pulse: outOfStockCount > 0, kpiClass: 'kpi-card-rose' },
           { title: 'Low Allocations', val: lowStockCount, label: 'Restock advised', color: '#f59e0b', icon: Layers, pulse: lowStockCount > 0, kpiClass: 'kpi-card-orange' },
         ].map((card, idx) => {
@@ -322,7 +322,7 @@ export default function AdminProductsPage() {
                         </div>
                       </td>
                       <td style={{ padding: '1rem 1.25rem', color: 'var(--color-muted)' }}>{p.category?.name || 'N/A'}</td>
-                      <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>Rs. {p.price.toFixed(2)}</td>
+                      <td style={{ padding: '1rem 1.25rem', fontWeight: '600' }}>Rs. {Math.round(p.price).toLocaleString('en-PK')}</td>
                       <td style={{ padding: '1rem 1.25rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <div style={{
