@@ -125,7 +125,7 @@ export default function AdminNotificationsPage() {
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '4px', letterSpacing: '0.02em' }}>
-            TELEMETRY_LOG_INTERFACE // EVENT_HISTORY
+            Event History
           </p>
         </div>
 
@@ -145,7 +145,7 @@ export default function AdminNotificationsPage() {
             }}
           >
             <RefreshCw size={13} />
-            SYNC_EVENTS
+            Sync Events
           </button>
           
           {unreadCount > 0 && (
@@ -161,7 +161,7 @@ export default function AdminNotificationsPage() {
               }}
             >
               <CheckCircle2 size={13} />
-              RESOLVE_ALL_UNREAD
+              Resolve All Unread
             </button>
           )}
         </div>
@@ -170,9 +170,9 @@ export default function AdminNotificationsPage() {
       {/* Analytics Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
         {[
-          { label: 'Unresolved Alerts', value: unreadCount, sub: '[ACTIVE_THREAT_QUEUE]', color: '#f87171', bg: 'rgba(239,68,68,0.05)', border: 'rgba(239,68,68,0.2)' },
-          { label: 'Logged Incidents', value: notifications.length, sub: '[TOTAL_SYSTEM_LOGS]', color: '#60a5fa', bg: 'rgba(96,165,250,0.05)', border: 'rgba(96,165,250,0.2)' },
-          { label: 'System Healthy', value: '100%', sub: '[CORE_NODE_STATUS]', color: '#4ade80', bg: 'rgba(74,222,128,0.05)', border: 'rgba(74,222,128,0.2)' }
+          { label: 'Unresolved Alerts', value: unreadCount, sub: 'Unresolved', color: '#f87171', bg: 'rgba(239,68,68,0.05)', border: 'rgba(239,68,68,0.2)' },
+          { label: 'Logged Incidents', value: notifications.length, sub: 'Total Logs', color: '#60a5fa', bg: 'rgba(96,165,250,0.05)', border: 'rgba(96,165,250,0.2)' },
+          { label: 'System Healthy', value: '100%', sub: 'Status', color: '#4ade80', bg: 'rgba(74,222,128,0.05)', border: 'rgba(74,222,128,0.2)' }
         ].map((card, index) => (
           <div key={card.label} className="glass notif-stat-card animate-fade-in-stagger" style={{
             borderRadius: '16px',
@@ -228,9 +228,9 @@ export default function AdminNotificationsPage() {
               onChange={(e) => setStatusFilter(e.target.value as any)}
               style={{ background: 'none', border: 'none', color: '#fff', fontSize: '0.78rem', outline: 'none', cursor: 'pointer' }}
             >
-              <option value="all" style={{ background: '#121212' }}>ALL_STATUS</option>
-              <option value="unread" style={{ background: '#121212' }}>UNRESOLVED_ONLY</option>
-              <option value="read" style={{ background: '#121212' }}>RESOLVED_ONLY</option>
+              <option value="all" style={{ background: '#121212' }}>All Statuses</option>
+              <option value="unread" style={{ background: '#121212' }}>Unresolved Only</option>
+              <option value="read" style={{ background: '#121212' }}>Resolved Only</option>
             </select>
           </div>
 
@@ -242,9 +242,9 @@ export default function AdminNotificationsPage() {
               onChange={(e) => setTypeFilter(e.target.value as any)}
               style={{ background: 'none', border: 'none', color: '#fff', fontSize: '0.78rem', outline: 'none', cursor: 'pointer' }}
             >
-              <option value="all" style={{ background: '#121212' }}>ALL_EVENT_TYPES</option>
-              <option value="order" style={{ background: '#121212' }}>ORDER_EVENTS</option>
-              <option value="payment" style={{ background: '#121212' }}>FINANCIAL_EVENTS</option>
+              <option value="all" style={{ background: '#121212' }}>All Types</option>
+              <option value="order" style={{ background: '#121212' }}>Order Events</option>
+              <option value="payment" style={{ background: '#121212' }}>Financial Events</option>
             </select>
           </div>
         </div>
@@ -260,7 +260,7 @@ export default function AdminNotificationsPage() {
       }}>
         {filteredNotifications.length === 0 ? (
           <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--color-muted)', fontSize: '0.9rem', fontFamily: 'monospace' }}>
-            NO EVENTS FOUND MATCHING SPECIFIED TELESCOPE FILTERS
+            No notifications found matching your filters.
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -317,7 +317,7 @@ export default function AdminNotificationsPage() {
                           border: '1px solid rgba(239,68,68,0.2)',
                           fontFamily: 'monospace'
                         }}>
-                          NEW_INCIDENT
+                          New
                         </span>
                       )}
                     </div>
@@ -356,7 +356,7 @@ export default function AdminNotificationsPage() {
                     onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.1)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)'; }}
                   >
                     <CheckCircle2 size={12} />
-                    RESOLVE
+                    Resolve
                   </button>
                 )}
               </div>

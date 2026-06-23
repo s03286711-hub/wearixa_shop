@@ -75,7 +75,7 @@ export default function AdminCategoriesPage() {
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            Taxonomies Management <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>METRICS_DECK</span>
+            Taxonomies Management <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>Categories</span>
           </h1>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>Hierarchical categorization and taxonomy control center</p>
         </div>
@@ -217,7 +217,7 @@ export default function AdminCategoriesPage() {
                   
                   {/* Bottom Image Tag overlay */}
                   <span style={{ position: 'absolute', bottom: '12px', left: '16px', fontSize: '0.65rem', background: 'rgba(201, 168, 76, 0.15)', border: '1px solid rgba(201, 168, 76, 0.25)', color: 'var(--color-accent)', padding: '2px 8px', borderRadius: '10px', fontFamily: 'monospace', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    active_segment
+                    Active Segment
                   </span>
                 </div>
                 

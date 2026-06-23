@@ -61,8 +61,7 @@ function RevenueSplitRing({ data }: { data: { label: string; value: number; colo
             </>
           ) : (
             <>
-              <p style={{ fontSize: '1.4rem', fontWeight: '800', color: '#fff', fontFamily: 'monospace', lineHeight: 1 }}>Rs. {total.toFixed(0)}</p>
-              <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>TOTAL_REV</p>
+              <p style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>Total Revenue</p>
             </>
           )}
         </div>
@@ -123,11 +122,11 @@ function TxRow({ order }: { order: any }) {
       <td style={{ padding: '0.85rem 1.25rem' }}>
         {order.isPaid ? (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)', color: '#4ade80', fontSize: '0.65rem', fontFamily: 'monospace', fontWeight: '700' }}>
-            <CheckCircle size={10} /> CLEARED
+            <CheckCircle size={10} /> Cleared
           </span>
         ) : (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '4px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', fontSize: '0.65rem', fontFamily: 'monospace', fontWeight: '700' }}>
-            <XCircle size={10} /> PENDING
+            <XCircle size={10} /> Pending
           </span>
         )}
       </td>
@@ -161,17 +160,17 @@ export default function FinancePage() {
   const pending = orders.filter(o => !o.isPaid).reduce((s, o) => s + o.totalPrice, 0);
 
   const financials = [
-    { label: 'GROSS_REVENUE', value: `Rs. ${grossRev.toFixed(2)}`, desc: 'Total paid revenue', Icon: Banknote, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
-    { label: 'NET_SETTLED', value: `Rs. ${netRev.toFixed(2)}`, desc: 'After gateway fees', Icon: TrendingUp, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
-    { label: 'GATEWAY_FEES', value: `Rs. ${totalFees.toFixed(2)}`, desc: 'Stripe 2.9% + Rs. 30', Icon: CreditCard, color: '#f87171', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
-    { label: 'PENDING_CAPTURE', value: `Rs. ${pending.toFixed(2)}`, desc: 'Unpaid orders value', Icon: Wallet, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
+    { label: 'Gross Revenue', value: `Rs. ${grossRev.toFixed(2)}`, desc: 'Total paid revenue', Icon: Banknote, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
+    { label: 'Net Settled', value: `Rs. ${netRev.toFixed(2)}`, desc: 'After gateway fees', Icon: TrendingUp, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
+    { label: 'Gateway Fees', value: `Rs. ${totalFees.toFixed(2)}`, desc: 'Stripe 2.9% + Rs. 30', Icon: CreditCard, color: '#f87171', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)' },
+    { label: 'Pending Capture', value: `Rs. ${pending.toFixed(2)}`, desc: 'Unpaid orders value', Icon: Wallet, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
   ];
 
   // Mock split: 60% card, 25% wallet, 15% COD
   const split = [
-    { label: 'STRIPE_CARD', value: grossRev * 0.60, color: '#06b6d4' },
-    { label: 'DIGI_WALLET', value: grossRev * 0.25, color: '#a78bfa' },
-    { label: 'CASH_ON_DEL', value: grossRev * 0.15, color: '#4ade80' },
+    { label: 'Stripe Card', value: grossRev * 0.60, color: '#06b6d4' },
+    { label: 'Digital Wallet', value: grossRev * 0.25, color: '#a78bfa' },
+    { label: 'Cash on Delivery', value: grossRev * 0.15, color: '#4ade80' },
   ];
 
   return (
@@ -187,19 +186,19 @@ export default function FinancePage() {
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.72rem', fontFamily: 'monospace' }}>
-            LEDGER_MODULE // PAYMENT_GATEWAY_POOLS_ACTIVE
+            Payment Gateway Pools
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.68rem', fontFamily: 'monospace', color: '#4ade80', padding: '6px 12px', borderRadius: '6px', background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.2)' }}>
-            <ShieldCheck size={12} /> STRIPE_CONNECTED
+            <ShieldCheck size={12} /> Stripe Connected
           </span>
           <button
             onClick={() => { setLoading(true); setRefreshKey(k => k + 1); }}
             className="hover-btn"
             style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(201,168,76,0.2)', background: 'rgba(201,168,76,0.06)', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontFamily: 'monospace', transition: 'all 0.2s' }}
           >
-            <RefreshCw size={13} /> SYNC_LEDGER
+            <RefreshCw size={13} /> Sync Ledger
           </button>
         </div>
       </div>
@@ -267,17 +266,17 @@ export default function FinancePage() {
               <h2 style={{ fontSize: '0.9rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <CreditCard size={15} style={{ color: '#06b6d4' }} /> Settlement Ledger
               </h2>
-              <p style={{ fontSize: '0.62rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>STRIPE_DISBURSEMENT_RECORDS</p>
+              <p style={{ fontSize: '0.62rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>Stripe Disbursement Records</p>
             </div>
             <a href="/admin/orders" style={{ fontSize: '0.68rem', fontFamily: 'monospace', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '4px', textDecoration: 'none', background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.2)', padding: '4px 10px', borderRadius: '6px' }}>
-              VIEW_ALL <ArrowUpRight size={11} />
+              View All <ArrowUpRight size={11} />
             </a>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(0,0,0,0.2)' }}>
-                  {['TX_HASH', 'DATE', 'GROSS', 'FEE', 'NET', 'STATUS'].map(h => (
+                  {['Tx Hash', 'Date', 'Gross', 'Fee', 'Net', 'Status'].map(h => (
                     <th key={h} style={{ padding: '0.75rem 1.25rem', textAlign: 'left', color: 'rgba(255,255,255,0.3)', fontWeight: '600', fontSize: '0.62rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
@@ -286,7 +285,7 @@ export default function FinancePage() {
                 {orders.slice(0, 8).map(o => <TxRow key={o._id} order={o} />)}
               </tbody>
             </table>
-            {orders.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.75rem' }}>LEDGER_EMPTY: NO_TRANSACTIONS</p>}
+            {orders.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.75rem' }}>No Transactions Found</p>}
           </div>
         </div>
       </div>

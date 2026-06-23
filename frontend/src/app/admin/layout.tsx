@@ -177,7 +177,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                  WEARIXA
                </span>
                <p style={{ fontSize: '0.55rem', color: 'var(--color-accent)', fontFamily: 'monospace', letterSpacing: '0.1em', lineHeight: 1 }}>
-                 ADMIN ERP v2.4
+                 ADMIN PANEL v2.4
                </p>
              </div>
            </div>
@@ -338,7 +338,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
                 <div style={{ overflow: 'hidden' }}>
                   <p style={{ fontSize: '0.78rem', fontWeight: '600', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name}</p>
-                  <p style={{ fontSize: '0.62rem', color: 'var(--color-accent)', fontFamily: 'monospace' }}>ADMIN_CLEARANCE</p>
+                  <p style={{ fontSize: '0.62rem', color: 'var(--color-accent)', fontFamily: 'monospace' }}>Administrator</p>
                 </div>
               </div>
             )}
@@ -373,7 +373,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Activity size={14} style={{ color: '#4ade80' }} />
               <span style={{ fontSize: '0.72rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)', letterSpacing: '0.05em' }}>
-                SYS_STATUS: <span style={{ color: '#4ade80' }}>ONLINE</span>
+                System Status: <span style={{ color: '#4ade80' }}>Online</span>
               </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }} ref={notifRef}>
@@ -414,7 +414,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       <Link href="/admin/notifications" style={{ fontSize: '0.75rem', fontWeight: 'bold', fontFamily: 'monospace', color: 'var(--color-accent)', letterSpacing: '0.05em', textDecoration: 'underline' }}
                         onClick={() => setNotifDropdownOpen(false)}
                       >
-                        SYS_NOTIFICATIONS ↗
+                        System Notifications ↗
                       </Link>
                       {unreadCount > 0 && (
                         <button onClick={handleMarkAllAsRead} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '500' }}
@@ -429,7 +429,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div style={{ maxHeight: '260px', overflowY: 'auto' }}>
                       {notifications.length === 0 ? (
                         <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', fontFamily: 'monospace' }}>
-                          NO SYSTEM EVENTS RECORDED
+                          No System Events Recorded
                         </div>
                       ) : (
                         notifications.map((notif) => (
@@ -618,7 +618,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
                 {notifications.length === 0 ? (
                   <div style={{ padding: '3rem 1rem', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem', fontFamily: 'monospace' }}>
-                    NO EVENTS RECORDED
+                    No Events Recorded
                   </div>
                 ) : (
                   notifications.map((notif) => (
@@ -697,7 +697,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   {user.name}
                 </h4>
                 <p style={{ fontSize: '0.65rem', color: 'var(--color-accent)', fontFamily: 'monospace', margin: 0 }}>
-                  ADMIN_CLEARANCE
+                  Administrator
                 </p>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column' }}>

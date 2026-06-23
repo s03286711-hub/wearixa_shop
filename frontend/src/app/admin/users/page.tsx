@@ -53,10 +53,10 @@ export default function AdminCustomersPage() {
   const regular = users.filter(u => u.role !== 'admin').length;
 
   const statCards = [
-    { label: 'CRM_ACC_TOTAL', value: users.length, desc: 'Registered Accounts', Icon: Users, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
-    { label: 'ADMIN_NODES', value: admins, desc: 'Administrator Clearance', Icon: Crown, color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.2)' },
-    { label: 'USER_ACCOUNTS', value: regular, desc: 'Standard Access Level', Icon: UserCheck, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
-    { label: 'CRM_GROWTH', value: '+12%', desc: 'Month-over-Month', Icon: Activity, color: '#06b6d4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
+    { label: 'Total Accounts', value: users.length, desc: 'Registered Accounts', Icon: Users, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
+    { label: 'Admins', value: admins, desc: 'Administrator Clearance', Icon: Crown, color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.2)' },
+    { label: 'Standard Users', value: regular, desc: 'Standard Access Level', Icon: UserCheck, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
+    { label: 'Growth', value: '+12%', desc: 'Month-over-Month', Icon: Activity, color: '#06b6d4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
   ];
 
   if (loading) return <LoadingSpinner />;
@@ -74,14 +74,14 @@ export default function AdminCustomersPage() {
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.72rem', fontFamily: 'monospace' }}>
-            CRM_MODULE // ACCOUNT_DIRECTORY_ACTIVE
+            Account Directory
           </p>
         </div>
         <button onClick={fetchUsers}
           className="hover-btn"
           style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(201,168,76,0.2)', background: 'rgba(201,168,76,0.06)', color: 'var(--color-accent)', cursor: 'pointer', fontSize: '0.78rem', fontFamily: 'monospace', transition: 'all 0.2s' }}
         >
-          <RefreshCw size={13} /> SYNC_CRM
+          <RefreshCw size={13} /> Sync CRM
         </button>
       </div>
 
@@ -156,7 +156,7 @@ export default function AdminCustomersPage() {
           ))}
         </div>
         <span style={{ fontSize: '0.7rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)' }}>
-          {filtered.length} RECORDS
+          {filtered.length} Records
         </span>
       </div>
 
@@ -257,7 +257,7 @@ export default function AdminCustomersPage() {
           {filtered.length === 0 && (
             <div style={{ padding: '3rem', textAlign: 'center' }}>
               <UserX size={32} style={{ color: 'var(--color-muted)', margin: '0 auto 1rem' }} />
-              <p style={{ color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.8rem' }}>CRM_QUERY_EMPTY: No matching records found.</p>
+              <p style={{ color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.8rem' }}>No matching records found.</p>
             </div>
           )}
         </div>

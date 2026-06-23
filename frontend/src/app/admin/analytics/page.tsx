@@ -122,7 +122,7 @@ function SessionGraph({ orders }: { orders: any[] }) {
           }}>
             <span style={{ fontSize: '0.6rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{day} ACTIVITY</span>
             <span style={{ fontSize: '0.85rem', fontWeight: '800', fontFamily: 'monospace', color: '#06b6d4' }}>{val.toLocaleString()}</span>
-            <span style={{ fontSize: '0.52rem', color: '#4ade80', fontFamily: 'monospace' }}>ACTIVE_SESSIONS</span>
+            <span style={{ fontSize: '0.52rem', color: '#4ade80', fontFamily: 'monospace' }}>Active Sessions</span>
           </div>
         );
       })()}
@@ -278,20 +278,20 @@ export default function AnalyticsPage() {
   const avgOrder = orders.length > 0 ? (orders.reduce((s, o) => s + o.totalPrice, 0) / orders.length).toFixed(2) : '0.00';
 
   const metrics = [
-    { label: 'CONV_RATE_INDEX', value: `${convRate}%`, desc: 'Paid / Total Orders', Icon: Target, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
-    { label: 'PLATFORM_SESSIONS', value: `${(users.length * 42).toLocaleString()}`, desc: 'Est. Monthly Sessions', Icon: Globe, color: '#06b6d4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
-    { label: 'AVG_ORDER_VALUE', value: `Rs. ${avgOrder}`, desc: 'Revenue Per Order', Icon: ShoppingCart, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
-    { label: 'REGISTERED_NODES', value: users.length, desc: 'Total User Accounts', Icon: Users, color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.2)' },
-    { label: 'CATALOG_ENTRIES', value: products.total || 0, desc: 'Active Products', Icon: BarChart3, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
-    { label: 'TOTAL_ORDERS', value: orders.length, desc: 'Lifetime Transactions', Icon: Activity, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)' },
+    { label: 'Conversion Rate', value: `${convRate}%`, desc: 'Paid / Total Orders', Icon: Target, color: '#4ade80', bg: 'rgba(74,222,128,0.08)', border: 'rgba(74,222,128,0.2)' },
+    { label: 'Platform Sessions', value: `${(users.length * 42).toLocaleString()}`, desc: 'Est. Monthly Sessions', Icon: Globe, color: '#06b6d4', bg: 'rgba(6,182,212,0.08)', border: 'rgba(6,182,212,0.2)' },
+    { label: 'Average Order Value', value: `Rs. ${avgOrder}`, desc: 'Revenue Per Order', Icon: ShoppingCart, color: '#c9a84c', bg: 'rgba(201,168,76,0.08)', border: 'rgba(201,168,76,0.2)' },
+    { label: 'Registered Users', value: users.length, desc: 'Total User Accounts', Icon: Users, color: '#a78bfa', bg: 'rgba(167,139,250,0.08)', border: 'rgba(167,139,250,0.2)' },
+    { label: 'Active Products', value: products.total || 0, desc: 'Active Products', Icon: BarChart3, color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.2)' },
+    { label: 'Total Orders', value: orders.length, desc: 'Lifetime Transactions', Icon: Activity, color: '#f43f5e', bg: 'rgba(244,63,94,0.08)', border: 'rgba(244,63,94,0.2)' },
   ];
 
   const funnel = [
-    { label: 'VISITORS', value: users.length * 42, color: '#06b6d4' },
-    { label: 'PRODUCT_VIEWS', value: Math.round(users.length * 18), color: '#a78bfa' },
-    { label: 'ADD_TO_CART', value: Math.round(orders.length * 2.8), color: '#c9a84c' },
-    { label: 'CHECKOUT_INIT', value: Math.round(orders.length * 1.4), color: '#f59e0b' },
-    { label: 'ORDERS_PLACED', value: orders.length, color: '#4ade80' },
+    { label: 'Visitors', value: users.length * 42, color: '#06b6d4' },
+    { label: 'Product Views', value: Math.round(users.length * 18), color: '#a78bfa' },
+    { label: 'Add to Cart', value: Math.round(orders.length * 2.8), color: '#c9a84c' },
+    { label: 'Checkout Initiated', value: Math.round(orders.length * 1.4), color: '#f59e0b' },
+    { label: 'Orders Placed', value: orders.length, color: '#4ade80' },
   ];
 
   return (
@@ -307,7 +307,7 @@ export default function AnalyticsPage() {
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.72rem', fontFamily: 'monospace' }}>
-            TELEMETRY_MODULE // PERFORMANCE_MATRIX_ACTIVE
+            Performance Analytics
           </p>
         </div>
         <button
@@ -317,7 +317,7 @@ export default function AnalyticsPage() {
           onMouseEnter={e => e.currentTarget.style.background = 'rgba(201,168,76,0.12)'}
           onMouseLeave={e => e.currentTarget.style.background = 'rgba(201,168,76,0.06)'}
         >
-          <RefreshCw size={13} /> REFRESH_DATA
+          <RefreshCw size={13} /> Refresh
         </button>
       </div>
 
@@ -373,7 +373,7 @@ export default function AnalyticsPage() {
               <h2 style={{ fontSize: '0.95rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Activity size={15} style={{ color: '#06b6d4' }} /> Weekly Sessions
               </h2>
-              <p style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>SESSION_MATRIX_7D</p>
+              <p style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>Last 7 Days</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: '#4ade80', fontFamily: 'monospace' }}>
               <TrendingUp size={12} /> +18.4% WoW
@@ -388,7 +388,7 @@ export default function AnalyticsPage() {
             <h2 style={{ fontSize: '0.95rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <MousePointer size={15} style={{ color: '#a78bfa' }} /> Conversion Funnel
             </h2>
-            <p style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>DROP_OFF_SCOPE_ACTIVE</p>
+            <p style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.3)', marginTop: '2px' }}>Funnel Analysis</p>
           </div>
           <FunnelChart data={funnel} />
         </div>
@@ -401,7 +401,7 @@ export default function AnalyticsPage() {
           <h2 style={{ fontSize: '0.95rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Live Telemetry Feed</h2>
           <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.65rem', fontFamily: 'monospace', color: '#4ade80' }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 6px #4ade80', animation: 'pulse 2s infinite' }} />
-            STREAM_ACTIVE
+            Live Stream
           </span>
         </div>
         <LiveLog orders={orders} />

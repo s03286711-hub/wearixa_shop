@@ -58,7 +58,7 @@ export default function AdminDashboard() {
     { 
       label: 'Total Accumulated Revenue', 
       value: `Rs. ${stats.revenue.toFixed(2)}`, 
-      sub: '[METRIC_REV_PKR]',
+      sub: 'Revenue in PKR',
       Icon: Banknote, 
       color: '#c9a84c', 
       bg: 'rgba(201,168,76,0.06)', 
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
     { 
       label: 'Total Orders Compiled', 
       value: stats.orders, 
-      sub: '[METRIC_ORD_LATEST]',
+      sub: 'Latest Orders',
       Icon: ShoppingCart, 
       color: '#60a5fa', 
       bg: 'rgba(96,165,250,0.06)', 
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
     { 
       label: 'Database Products Ledger', 
       value: stats.products, 
-      sub: '[METRIC_PRD_INVENTORY]',
+      sub: 'Product Inventory',
       Icon: Package, 
       color: '#a78bfa', 
       bg: 'rgba(167,139,250,0.06)', 
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
     { 
       label: 'Registered Network Users', 
       value: stats.users, 
-      sub: '[METRIC_USR_CONNECTIONS]',
+      sub: 'User Connections',
       Icon: Users, 
       color: '#4ade80', 
       bg: 'rgba(74,222,128,0.06)', 
@@ -123,14 +123,12 @@ export default function AdminDashboard() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Activity size={18} className="text-gold" style={{ filter: 'drop-shadow(0 0 5px rgba(201,168,76,0.6))' }} />
             <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: '700', letterSpacing: '0.05em', color: '#fff', textTransform: 'uppercase' }}>
-              Wearixa Command Deck
+              Wearixa Dashboard
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '4px', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span>LAT: 40.7128° N // LON: 74.0060° W</span>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }} className="hidden-mobile">|</span>
             <span style={{ color: '#4ade80', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <ShieldCheck size={12} /> SECURE_NODE_ONLINE
+              <ShieldCheck size={12} /> Secure Connection
             </span>
           </p>
         </div>
@@ -139,9 +137,9 @@ export default function AdminDashboard() {
         <div className="cyber-telemetry-meta" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
           {/* Uptime and latency info */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontFamily: 'monospace', fontSize: '0.68rem', color: 'var(--color-muted)' }}>
-            <span>SYS_CORE_SECURE // V.2.4</span>
+            <span>Core System v2.4</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-              API_LATENCY: <span style={{ color: '#4ade80' }}>14ms</span>
+              API Latency: <span style={{ color: '#4ade80' }}>14ms</span>
             </span>
           </div>
           
@@ -231,7 +229,7 @@ export default function AdminDashboard() {
               <div>
                 <p style={{ fontSize: '1.75rem', fontWeight: '700', color, fontFamily: 'monospace', lineHeight: 1.1 }}>{value}</p>
                 <p style={{ fontSize: '0.68rem', color: '#4ade80', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '3px', fontFamily: 'monospace' }}>
-                  <TrendingUp size={11} /> +12% DELTA
+                  <TrendingUp size={11} /> +12% increase
                 </p>
               </div>
 
@@ -281,7 +279,7 @@ export default function AdminDashboard() {
         }}>
           {/* Cyber accents */}
           <div style={{ position: 'absolute', top: 0, right: 0, opacity: 0.15, pointerEvents: 'none', fontFamily: 'monospace', fontSize: '0.6rem', padding: '6px' }}>
-            TRANSACTION_LEDGER_SYSTEM
+            Transaction Ledger
           </div>
 
           <div>
@@ -291,7 +289,7 @@ export default function AdminDashboard() {
                   <Cpu size={16} className="text-gold" /> System Orders Ledger
                 </h2>
                 <p style={{ fontSize: '0.68rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>
-                  REALTIME_TRANSACTION_RECORD
+                  Realtime Transaction Record
                 </p>
               </div>
               <a href="/admin/orders" style={{
@@ -311,7 +309,7 @@ export default function AdminDashboard() {
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.12)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(201,168,76,0.05)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.2)'; }}
               >
-                COMPILE_ALL <ArrowUpRight size={12} />
+                View All <ArrowUpRight size={12} />
               </a>
             </div>
             
@@ -319,7 +317,7 @@ export default function AdminDashboard() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(0,0,0,0.15)' }}>
-                    {['TX_ID', 'Customer', 'Date', 'Gross Vol', 'Paid', 'Dispatched'].map(h => (
+                    {['Order ID', 'Customer', 'Date', 'Gross Vol', 'Paid', 'Dispatched'].map(h => (
                       <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', color: 'var(--color-muted)', fontWeight: '600', fontSize: '0.68rem', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' }}>{h}</th>
                     ))}
                   </tr>
@@ -362,7 +360,7 @@ export default function AdminDashboard() {
                           color: order.isPaid ? '#4ade80' : '#f87171', 
                           border: `1px solid ${order.isPaid ? 'rgba(74,222,128,0.2)' : 'rgba(239,68,68,0.2)'}` 
                         }}>
-                          {order.isPaid ? 'VAL_TRUE' : 'VAL_FALSE'}
+                          {order.isPaid ? 'Paid' : 'Unpaid'}
                         </span>
                       </td>
                       <td style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}>
@@ -376,14 +374,14 @@ export default function AdminDashboard() {
                           color: order.isDelivered ? '#4ade80' : '#ffa500', 
                           border: `1px solid ${order.isDelivered ? 'rgba(74,222,128,0.2)' : 'rgba(255,165,0,0.2)'}` 
                         }}>
-                          {order.isDelivered ? 'TRUE' : 'WAITING'}
+                          {order.isDelivered ? 'Delivered' : 'Waiting'}
                         </span>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              {recentOrders.length === 0 && <p style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.78rem' }}>BUFFER_EMPTY: NO_TRANSACTION_RECORDS</p>}
+              {recentOrders.length === 0 && <p style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.78rem' }}>No recent orders found</p>}
             </div>
           </div>
         </div>

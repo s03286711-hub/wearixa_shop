@@ -157,7 +157,7 @@ export default function AdminPromosPage() {
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            Campaigns & Promos <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>PROMO_MATRIX</span>
+            Campaigns & Promos <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>Promos</span>
           </h1>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>Real-time coupon validation, rates, and active campaign tracking</p>
         </div>
@@ -252,10 +252,10 @@ export default function AdminPromosPage() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Zap size={18} style={{ color: 'var(--color-accent)', filter: 'drop-shadow(0 0 5px var(--color-accent))' }} />
-                  <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--color-accent)', fontWeight: 'bold', letterSpacing: '0.1em' }}>LIVE_COUNTDOWN_ALERT</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: 'var(--color-accent)', fontWeight: 'bold', letterSpacing: '0.1em' }}>Live Countdown</span>
                 </div>
                 <span style={{ fontSize: '0.65rem', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#ef4444', padding: '2px 8px', borderRadius: '10px', fontFamily: 'monospace', fontWeight: 'bold', animation: 'pulse 1.5s infinite alternate' }}>
-                  EXPIRING_SOON
+                  Expiring Soon
                 </span>
               </div>
 
@@ -338,7 +338,7 @@ export default function AdminPromosPage() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1.25rem' }}>
                 <Percent size={16} style={{ color: '#10b981' }} />
-                <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: '#10b981', fontWeight: 'bold', letterSpacing: '0.1em' }}>CAMPAIGN_PERFORMANCE</span>
+                <span style={{ fontFamily: 'monospace', fontSize: '0.78rem', color: '#10b981', fontWeight: 'bold', letterSpacing: '0.1em' }}>Campaign Performance</span>
               </div>
               
               {/* Progress bar visual */}
@@ -446,7 +446,7 @@ export default function AdminPromosPage() {
                               fontWeight: 'bold',
                               color: isActive ? '#34d399' : '#f87171'
                             }}>
-                              {isActive ? 'ACTIVE' : expired ? 'EXPIRED' : capped ? 'DEPLETED' : 'OFFLINE'}
+                              {isActive ? 'Active' : expired ? 'Expired' : capped ? 'Depleted' : 'Offline'}
                             </span>
                           </div>
                         </td>

@@ -165,7 +165,7 @@ export default function SettingsPage() {
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.72rem', fontFamily: 'monospace' }}>
-            CONFIG_NODE // CORE_PARAMETERS_CONTROL
+            Configuration Parameters
           </p>
         </div>
         <button
@@ -182,7 +182,7 @@ export default function SettingsPage() {
           }}
         >
           {saving ? <RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> : saved ? <CheckCircle size={14} /> : <Save size={14} />}
-          {saving ? 'SAVING...' : saved ? 'SAVED!' : 'SAVE_CONFIG'}
+          {saving ? 'SAVING...' : saved ? 'SAVED!' : 'Save Config'}
         </button>
       </div>
 
@@ -190,12 +190,12 @@ export default function SettingsPage() {
       {maintenanceMode && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '1rem 1.25rem', borderRadius: '10px', background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.25)', color: '#fbbf24' }}>
           <AlertTriangle size={16} />
-          <p style={{ fontSize: '0.82rem', fontWeight: '600' }}>MAINTENANCE_MODE is ACTIVE — The storefront is currently offline for visitors.</p>
+          <p style={{ fontSize: '0.82rem', fontWeight: '600' }}>Maintenance Mode is active — The storefront is currently offline for visitors.</p>
         </div>
       )}
 
       {/* ─ Payment Gateways ─ */}
-      <SettingCard title="Payment Gateways" subtitle="GATEWAY_ROUTING_CONFIG" Icon={CreditCard} color="6,182,212">
+      <SettingCard title="Payment Gateways" subtitle="Gateway Routing Configuration" Icon={CreditCard} color="6,182,212">
         <ToggleSwitch enabled={stripeEnabled} onChange={setStripeEnabled} label="Stripe Card Payments" desc="Accept Visa, Mastercard, Amex via Stripe" color="#06b6d4" />
         <ToggleSwitch enabled={walletEnabled} onChange={setWalletEnabled} label="Digital Wallet" desc="Allow balance top-ups and wallet checkouts" color="#a78bfa" />
         <ToggleSwitch enabled={codEnabled} onChange={setCodEnabled} label="Cash on Delivery (COD)" desc="Enable COD as a global payment option" color="#4ade80" />
@@ -206,7 +206,7 @@ export default function SettingsPage() {
       </SettingCard>
 
       {/* ─ Tax & Fees ─ */}
-      <SettingCard title="Tax & Fees" subtitle="COMMERCE_RATE_CONFIG" Icon={Percent} color="201,168,76">
+      <SettingCard title="Tax & Fees" subtitle="Commerce Rate Configuration" Icon={Percent} color="201,168,76">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', padding: '1.25rem 0' }}>
           {[
             { label: 'Sales Tax Rate (%)', value: taxRate, onChange: setTaxRate, hint: 'e.g. 8 = 8%' },
@@ -228,7 +228,7 @@ export default function SettingsPage() {
       </SettingCard>
 
       {/* ─ Platform Controls ─ */}
-      <SettingCard title="Platform Controls" subtitle="SYSTEM_OPERATION_PARAMS" Icon={Globe} color="167,139,250">
+      <SettingCard title="Platform Controls" subtitle="System Operation Parameters" Icon={Globe} color="167,139,250">
         <ToggleSwitch enabled={maintenanceMode} onChange={setMaintenanceMode} label="Maintenance Mode" desc="Take storefront offline for maintenance" color="#f59e0b" />
         <ToggleSwitch enabled={emailNotify} onChange={setEmailNotify} label="Email Notifications" desc="Send order confirmation emails to customers" color="#a78bfa" />
         <ToggleSwitch enabled={orderAlerts} onChange={setOrderAlerts} label="Admin Order Alerts" desc="Notify admin on each new order placed" color="#a78bfa" />
@@ -238,7 +238,7 @@ export default function SettingsPage() {
       </SettingCard>
 
       {/* ─ System Actions ─ */}
-      <SettingCard title="System Actions" subtitle="DB_NODE_MAINTENANCE_OPS" Icon={Database} color="74,222,128">
+      <SettingCard title="System Actions" subtitle="Database Maintenance Operations" Icon={Database} color="74,222,128">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '0.75rem', padding: '1.25rem 0' }}>
           {[
             { label: 'Purge Cache', desc: 'Clear all server-side caches', color: '#06b6d4', Icon: RefreshCw },

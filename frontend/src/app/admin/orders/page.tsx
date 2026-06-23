@@ -125,10 +125,10 @@ export default function AdminOrdersPage() {
   };
 
   const statCards = [
-    { label: 'Cumulative Revenue', value: `Rs. ${totalRevenue.toFixed(2)}`, sub: 'PAID_VOLUME_PKR', color: '#c9a84c', bg: 'rgba(201,168,76,0.06)', border: 'rgba(201,168,76,0.2)', icon: <Banknote size={16} /> },
-    { label: 'Pending Queue', value: pendingCount, sub: 'PROCESSING_ORDERS', color: '#60a5fa', bg: 'rgba(96,165,250,0.06)', border: 'rgba(96,165,250,0.2)', icon: <Package size={16} /> },
-    { label: 'Active Shipments', value: shippedCount, sub: 'IN_TRANSIT_CARRIERS', color: '#a78bfa', bg: 'rgba(167,139,250,0.06)', border: 'rgba(167,139,250,0.2)', icon: <Truck size={16} /> },
-    { label: 'Completed Deliveries', value: completedCount, sub: 'LIFECYCLE_DELIVERED', color: '#4ade80', bg: 'rgba(74,222,128,0.06)', border: 'rgba(74,222,128,0.2)', icon: <CheckCircle size={16} /> }
+    { label: 'Cumulative Revenue', value: `Rs. ${totalRevenue.toFixed(2)}`, sub: 'Paid Volume in PKR', color: '#c9a84c', bg: 'rgba(201,168,76,0.06)', border: 'rgba(201,168,76,0.2)', icon: <Banknote size={16} /> },
+    { label: 'Pending Queue', value: pendingCount, sub: 'Processing Orders', color: '#60a5fa', bg: 'rgba(96,165,250,0.06)', border: 'rgba(96,165,250,0.2)', icon: <Package size={16} /> },
+    { label: 'Active Shipments', value: shippedCount, sub: 'In Transit Carriers', color: '#a78bfa', bg: 'rgba(167,139,250,0.06)', border: 'rgba(167,139,250,0.2)', icon: <Truck size={16} /> },
+    { label: 'Completed Deliveries', value: completedCount, sub: 'Lifecycle Delivered', color: '#4ade80', bg: 'rgba(74,222,128,0.06)', border: 'rgba(74,222,128,0.2)', icon: <CheckCircle size={16} /> }
   ];
 
   return (
@@ -160,12 +160,12 @@ export default function AdminOrdersPage() {
             </h1>
           </div>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.75rem', fontFamily: 'monospace', marginTop: '4px', letterSpacing: '0.02em' }}>
-            ORDER_CONTROLLER_SYS // TOTAL_QUEUES: {orders.length} ACTIVE_RECORDS
+            Total Orders: {orders.length}
           </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>NODE_CLEARED_SECURE</span>
+          <span style={{ fontSize: '0.65rem', fontFamily: 'monospace', color: 'rgba(255,255,255,0.25)' }}>System Secure</span>
           <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4ade80', boxShadow: '0 0 8px #4ade80' }} />
         </div>
       </div>
@@ -266,7 +266,7 @@ export default function AdminOrdersPage() {
             </span>
             <input 
               type="text"
-              placeholder="SEARCH_BY_ID_CUSTOMER_EMAIL..."
+              placeholder="Search by ID, Customer, Email..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               style={{
@@ -391,7 +391,7 @@ export default function AdminOrdersPage() {
                               border: `1px solid ${order.isPaid ? 'rgba(74,222,128,0.25)' : 'rgba(239,68,68,0.25)'}` 
                             }}>
                               {order.isPaid ? <ShieldCheck size={11} /> : <Clock size={11} />}
-                              {order.isPaid ? 'VAL_TRUE' : 'VAL_FALSE'}
+                              {order.isPaid ? 'Paid' : 'Unpaid'}
                             </div>
                           </td>
 
@@ -455,7 +455,7 @@ export default function AdminOrdersPage() {
                                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(74,222,128,0.15)'}
                                     onMouseLeave={e => e.currentTarget.style.background = 'rgba(74,222,128,0.06)'}
                                   >
-                                    PAY_VAL
+                                    Mark as Paid
                                   </button>
                                 )}
                               </div>
@@ -550,7 +550,7 @@ export default function AdminOrdersPage() {
                                       </div>
                                     ))}
                                     {(!order.orderItems || order.orderItems.length === 0) && (
-                                      <p style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>BUFFER_EMPTY: NO_ITEMS_IN_RECORD</p>
+                                      <p style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>No items in order.</p>
                                     )}
                                   </div>
                                 </div>
@@ -580,7 +580,7 @@ export default function AdminOrdersPage() {
                                       Method: <span style={{ color: 'var(--color-accent-light)' }}>{order.paymentMethod || 'UNKNOWN'}</span>
                                     </p>
                                     <p style={{ fontSize: '0.68rem', color: 'var(--color-muted)', marginTop: '3px', fontFamily: 'monospace' }}>
-                                      Cleared Status: {order.isPaid ? 'VAL_TRUE' : 'VAL_FALSE'}
+                                      Cleared Status: {order.isPaid ? 'Paid' : 'Unpaid'}
                                     </p>
                                   </div>
                                 </div>
@@ -595,7 +595,7 @@ export default function AdminOrdersPage() {
                   {filteredOrders.length === 0 && (
                     <tr>
                       <td colSpan={7} style={{ padding: '3.5rem', textAlign: 'center', color: 'var(--color-muted)', fontFamily: 'monospace', fontSize: '0.78rem' }}>
-                        BUFFER_EMPTY: NO_MATCHING_ORDER_RECORDS
+                        No matching orders found.
                       </td>
                     </tr>
                   )}

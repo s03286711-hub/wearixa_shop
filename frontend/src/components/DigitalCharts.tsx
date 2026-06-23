@@ -135,7 +135,7 @@ export function SalesTrendMatrix({ stats }: { stats: DigitalChartsProps['stats']
     }}>
       {/* Decorative tech grid elements */}
       <div style={{ position: 'absolute', top: 0, right: 0, opacity: 0.15, pointerEvents: 'none', fontFamily: 'monospace', fontSize: '0.6rem', padding: '6px' }}>
-        SYS_MATRIX_SENSORS_V.4.2 // SYS_UPTIME: 100%
+        Revenue Analytics
       </div>
       <div style={{ position: 'absolute', bottom: '8px', left: '16px', display: 'flex', gap: '8px', pointerEvents: 'none', opacity: 0.2 }}>
         <div style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: 'var(--color-accent)' }}></div>
@@ -151,7 +151,7 @@ export function SalesTrendMatrix({ stats }: { stats: DigitalChartsProps['stats']
             </h3>
           </div>
           <p style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginTop: '2px' }}>
-            DATAFEED_SYS: REVENUE_STREAM_MATRIX
+            Revenue Stream Matrix
           </p>
         </div>
 
@@ -372,7 +372,7 @@ export function SalesTrendMatrix({ stats }: { stats: DigitalChartsProps['stats']
                 <div style={{ position: 'absolute', bottom: -1, right: -1, width: '4px', height: '4px', borderBottom: '1px solid #fff', borderRight: '1px solid #fff' }} />
                 
                 <div style={{ color: 'var(--color-muted)', fontSize: '0.6rem', display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '3px', marginBottom: '3px' }}>
-                  <span>TELEMETRY_DATAFEED</span>
+                  <span>Revenue Analytics</span>
                   <span>{activePoint.label}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -464,7 +464,7 @@ export function CategoryDistributionRing({ stats }: { stats: DigitalChartsProps[
     }}>
       {/* Visual cyber decorations */}
       <div style={{ position: 'absolute', top: 0, right: 0, opacity: 0.15, pointerEvents: 'none', fontFamily: 'monospace', fontSize: '0.6rem', padding: '6px' }}>
-        RING_SEGMENT_ANALYZER_v1.0
+        Category Distribution
       </div>
 
       <div>
@@ -475,7 +475,7 @@ export function CategoryDistributionRing({ stats }: { stats: DigitalChartsProps[
           </h3>
         </div>
         <p style={{ fontSize: '0.72rem', color: 'var(--color-muted)', fontFamily: 'monospace', marginBottom: '1rem' }}>
-          STOCK_DISTRIBUTION // TOTAL: {total} UNITS
+          Stock Distribution // TOTAL: {total} UNITS
         </p>
       </div>
 
@@ -646,9 +646,9 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
     };
 
     const initialLogs: Array<{ id: string; time: string; type: string; message: string; severity: 'info' | 'success' | 'warn' | 'error' }> = [
-      { id: '1', time: timestamp(), type: 'SYS_CORE', message: 'WEARIXA Admin Command Deck interface loaded successfully.', severity: 'info' },
-      { id: '2', time: timestamp(), type: 'DB_CONN', message: 'Established active handshake with MongoDB cluster.', severity: 'success' },
-      { id: '3', time: timestamp(), type: 'SECURE_AUTH', message: 'Stripe Payment Gateway sandbox synchronizer active.', severity: 'info' },
+      { id: '1', time: timestamp(), type: 'System Core', message: 'WEARIXA Admin Command Deck interface loaded successfully.', severity: 'info' },
+      { id: '2', time: timestamp(), type: 'Database Connection', message: 'Established active handshake with MongoDB cluster.', severity: 'success' },
+      { id: '3', time: timestamp(), type: 'Secure Auth', message: 'Stripe Payment Gateway sandbox synchronizer active.', severity: 'info' },
     ];
 
     // Merge in real order logs if we have them
@@ -658,7 +658,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
         initialLogs.push({
           id: `ord-${idx}`,
           time: new Date(ord.createdAt).toLocaleTimeString(),
-          type: 'TRANS_LOG',
+          type: 'Transaction Log',
           message: `Order #${orderIdShort} detected for customer ${ord.user?.name || 'Guest'}. Status: ${ord.isPaid ? 'PAID' : 'PENDING'}. Total: Rs. ${ord.totalPrice.toFixed(2)}.`,
           severity: ord.isPaid ? ('success' as const) : ('warn' as const)
         });
@@ -681,11 +681,11 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
   // Periodic random live event simulation
   useEffect(() => {
     const logTypes = [
-      { type: 'SECURE_GATEWAY', message: 'Stripe API ping successful. Latency 22ms.', severity: 'success' as const },
-      { type: 'CACHE_INDEX', message: 'Flushed category collection lookup nodes.', severity: 'info' as const },
-      { type: 'DB_MUTATION', message: 'Product stock ledger verified. Integrity: 100%.', severity: 'info' as const },
-      { type: 'SYS_DAEMON', message: 'Cron job synchronized with mailer pipeline.', severity: 'success' as const },
-      { type: 'SSL_HANDSHAKE', message: 'SSL certificate verification completed successfully.', severity: 'success' as const }
+      { type: 'Secure Gateway', message: 'Stripe API ping successful. Latency 22ms.', severity: 'success' as const },
+      { type: 'Cache Index', message: 'Flushed category collection lookup nodes.', severity: 'info' as const },
+      { type: 'Database Mutation', message: 'Product stock ledger verified. Integrity: 100%.', severity: 'info' as const },
+      { type: 'System Daemon', message: 'Cron job synchronized with mailer pipeline.', severity: 'success' as const },
+      { type: 'SSL Handshake', message: 'SSL certificate verification completed successfully.', severity: 'success' as const }
     ];
 
     const interval = setInterval(() => {
@@ -803,7 +803,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Terminal size={14} className="text-gold" />
             <span style={{ fontSize: '0.72rem', color: '#fff', fontWeight: '700', fontFamily: 'monospace', letterSpacing: '0.08em' }}>
-              SYS_OPERATIONS_FEED // STACK_CONSOLE
+              System Operations Feed
             </span>
           </div>
 
@@ -820,7 +820,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
                 animation: 'pulse 1.5s infinite'
               }}></span>
               <span style={{ fontSize: '0.58rem', color: 'var(--color-muted)', fontFamily: 'monospace' }}>
-                {isScanning ? 'RUNNING_DIAG' : 'STABLE'}
+                {isScanning ? 'Running Diagnostics' : 'Stable'}
               </span>
             </div>
 
@@ -846,7 +846,7 @@ export function LiveActivityConsole({ recentOrders }: { recentOrders: any[] }) {
               onMouseLeave={e => { if(!isScanning) { e.currentTarget.style.background = 'rgba(201,168,76,0.08)'; e.currentTarget.style.borderColor = 'rgba(201,168,76,0.25)'; } }}
             >
               <Cpu size={10} />
-              {isScanning ? 'DIAG_RUNNING' : 'RUN_DIAGNOSTICS'}
+              {isScanning ? 'Running' : 'Run Diagnostics'}
             </button>
           </div>
         </div>

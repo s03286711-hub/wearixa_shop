@@ -154,7 +154,7 @@ export default function AdminProductsPage() {
       <div style={{ marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            Products Management <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>PORTAL_V2</span>
+            Products Management <span style={{ fontSize: '0.72rem', background: 'rgba(201, 168, 76, 0.1)', color: 'var(--color-accent)', padding: '4px 10px', borderRadius: '20px', fontFamily: 'monospace', fontWeight: 'bold' }}>v2</span>
           </h1>
           <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginTop: '4px' }}>Real-time inventory and catalog status telemetry</p>
         </div>
@@ -342,7 +342,7 @@ export default function AdminProductsPage() {
                             fontWeight: 'bold',
                             color: p.stock === 0 ? '#f87171' : p.stock < 10 ? '#fbbf24' : '#34d399'
                           }}>
-                            {p.stock === 0 ? 'OUT_OF_STOCK' : p.stock < 10 ? `LOW_STOCK (${p.stock})` : `STABLE (${p.stock})`}
+                            {p.stock === 0 ? 'Out of Stock' : p.stock < 10 ? `Low Stock (${p.stock})` : `Stable (${p.stock})`}
                           </span>
                         </div>
                       </td>
