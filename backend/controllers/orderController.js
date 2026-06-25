@@ -137,7 +137,7 @@ const addOrderItems = async (req, res) => {
                         <p>Dear ${user.name},</p>
                         <p>Thank you for shopping at Wearixa! Your order has been placed successfully and is now being processed.</p>
                         <p><b>Order ID:</b> ${createdOrder._id}</p>
-                        <p><b>Total Amount:</b> $${totalPrice.toFixed(2)}</p>
+                        <p><b>Total Amount:</b> Rs. ${totalPrice.toFixed(2)}</p>
                         <p>We will notify you once your package is on its way.</p>
                         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
                         <p style="text-align: center; font-size: 0.75rem; color: #aaa;">&copy; 2026 Wearixa Fashion House. All rights reserved.</p>
@@ -158,9 +158,8 @@ const addOrderItems = async (req, res) => {
         const orderAlerts = settings ? settings.orderAlerts : true;
         if (orderAlerts) {
             try {
-                // Find admin user dynamically from database
-                const adminUser = await User.findOne({ role: 'admin' });
-                const adminEmail = adminUser ? adminUser.email : 'admin@wearixa.com';
+                // Send specifically to official email
+                const adminEmail = 'wearixastore@gmail.com';
 
                 const adminEmailMessage = `
                     <div style="font-family: 'Playfair Display', serif; color: #1a1a2e; padding: 20px; border: 1px solid #c9a84c; border-radius: 10px;">
@@ -169,7 +168,7 @@ const addOrderItems = async (req, res) => {
                         <p>A new order has been placed on the storefront.</p>
                         <p><b>Order ID:</b> ${createdOrder._id}</p>
                         <p><b>Customer:</b> ${user.name} (${user.email})</p>
-                        <p><b>Total Amount:</b> $${totalPrice.toFixed(2)}</p>
+                        <p><b>Total Amount:</b> Rs. ${totalPrice.toFixed(2)}</p>
                         <p><b>Payment Method:</b> ${paymentMethod.toUpperCase()}</p>
                         <p>Please log in to the admin panel to review and manage this order.</p>
                         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
