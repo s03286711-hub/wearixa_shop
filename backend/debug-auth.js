@@ -8,7 +8,7 @@ connectDB();
 
 const testQuery = async () => {
     try {
-        const testEmail = 's03286711@gmail.com';
+        const testEmail = 'wearixastore@gmail.com';
         console.log(`Searching for: ${testEmail}`);
         
         const user = await User.findOne({ 

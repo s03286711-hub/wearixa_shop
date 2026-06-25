@@ -23,8 +23,8 @@ export default function Footer() {
             </p>
             <div style={{ display: 'flex', gap: '1rem' }}>
               {[
-                { Icon: Mail, href: 'mailto:s03286711@gmail.com' },
-                { Icon: Phone, href: 'tel:+923286711208' },
+                { Icon: Mail, href: 'mailto:wearixastore@gmail.com' },
+                { Icon: Phone, href: 'tel:+19018331756' },
                 { Icon: MapPin, href: 'https://maps.google.com/?q=Lahore,+Punjab+Pakistan' }
               ].map(({ Icon, href }, i) => (
                 <motion.a 
@@ -94,8 +94,8 @@ export default function Footer() {
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
-                { Icon: Mail, text: 's03286711@gmail.com', href: 'mailto:s03286711@gmail.com' },
-                { Icon: Phone, text: '+92 328 6711 208', href: 'tel:+923286711208' },
+                { Icon: Mail, text: 'wearixastore@gmail.com', href: 'mailto:wearixastore@gmail.com' },
+                { Icon: Phone, text: '+1 901 833 1756', href: 'tel:+19018331756' },
                 { Icon: MapPin, text: 'Lahore, Punjab Pakistan', href: 'https://maps.google.com/?q=Lahore,+Punjab+Pakistan' },
               ].map(({ Icon, text, href }) => (
                 <motion.a 
