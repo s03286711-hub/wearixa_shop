@@ -205,12 +205,7 @@ className="relative hidden md:block"
               </div>
 
               {/* Decorative background glow */}
-              <div style={{
-                position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                width: '120%', height: '120%',
-                background: 'radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%)',
-                zIndex: -1
-              }} />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(201,168,76,0.15)_0%,transparent_70%)] -z-10" />
             </motion.div>
           </div>
         </div>
