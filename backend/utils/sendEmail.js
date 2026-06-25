@@ -24,6 +24,7 @@ const sendEmail = async (options) => {
             from: process.env.EMAIL_FROM,
             to: options.email,
             subject: options.subject,
+            text: options.message.replace(/<[^>]*>?/gm, '').trim(),
             html: options.message,
         };
 
