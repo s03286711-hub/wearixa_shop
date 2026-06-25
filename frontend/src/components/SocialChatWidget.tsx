@@ -126,14 +126,14 @@ export default function SocialChatWidget() {
             width: '64px',
             height: '64px',
             borderRadius: '50%',
-            background: isOpen ? '#0047FF' : 'var(--color-primary, #000000)',
+            background: isOpen ? '#ea580c' : '#f97316', /* Changed to orange */
             color: 'white',
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+            boxShadow: '0 6px 16px rgba(249,115,22,0.4)', /* Orange shadow */
             zIndex: 10
           }}
         >
