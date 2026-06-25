@@ -183,24 +183,11 @@ className="relative hidden md:block"
 </section>
                   <Link 
                     href="/shop" 
-                    style={{ 
-                      color: 'white', fontSize: '0.8rem', display: 'flex', 
-                      alignItems: 'center', gap: '5px', textDecoration: 'none',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      const arrow = e.currentTarget.querySelector('svg');
-                      if (arrow) arrow.style.transform = 'translateX(5px)';
-                      e.currentTarget.style.color = 'var(--color-accent)';
-                    }}
-                    onMouseLeave={(e) => {
-                      const arrow = e.currentTarget.querySelector('svg');
-                      if (arrow) arrow.style.transform = 'translateX(0)';
-                      e.currentTarget.style.color = 'white';
-                    }}
+                    className="flex items-center gap-2 text-white hover:text-amber-500 transition-colors"
                   >
-                    Shop Collection <ArrowRight size={14} style={{ transition: 'transform 0.3s ease' }} />
+                    Shop Collection <ArrowRight size={14} className="transition-transform duration-300" />
                   </Link>
+                </div>
               </div>
 
               {/* Decorative background glow */}
