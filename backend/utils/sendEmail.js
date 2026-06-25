@@ -1,53 +1,36 @@
-const axios = require('axios');
+const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
     try {
-        console.log('--- STARTING GMAIL API HTTP SEND ---');
+        console.log('--- STARTING NODEMAILER OAUTH2 SEND ---');
         
-        // 1. Get Access Token from Refresh Token
         let rToken = process.env.OAUTH_REFRESH_TOKEN.trim();
         if (!rToken.startsWith('1//')) {
             rToken = `1//${rToken}`;
         }
-        
-        const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
-            client_id: process.env.OAUTH_CLIENT_ID.trim(),
-            client_secret: process.env.OAUTH_CLIENT_SECRET.trim(),
-            refresh_token: rToken,
-            grant_type: 'refresh_token',
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: process.env.EMAIL_USER.trim(),
+                clientId: process.env.OAUTH_CLIENT_ID.trim(),
+                clientSecret: process.env.OAUTH_CLIENT_SECRET.trim(),
+                refreshToken: rToken
+            }
         });
 
-        const accessToken = tokenResponse.data.access_token;
-        console.log('Access Token acquired');
+        const mailOptions = {
+            from: process.env.EMAIL_FROM,
+            to: options.email,
+            subject: options.subject,
+            html: options.message,
+        };
 
-        // 2. Construct the Email
-        const str = [
-            `Content-Type: text/html; charset="UTF-8"\n`,
-            `MIME-Version: 1.0\n`,
-            `Content-Transfer-Encoding: 7bit\n`,
-            `To: ${options.email}\n`,
-            `From: ${process.env.EMAIL_FROM}\n`,
-            `Subject: ${options.subject}\n\n`,
-            options.message
-        ].join('');
-
-        const encodedMail = Buffer.from(str).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-        // 3. Send via Gmail API
-        await axios.post(
-            'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
-            { raw: encodedMail },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-
-        console.log('EMAIL SENT SUCCESSFULLY VIA HTTP API');
+        await transporter.sendMail(mailOptions);
+        console.log('EMAIL SENT SUCCESSFULLY VIA NODEMAILER');
     } catch (error) {
-        console.error('GMAIL HTTP API ERROR:', error.response ? error.response.data : error.message);
+        console.error('NODEMAILER ERROR:', error.message);
         throw new Error(`Email could not be sent: ${error.message}`);
     }
 };
