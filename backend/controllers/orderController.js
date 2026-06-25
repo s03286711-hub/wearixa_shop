@@ -89,7 +89,7 @@ const addOrderItems = async (req, res) => {
             await Notification.create({
                 user: req.user._id,
                 title: '🚨 New Order Placed',
-                message: `Customer ${user.name} placed a new order #${createdOrder._id} totaling $${totalPrice.toFixed(2)} using ${paymentMethod.toUpperCase()}.`,
+                message: `Customer ${user.name} placed a new order #${createdOrder._id} totaling Rs. ${totalPrice.toFixed(2)} using ${paymentMethod.toUpperCase()}.`,
                 type: 'ORDER_PLACED',
                 isAdminNotification: true
             });
