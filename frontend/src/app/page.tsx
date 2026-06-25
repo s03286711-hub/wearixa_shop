@@ -418,7 +418,7 @@ export default function HomePage() {
             overflow: 'hidden'
           }}
         >
-          {/* Subtle glowing radial background for recommendations AI vibe */}
+          {/* Subtle glowing radial background for recommendations vibe */}
           <div style={{
             position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
             width: '800px', height: '300px',
@@ -445,8 +445,8 @@ export default function HomePage() {
               <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600', textTransform: 'uppercase' }}>
                 Tailored <span className="text-gold">For You</span>
               </h2>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem', maxWidth: '480px', margin: '0.5rem auto 0', lineHeight: '1.5' }}>
-                Our hybrid intelligence recommendations deck, dynamically styled based on your active cart and browsing intent.
+              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', maxWidth: '480px', margin: '0.5rem auto 0', lineHeight: '1.6' }}>
+                Curated specifically for you, based on your unique style and browsing preferences.
               </p>
             </div>
 
@@ -549,44 +549,42 @@ export default function HomePage() {
 
       {/* ── Banner CTA ── */}
       <section style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #0d0d0d 100%)',
-        borderTop: '1px solid rgba(201,168,76,0.2)',
-        borderBottom: '1px solid rgba(201,168,76,0.2)',
-        padding: '5rem 1.5rem',
+        background: 'linear-gradient(135deg, #111 0%, #000 100%)',
+        borderTop: '1px solid rgba(201,168,76,0.1)',
+        padding: '6rem 1.5rem',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
       }}>
         <div style={{
           position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          width: '600px', height: '600px',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)',
+          width: '80vw', height: '80vw', maxWidth: '800px', maxHeight: '800px',
+          background: 'radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 60%)',
           borderRadius: '50%',
         }} />
         {(() => {
           const featuredPromo = activePromos[0];
           return (
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <p style={{ fontSize: '0.75rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1rem', fontWeight: 'bold' }}>
-                {featuredPromo ? 'ACTIVE CAMPAIGN DISPATCHED' : 'Limited Time Offer'}
+              <p style={{ fontSize: '0.85rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: '600' }}>
+                {featuredPromo ? 'Exclusive Offer' : 'Limited Time Offer'}
               </p>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: '700', marginBottom: '1rem', textTransform: 'uppercase', lineHeight: '1.2' }}>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: '800', marginBottom: '1.5rem', textTransform: 'uppercase', lineHeight: '1.1' }}>
                 {featuredPromo ? (
                   <>
-                    Unlock <span className="text-gold">{featuredPromo.discountType === 'percentage' ? `${featuredPromo.discountValue}%` : `Rs. ${featuredPromo.discountValue}`} Off</span><br />
-                    With Code: <span style={{ color: '#fff', borderBottom: '2px dashed var(--color-accent)', paddingBottom: '2px', fontFamily: 'monospace' }}>{featuredPromo.code}</span>
+                    Enjoy <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">{featuredPromo.discountType === 'percentage' ? `${featuredPromo.discountValue}%` : `Rs. ${featuredPromo.discountValue}`} Off</span>
                   </>
                 ) : (
                   <>
-                    Up to <span className="text-gold">40% Off</span><br />New Season Styles
+                    Up to <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">40% Off</span><br />New Season Styles
                   </>
                 )}
               </h2>
-              <p style={{ color: 'var(--color-muted)', fontSize: '1rem', marginBottom: '2.5rem', maxWidth: '480px', margin: '0 auto 2.5rem', lineHeight: '1.6' }}>
+              <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', marginBottom: '3rem', maxWidth: '500px', margin: '0 auto 3rem', lineHeight: '1.6' }}>
                 {featuredPromo ? (
                   <>
-                    Initiate the {featuredPromo.code} protocol. Apply coupon code at checkout to unlock savings.
-                    {featuredPromo.minOrderAmount > 0 ? ` Valid for order aggregates exceeding Rs. ${featuredPromo.minOrderAmount}.` : ''}
+                    Use code <span className="text-white font-mono px-2 py-1 bg-white/10 rounded">{featuredPromo.code}</span> at checkout to unlock your savings.
+                    {featuredPromo.minOrderAmount > 0 ? ` Valid for orders over Rs. ${featuredPromo.minOrderAmount}.` : ''}
                   </>
                 ) : (
                   "Don't miss out on our seasonal sale. Premium fashion at unbeatable prices."
@@ -600,13 +598,13 @@ export default function HomePage() {
                     setTimeout(() => setCopiedCode(null), 2000);
                   }}
                   className="btn-primary" 
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '1rem 2.5rem', boxShadow: '0 15px 30px rgba(201,168,76,0.2)', cursor: 'pointer' }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', padding: '1.25rem 3rem', boxShadow: '0 15px 30px rgba(201,168,76,0.15)', cursor: 'pointer', transition: 'all 0.3s' }}
                 >
                   {copiedCode === featuredPromo.code ? 'Copied to Clipboard! ✓' : `Copy Code: ${featuredPromo.code}`}
                 </button>
               ) : (
-                <Link href="/shop" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '1rem', padding: '1rem 2.5rem' }}>
-                  Shop the Sale <ArrowRight size={18} />
+                <Link href="/shop" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', padding: '1.25rem 3rem' }}>
+                  Shop the Sale <ArrowRight size={20} />
                 </Link>
               )}
             </div>
