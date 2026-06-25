@@ -17,6 +17,7 @@ const HERO_SLIDES = [
     cta: 'Explore Collection',
     bg: 'linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #0d0d0d 100%)',
     accent: '#c9a84c',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1000'
   },
   {
     title: 'Redefine\nYour Style',
@@ -24,6 +25,15 @@ const HERO_SLIDES = [
     cta: 'Shop Now',
     bg: 'linear-gradient(135deg, #0d0d0d 0%, #1a0a2e 50%, #0d0d0d 100%)',
     accent: '#c9a84c',
+    image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=1000'
+  },
+  {
+    title: 'Avant-Garde\nExcellence',
+    subtitle: 'High Fashion Editorials',
+    cta: 'Discover More',
+    bg: 'linear-gradient(135deg, #0d0d0d 0%, #2a1a1a 50%, #0d0d0d 100%)',
+    accent: '#c9a84c',
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=1000'
   },
 ];
 
@@ -103,7 +113,7 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 5000);
+    const timer = setInterval(() => setSlide((s) => (s + 1) % HERO_SLIDES.length), 3000);
     return () => clearInterval(timer);
   }, []);
 
@@ -168,6 +178,7 @@ export default function HomePage() {
 
             {/* Right Visual Element */}
             <motion.div 
+              key={slide + "img"}
               initial={{ opacity: 0, scale: 0.85, rotate: -2 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
               transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -175,7 +186,7 @@ export default function HomePage() {
             >
               <div className="relative z-10 w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/10 group">
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none" />
-                 <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1000" alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
+                 <img src={current.image} alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
               </div>
               {/* Decorative blob */}
               <div className="absolute -bottom-16 -left-16 w-80 h-80 bg-amber-500/30 rounded-full blur-[80px] z-0 animate-pulse" />
