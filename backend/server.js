@@ -32,6 +32,20 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 });
 
+const sendEmail = require('./utils/sendEmail');
+app.get('/api/test-email', async (req, res) => {
+    try {
+        await sendEmail({
+            email: 'wearixastore@gmail.com',
+            subject: 'Railway Test Email',
+            message: '<h1>This is a test from the Railway Server</h1><p>If you get this, emails work on Railway.</p>'
+        });
+        res.json({ success: true, message: 'Email sent successfully from Railway!' });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message, stack: err.stack, oauth_refresh_token_exists: !!process.env.OAUTH_REFRESH_TOKEN });
+    }
+});
+
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
