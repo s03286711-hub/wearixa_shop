@@ -68,7 +68,7 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
                   <div style={{ flex: 1 }}>
                     <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '4px' }}>{item.name}</h3>
                     <p style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>Quantity: {item.qty}</p>
-                    <p style={{ fontWeight: '600', color: 'var(--color-accent)', marginTop: '8px' }}>${item.price.toFixed(2)}</p>
+                    <p style={{ fontWeight: '600', color: 'var(--color-accent)', marginTop: '8px' }}>Rs. {item.price.toFixed(2)}</p>
                   </div>
                 </div>
               ))}
@@ -111,19 +111,19 @@ export default function OrderDetailsPage({ params }: { params: Promise<{ id: str
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
               <span style={{ color: 'var(--color-muted)' }}>Subtotal</span>
-              <span>${(order.totalPrice - order.taxPrice - order.shippingPrice).toFixed(2)}</span>
+              <span>Rs. {(order.totalPrice - order.taxPrice - order.shippingPrice).toFixed(2)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
               <span style={{ color: 'var(--color-muted)' }}>Shipping</span>
-              <span>${order.shippingPrice.toFixed(2)}</span>
+              <span>Rs. {order.shippingPrice.toFixed(2)}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
               <span style={{ color: 'var(--color-muted)' }}>Tax</span>
-              <span>${order.taxPrice.toFixed(2)}</span>
+              <span>Rs. {order.taxPrice.toFixed(2)}</span>
             </div>
             <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', fontSize: '1.15rem', fontWeight: '700' }}>
               <span>Total</span>
-              <span style={{ color: 'var(--color-accent)' }}>${order.totalPrice.toFixed(2)}</span>
+              <span style={{ color: 'var(--color-accent)' }}>Rs. {order.totalPrice.toFixed(2)}</span>
             </div>
           </div>
         </div>

@@ -342,7 +342,7 @@ export default function CheckoutPage() {
                       <p style={{ fontSize: '0.82rem', fontWeight: '500', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</p>
                       <p style={{ fontSize: '0.78rem', color: 'var(--color-muted)' }}>x{item.qty}</p>
                     </div>
-                    <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-accent)', flexShrink: 0 }}>${(item.price * item.qty).toFixed(2)}</span>
+                    <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--color-accent)', flexShrink: 0 }}>Rs. {(item.price * item.qty).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -354,7 +354,7 @@ export default function CheckoutPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Tag size={14} style={{ color: '#4ade80' }} />
                       <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#4ade80' }}>{promoApplied.code}</span>
-                      <span style={{ fontSize: '0.78rem', color: 'var(--color-muted)' }}>−${promoApplied.discount.toFixed(2)}</span>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--color-muted)' }}>−Rs. {promoApplied.discount.toFixed(2)}</span>
                     </div>
                     <button onClick={() => { setPromoApplied(null); setPromoCode(''); setPromoError(''); }}
                       style={{ background: 'none', border: 'none', color: 'var(--color-muted)', cursor: 'pointer', fontSize: '0.75rem' }}>Remove</button>
@@ -393,17 +393,17 @@ export default function CheckoutPage() {
                 {promoApplied && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
                     <span style={{ color: '#4ade80' }}>Discount</span>
-                    <span style={{ color: '#4ade80' }}>−${promoApplied.discount.toFixed(2)}</span>
+                    <span style={{ color: '#4ade80' }}>−Rs. {promoApplied.discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1rem', marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--color-border)' }}>
                   <span>Total</span>
-                  <span style={{ color: 'var(--color-accent)' }}>${grandTotal.toFixed(2)}</span>
+                  <span style={{ color: 'var(--color-accent)' }}>Rs. {grandTotal.toFixed(2)}</span>
                 </div>
                 {walletCashback > 0 && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', padding: '0.5rem 0.75rem', background: 'rgba(201,168,76,0.08)', borderRadius: '6px', marginTop: '0.5rem' }}>
                     <span style={{ color: 'var(--color-accent)' }}>🎉 Wallet Cashback ({settings.walletCashback ?? 5}%)</span>
-                    <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>+${walletCashback.toFixed(2)}</span>
+                    <span style={{ color: 'var(--color-accent)', fontWeight: '600' }}>+Rs. {walletCashback.toFixed(2)}</span>
                   </div>
                 )}
               </div>

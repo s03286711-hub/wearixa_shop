@@ -57,7 +57,7 @@ export default function OrdersPage() {
                   </div>
                   <div>
                     <p style={{ fontSize: '0.72rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>Total</p>
-                    <p style={{ fontWeight: '700', color: 'var(--color-accent)' }}>${order.totalPrice.toFixed(2)}</p>
+                    <p style={{ fontWeight: '700', color: 'var(--color-accent)' }}>Rs. {order.totalPrice.toFixed(2)}</p>
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
                     <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '0.72rem', fontWeight: '600', background: order.isPaid ? 'rgba(74,222,128,0.1)' : 'rgba(239,68,68,0.1)', color: order.isPaid ? '#4ade80' : '#f87171', border: `1px solid ${order.isPaid ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)'}` }}>

@@ -60,7 +60,7 @@ export default function CartPage() {
                       {item.title}
                     </h3>
                   </Link>
-                  <p className="price" style={{ marginBottom: '0.75rem' }}>${item.price.toFixed(2)}</p>
+                  <p className="price" style={{ marginBottom: '0.75rem' }}>Rs. {item.price.toFixed(2)}</p>
 
                   <div className="cart-item-details" style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--color-border)', borderRadius: '6px', overflow: 'hidden' }}>
@@ -75,7 +75,7 @@ export default function CartPage() {
                       </button>
                     </div>
                     <span style={{ color: 'var(--color-muted)', fontSize: '0.85rem' }}>
-                      = ${(item.price * item.qty).toFixed(2)}
+                      = Rs. {(item.price * item.qty).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -111,13 +111,13 @@ export default function CartPage() {
 
             {shipping > 0 && (
               <div style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '6px', padding: '0.75rem', marginBottom: '1.5rem', fontSize: '0.78rem', color: 'var(--color-accent)', textAlign: 'center' }}>
-                Add ${(100 - subtotal).toFixed(2)} more for free shipping!
+                Add Rs. {(100 - subtotal).toFixed(2)} more for free shipping!
               </div>
             )}
 
             <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '1rem', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontWeight: '600', fontSize: '1rem' }}>Total</span>
-              <span style={{ fontWeight: '700', fontSize: '1.35rem', color: 'var(--color-accent)' }}>${grandTotal.toFixed(2)}</span>
+              <span style={{ fontWeight: '700', fontSize: '1.35rem', color: 'var(--color-accent)' }}>Rs. {grandTotal.toFixed(2)}</span>
             </div>
 
             <Link href="/checkout" className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', textAlign: 'center', marginBottom: '1rem' }}>
