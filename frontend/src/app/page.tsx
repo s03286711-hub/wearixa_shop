@@ -201,7 +201,6 @@ className="relative hidden md:block"
                   >
                     Shop Collection <ArrowRight size={14} style={{ transition: 'transform 0.3s ease' }} />
                   </Link>
-                </div>
               </div>
 
               {/* Decorative background glow */}
