@@ -25,9 +25,9 @@ const sendEmail = async (options) => {
             `Content-Type: text/html; charset="UTF-8"\n`,
             `MIME-Version: 1.0\n`,
             `Content-Transfer-Encoding: 7bit\n`,
-            `to: ${options.email}\n`,
-            `from: ${process.env.EMAIL_FROM}\n`,
-            `subject: ${options.subject}\n\n`,
+            `To: ${options.email}\n`,
+            `From: ${process.env.EMAIL_FROM}\n`,
+            `Subject: ${options.subject}\n\n`,
             options.message
         ].join('');
 
