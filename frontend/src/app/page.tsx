@@ -486,69 +486,91 @@ export default function HomePage() {
         onClose={() => setIsQuickViewOpen(false)} 
       />
 
-      {/* ── Banner CTA ── */}
-      <section style={{
-        background: 'linear-gradient(135deg, #111 0%, #000 100%)',
-        borderTop: '1px solid rgba(201,168,76,0.1)',
-        padding: '6rem 1.5rem',
-        textAlign: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-          width: '80vw', height: '80vw', maxWidth: '800px', maxHeight: '800px',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 60%)',
-          borderRadius: '50%',
-        }} />
-        {(() => {
-          const featuredPromo = activePromos[0];
-          return (
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <p style={{ fontSize: '0.85rem', letterSpacing: '0.3em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: '600' }}>
-                {featuredPromo ? 'Exclusive Offer' : 'Limited Time Offer'}
-              </p>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: '800', marginBottom: '1.5rem', textTransform: 'uppercase', lineHeight: '1.1' }}>
-                {featuredPromo ? (
+      {/* ── Newsletter / Banner CTA ── */}
+      <section className="relative py-24 lg:py-32 overflow-hidden border-t border-white/10 mt-12">
+        {/* Background Image Container */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop" 
+            alt="Collection Background" 
+            className="w-full h-full object-cover opacity-30 transform scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+        </div>
+
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Content Left */}
+            <div className="text-left max-w-xl">
+              <div className="inline-flex items-center gap-3 mb-6">
+                <span className="w-10 h-px bg-amber-500"></span>
+                <span className="text-[0.75rem] tracking-[0.25em] text-amber-500 uppercase font-bold">
+                  {activePromos.length > 0 ? 'Exclusive Campaign' : 'Join Our Club'}
+                </span>
+              </div>
+              
+              <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-bold leading-[1.1] mb-6 text-white drop-shadow-lg">
+                {activePromos.length > 0 ? (
                   <>
-                    Enjoy <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">{featuredPromo.discountType === 'percentage' ? `${featuredPromo.discountValue}%` : `Rs. ${featuredPromo.discountValue}`} Off</span>
+                    Unlock <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">
+                    {activePromos[0].discountType === 'percentage' ? `${activePromos[0].discountValue}%` : `Rs. ${activePromos[0].discountValue}`} Off
+                    </span>
                   </>
                 ) : (
-                  <>
-                    Up to <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">40% Off</span><br />New Season Styles
-                  </>
+                  <>Elevate Your <br/><span className="italic font-light text-white/90">Everyday Style</span></>
                 )}
               </h2>
-              <p style={{ color: 'var(--color-muted)', fontSize: '1.1rem', marginBottom: '3rem', maxWidth: '500px', margin: '0 auto 3rem', lineHeight: '1.6' }}>
-                {featuredPromo ? (
-                  <>
-                    Use code <span className="text-white font-mono px-2 py-1 bg-white/10 rounded">{featuredPromo.code}</span> at checkout to unlock your savings.
-                    {featuredPromo.minOrderAmount > 0 ? ` Valid for orders over Rs. ${featuredPromo.minOrderAmount}.` : ''}
-                  </>
+
+              <p className="text-white/70 text-lg mb-10 leading-relaxed max-w-md">
+                {activePromos.length > 0 ? (
+                  `Use code ${activePromos[0].code} at checkout to unlock your savings. Valid on premium collections and new arrivals.`
                 ) : (
-                  "Don't miss out on our seasonal sale. Premium fashion at unbeatable prices."
+                  "Subscribe to our newsletter to receive early access to new collections, exclusive offers, and expert styling tips straight to your inbox."
                 )}
               </p>
-              {featuredPromo ? (
-                <button 
-                  onClick={() => {
-                    navigator.clipboard.writeText(featuredPromo.code);
-                    setCopiedCode(featuredPromo.code);
-                    setTimeout(() => setCopiedCode(null), 2000);
-                  }}
-                  className="btn-primary" 
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', padding: '1.25rem 3rem', boxShadow: '0 15px 30px rgba(201,168,76,0.15)', cursor: 'pointer', transition: 'all 0.3s' }}
-                >
-                  {copiedCode === featuredPromo.code ? 'Copied to Clipboard! ✓' : `Copy Code: ${featuredPromo.code}`}
-                </button>
+
+              {activePromos.length > 0 ? (
+                <div className="flex flex-wrap gap-4">
+                  <button 
+                    onClick={() => {
+                      navigator.clipboard.writeText(activePromos[0].code);
+                      setCopiedCode(activePromos[0].code);
+                      setTimeout(() => setCopiedCode(null), 2000);
+                    }}
+                    className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base shadow-[0_10px_30px_rgba(201,168,76,0.15)]"
+                  >
+                    {copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}
+                  </button>
+                  <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-8 py-4 text-base border-white/20">
+                    Shop Collection
+                  </Link>
+                </div>
               ) : (
-                <Link href="/shop" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', fontSize: '1.1rem', padding: '1.25rem 3rem' }}>
-                  Shop the Sale <ArrowRight size={20} />
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+                  <input 
+                    type="email" 
+                    placeholder="Enter your email address" 
+                    className="flex-1 bg-white/5 border border-white/10 px-6 py-4 text-white placeholder-white/40 focus:outline-none focus:border-amber-500 transition-colors rounded-none"
+                  />
+                  <button className="btn-primary px-8 py-4 whitespace-nowrap shadow-[0_10px_20px_rgba(201,168,76,0.1)]">
+                    Subscribe
+                  </button>
+                </div>
               )}
             </div>
-          );
-        })()}
+
+            {/* Content Right (Empty for aesthetic breathing room or can hold a subtle floating element) */}
+            <div className="hidden lg:flex justify-end relative h-full min-h-[300px]">
+              <div className="absolute top-1/2 right-10 -translate-y-1/2 w-72 h-72 border border-white/10 rounded-full flex items-center justify-center animate-[spin_60s_linear_infinite]">
+                <div className="w-48 h-48 border border-amber-500/20 rounded-full flex items-center justify-center">
+                  <div className="w-24 h-24 bg-gradient-to-tr from-amber-500/10 to-transparent rounded-full blur-xl" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </section>
     </>
   );
