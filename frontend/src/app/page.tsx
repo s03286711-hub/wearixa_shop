@@ -403,68 +403,7 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* ── Tailored For You (AI Recommendations) ── */}
-      {hasMounted && recommendedProducts.length > 0 && (
-        <motion.section
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="section"
-          style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.02) 50%, transparent 100%)',
-            borderTop: '1px solid var(--color-border)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          {/* Subtle glowing radial background for recommendations vibe */}
-          <div style={{
-            position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
-            width: '800px', height: '300px',
-            background: 'radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%)',
-            pointerEvents: 'none',
-            zIndex: 0
-          }} />
 
-          <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-              <p style={{ 
-                fontSize: '0.75rem', 
-                letterSpacing: '0.3em', 
-                color: 'var(--color-accent)', 
-                textTransform: 'uppercase', 
-                marginBottom: '0.75rem', 
-                fontWeight: 'bold',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                <Sparkles size={14} className="text-gold" /> Personalized Curation
-              </p>
-              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '600', textTransform: 'uppercase' }}>
-                Tailored <span className="text-gold">For You</span>
-              </h2>
-              <p style={{ color: 'var(--color-muted)', fontSize: '0.9rem', maxWidth: '480px', margin: '0.5rem auto 0', lineHeight: '1.6' }}>
-                Curated specifically for you, based on your unique style and browsing preferences.
-              </p>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
-              {recommendedProducts.map((p) => (
-                <ProductCard 
-                  key={p._id} 
-                  product={p} 
-                  onQuickView={(p) => { 
-                    setQuickViewProduct(p); 
-                    setIsQuickViewOpen(true); 
-                  }} 
-                />
-              ))}
-            </div>
-          </div>
-        </motion.section>
-      )}
 
       {/* ── Seasonal Deal Sections ── */}
       {!loading && Object.keys(seasonalData).map((season, idx) => (
