@@ -486,10 +486,9 @@ export default function HomePage() {
         onClose={() => setIsQuickViewOpen(false)} 
       />
 
-      {/* ── Banner CTA ── */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-white/10">
+      {/* ── Premium Ad Banner ── */}
+      <section className="w-full px-4 sm:px-6 lg:px-8 pb-16 lg:pb-20 pt-8">
+        <div className="max-w-[1400px] mx-auto relative rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 bg-black">
             {/* Background Image Container */}
             <div className="absolute inset-0 z-0">
               <img 
