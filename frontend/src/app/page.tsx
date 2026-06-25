@@ -175,7 +175,7 @@ export default function HomePage() {
             >
               <div className="relative z-10 w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/10 group">
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none" />
-                 <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=1000" alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
+                 <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=1000" alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
               </div>
               {/* Decorative blob */}
               <div className="absolute -bottom-16 -left-16 w-80 h-80 bg-amber-500/30 rounded-full blur-[80px] z-0 animate-pulse" />
