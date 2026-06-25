@@ -114,52 +114,54 @@ export default function HomePage() {
   return (
     <>
       {/* ── Luxury Hero Section ── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-black/80">
+      <section className="relative min-h-[100vh] lg:min-h-[115vh] flex items-center overflow-hidden bg-black">
         {/* Background Image Container */}
         <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-105"
           style={{
-            backgroundImage: `linear-gradient(rgba(13,13,13,0.8), rgba(13,13,13,0.8)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`
+            backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.6)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`
           }}
         />
 
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-[40%] h-full bg-gradient-to-l from-amber-500/5 to-transparent z-0" />
+        <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-amber-500/10 to-transparent z-0 blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t from-black to-transparent z-0" />
 
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+        <div className="container relative z-10 px-6 mx-auto mt-12 lg:mt-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-20 items-center">
             
             {/* Left Content */}
             <motion.div 
               key={slide}
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial={{ opacity: 0, x: -40, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 1, ease: "easeOut" }}
               className="text-left"
             >
-              <div className="inline-flex items-center gap-2.5 bg-amber-500/15 backdrop-blur-md border border-amber-500/30 rounded-full px-5 py-2 mb-10">
-                <Sparkles size={16} className="text-amber-500" />
-                <span className="text-[0.8rem] tracking-[0.2em] text-amber-500 uppercase font-bold">
+              <div className="inline-flex items-center gap-3 bg-amber-500/10 backdrop-blur-xl border border-amber-500/40 rounded-full px-6 py-2.5 mb-10 lg:mb-12 shadow-[0_0_20px_rgba(201,168,76,0.15)]">
+                <Sparkles size={18} className="text-amber-400" />
+                <span className="text-[0.85rem] tracking-[0.25em] text-amber-400 uppercase font-extrabold">
                   {current.subtitle}
                 </span>
               </div>
-              <h1 className="font-heading text-[clamp(3.5rem,8vw,6.5rem)] font-extrabold leading-none mb-8 text-white drop-shadow-xl">
-                <span className="text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.3)]">
+              <h1 className="font-heading text-[clamp(4rem,9vw,8rem)] font-black leading-[1.05] mb-8 text-white drop-shadow-2xl tracking-tight">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 drop-shadow-[0_0_15px_rgba(201,168,76,0.4)]">
                   {current.title.split('\n')[0]}
                 </span>
                 <br />
-                {current.title.split('\n')[1]}
+                <span className="opacity-90">{current.title.split('\n')[1]}</span>
               </h1>
 
-              <p className="text-white/70 text-xl mb-14 max-w-[520px] leading-relaxed tracking-wide">
-                Experience the pinnacle of fashion with our meticulously curated collection of modern essentials.
+              <p className="text-white/80 text-xl lg:text-2xl mb-12 max-w-[600px] leading-relaxed tracking-wide font-light">
+                Experience the pinnacle of fashion with our meticulously curated collection of modern essentials. Designed to elevate your everyday elegance.
               </p>
 
-              <div className="flex flex-wrap gap-6">
-                <Link href="/shop" className="btn-primary inline-flex items-center gap-3 px-11 py-5 text-base shadow-[0_20px_40px_rgba(201,168,76,0.2)]">
-                  {current.cta} <ArrowRight size={20} />
+              <div className="flex flex-wrap gap-6 lg:gap-8">
+                <Link href="/shop" className="group relative inline-flex items-center gap-3 px-12 py-5 lg:py-6 text-lg font-bold uppercase tracking-wider bg-amber-500 text-black hover:bg-amber-400 transition-all duration-300 overflow-hidden shadow-[0_0_40px_rgba(201,168,76,0.3)] hover:shadow-[0_0_60px_rgba(201,168,76,0.5)]">
+                  <span className="relative z-10 flex items-center gap-3">{current.cta} <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" /></span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0" />
                 </Link>
-                <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-11 py-5 text-base border-white/20">
+                <Link href="/shop" className="group inline-flex items-center gap-3 px-12 py-5 lg:py-6 text-lg font-bold uppercase tracking-wider border-2 border-white/20 text-white hover:border-amber-500 hover:text-amber-500 transition-all duration-300 bg-black/20 backdrop-blur-sm">
                   New Arrivals
                 </Link>
               </div>
@@ -167,39 +169,42 @@ export default function HomePage() {
 
             {/* Right Visual Element */}
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative hidden md:block"
+              initial={{ opacity: 0, scale: 0.85, rotate: -2 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="relative hidden lg:block"
             >
-              <div className="relative z-10 w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-                 <img src="https://images.unsplash.com/photo-1523381294911-8d3cead1b475?q=80&w=1000&auto=format&fit=crop" alt="Hero" className="object-cover w-full h-full" />
+              <div className="relative z-10 w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/10 group">
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none" />
+                 <img src="https://images.unsplash.com/photo-1523381294911-8d3cead1b475?q=80&w=1000&auto=format&fit=crop" alt="Hero" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
               </div>
               {/* Decorative blob */}
-              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl z-0" />
+              <div className="absolute -bottom-16 -left-16 w-80 h-80 bg-amber-500/30 rounded-full blur-[80px] z-0 animate-pulse" />
+              <div className="absolute -top-16 -right-16 w-64 h-64 bg-amber-300/20 rounded-full blur-[60px] z-0" />
               
               {/* Decorative background glow */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(201,168,76,0.15)_0%,transparent_70%)] -z-10" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-[radial-gradient(circle,rgba(201,168,76,0.2)_0%,transparent_60%)] -z-10" />
             </motion.div>
           </div>
         </div>
 
         {/* Slide navigation / Progress indicators */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-3">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-4 z-20">
           {HERO_SLIDES.map((_, i) => (
             <button 
               key={i} 
               onClick={() => setSlide(i)} 
-              className={`transition-all duration-500 ease-out h-1 rounded-full ${i === slide ? 'w-10 bg-amber-500' : 'w-2.5 bg-white/20'}`}
+              className={`transition-all duration-500 ease-out h-1.5 rounded-full ${i === slide ? 'w-16 bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]' : 'w-4 bg-white/30 hover:bg-white/50'}`}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>
 
         {/* Vertical Scroll Label */}
-        <div className="absolute bottom-12 right-12 hidden md:flex flex-col items-center gap-4">
-          <span className="text-[0.7rem] tracking-[0.4em] text-white/30 uppercase font-medium [writing-mode:vertical-rl]">Discover</span>
-          <div className="w-px h-20 bg-gradient-to-b from-amber-500 to-transparent relative">
-            <div className="absolute top-0 left-0 w-full h-[40%] bg-white animate-[scrollDown_2s_infinite_ease-in-out]" />
+        <div className="absolute bottom-16 right-16 hidden lg:flex flex-col items-center gap-6 z-20">
+          <span className="text-[0.75rem] tracking-[0.5em] text-white/50 uppercase font-bold [writing-mode:vertical-rl] mix-blend-screen">Discover</span>
+          <div className="w-px h-32 bg-gradient-to-b from-amber-500/80 via-amber-500/20 to-transparent relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-[30%] bg-amber-200 animate-[scrollDown_2.5s_infinite_ease-in-out] shadow-[0_0_8px_rgba(253,230,138,1)]" />
           </div>
         </div>
       </section>
