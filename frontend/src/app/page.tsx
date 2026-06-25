@@ -157,11 +157,10 @@ export default function HomePage() {
               </p>
 
               <div className="flex flex-wrap gap-6 lg:gap-8">
-                <Link href="/shop" className="group relative inline-flex items-center gap-3 px-12 py-5 lg:py-6 text-lg font-bold uppercase tracking-wider bg-amber-500 text-black hover:bg-amber-400 transition-all duration-300 overflow-hidden shadow-[0_0_40px_rgba(201,168,76,0.3)] hover:shadow-[0_0_60px_rgba(201,168,76,0.5)]">
-                  <span className="relative z-10 flex items-center gap-3">{current.cta} <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" /></span>
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-0" />
+                <Link href="/shop" className="btn-primary inline-flex items-center gap-3 px-11 py-5 text-base shadow-[0_20px_40px_rgba(201,168,76,0.2)]">
+                  {current.cta} <ArrowRight size={20} />
                 </Link>
-                <Link href="/shop" className="group inline-flex items-center gap-3 px-12 py-5 lg:py-6 text-lg font-bold uppercase tracking-wider border-2 border-white/20 text-white hover:border-amber-500 hover:text-amber-500 transition-all duration-300 bg-black/20 backdrop-blur-sm">
+                <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-11 py-5 text-base border-white/20">
                   New Arrivals
                 </Link>
               </div>
@@ -176,7 +175,7 @@ export default function HomePage() {
             >
               <div className="relative z-10 w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/10 group">
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none" />
-                 <img src="https://images.unsplash.com/photo-1523381294911-8d3cead1b475?q=80&w=1000&auto=format&fit=crop" alt="Hero" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
+                 <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=1000" alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
               </div>
               {/* Decorative blob */}
               <div className="absolute -bottom-16 -left-16 w-80 h-80 bg-amber-500/30 rounded-full blur-[80px] z-0 animate-pulse" />
