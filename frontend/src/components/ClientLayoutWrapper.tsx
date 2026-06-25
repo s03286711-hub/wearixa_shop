@@ -4,7 +4,7 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import ChatWidget from './ChatWidget';
+import SocialChatWidget from './SocialChatWidget';
 import PageTransition from './PageTransition';
 import MaintenanceWrapper from './MaintenanceWrapper';
 
@@ -33,7 +33,7 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
         </PageTransition>
       </main>
       <Footer />
-      <ChatWidget />
+      <SocialChatWidget />
     </>
   );
 }
