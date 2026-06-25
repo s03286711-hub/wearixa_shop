@@ -538,22 +538,22 @@ export default function HomePage() {
                       setCopiedCode(activePromos[0].code);
                       setTimeout(() => setCopiedCode(null), 2000);
                     }}
-                    className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base shadow-[0_10px_30px_rgba(201,168,76,0.15)]"
+                    className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base shadow-[0_10px_30px_rgba(201,168,76,0.15)] rounded-full"
                   >
                     {copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}
                   </button>
-                  <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-8 py-4 text-base border-white/20">
+                  <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-8 py-4 text-base border-white/20 rounded-full">
                     Shop Collection
                   </Link>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+                <div className="relative max-w-md group">
                   <input 
                     type="email" 
-                    placeholder="Enter your email address" 
-                    className="flex-1 bg-white/5 border border-white/10 px-6 py-4 text-white placeholder-white/40 focus:outline-none focus:border-amber-500 transition-colors rounded-none"
+                    placeholder="Enter your email address..." 
+                    className="w-full bg-black/40 backdrop-blur-md border border-white/20 pl-6 pr-[140px] py-4 text-white placeholder-white/40 focus:outline-none focus:border-amber-400 focus:bg-black/60 transition-all duration-300 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
                   />
-                  <button className="btn-primary px-8 py-4 whitespace-nowrap shadow-[0_10px_20px_rgba(201,168,76,0.1)]">
+                  <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold uppercase tracking-wider px-6 rounded-full transition-all duration-300 text-sm shadow-[0_0_15px_rgba(201,168,76,0.4)] hover:shadow-[0_0_25px_rgba(201,168,76,0.6)]">
                     Subscribe
                   </button>
                 </div>
