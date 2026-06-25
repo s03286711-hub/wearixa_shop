@@ -143,53 +143,41 @@ export default function HomePage() {
                   {current.subtitle}
                 </span>
               </div>
-<h1 className="font-heading text-[clamp(3.5rem,8vw,6.5rem)] font-extrabold leading-none mb-8 text-white drop-shadow-xl">
-  <span className="text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.3)]">
-    {current.title.split('\n')[0]}
-  </span>
-  <br />
-  {current.title.split('\n')[1]}
-</h1>
+              <h1 className="font-heading text-[clamp(3.5rem,8vw,6.5rem)] font-extrabold leading-none mb-8 text-white drop-shadow-xl">
+                <span className="text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.3)]">
+                  {current.title.split('\n')[0]}
+                </span>
+                <br />
+                {current.title.split('\n')[1]}
+              </h1>
 
-<p className="text-white/70 text-xl mb-14 max-w-[520px] leading-relaxed tracking-wide">
-  Experience the pinnacle of fashion with our meticulously curated collection of modern essentials.
-</p>
+              <p className="text-white/70 text-xl mb-14 max-w-[520px] leading-relaxed tracking-wide">
+                Experience the pinnacle of fashion with our meticulously curated collection of modern essentials.
+              </p>
 
-<div className="flex flex-wrap gap-6">
-  <Link href="/shop" className="btn-primary inline-flex items-center gap-3 px-11 py-5 text-base shadow-[0_20px_40px_rgba(201,168,76,0.2)]">
-    {current.cta} <ArrowRight size={20} />
-  </Link>
-  <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-11 py-5 text-base border-white/20">
-    New Arrivals
-  </Link>
-</div>
-</motion.div>
-
-{/* Right Visual Element */}
-<motion.div 
-initial={{ opacity: 0, scale: 0.9 }}
-animate={{ opacity: 1, scale: 1 }}
-transition={{ duration: 0.8, delay: 0.2 }}
-className="relative hidden md:block"
->
-<div className="relative z-10 w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
-   <img src="https://images.unsplash.com/photo-1523381294911-8d3cead1b475?q=80&w=1000&auto=format&fit=crop" alt="Hero" className="object-cover w-full h-full" />
-</div>
-{/* Decorative blob */}
-<div className="absolute -bottom-10 -left-10 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl z-0" />
-</motion.div>
-</div>
-</div>
-</section>
-                  <Link 
-                    href="/shop" 
-                    className="flex items-center gap-2 text-white hover:text-amber-500 transition-colors"
-                  >
-                    Shop Collection <ArrowRight size={14} className="transition-transform duration-300" />
-                  </Link>
-                </div>
+              <div className="flex flex-wrap gap-6">
+                <Link href="/shop" className="btn-primary inline-flex items-center gap-3 px-11 py-5 text-base shadow-[0_20px_40px_rgba(201,168,76,0.2)]">
+                  {current.cta} <ArrowRight size={20} />
+                </Link>
+                <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-11 py-5 text-base border-white/20">
+                  New Arrivals
+                </Link>
               </div>
+            </motion.div>
 
+            {/* Right Visual Element */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative hidden md:block"
+            >
+              <div className="relative z-10 w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                 <img src="https://images.unsplash.com/photo-1523381294911-8d3cead1b475?q=80&w=1000&auto=format&fit=crop" alt="Hero" className="object-cover w-full h-full" />
+              </div>
+              {/* Decorative blob */}
+              <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl z-0" />
+              
               {/* Decorative background glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle,rgba(201,168,76,0.15)_0%,transparent_70%)] -z-10" />
             </motion.div>
