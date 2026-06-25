@@ -486,87 +486,89 @@ export default function HomePage() {
         onClose={() => setIsQuickViewOpen(false)} 
       />
 
-      {/* ── Newsletter / Banner CTA ── */}
-      <section className="relative py-24 lg:py-32 overflow-hidden border-t border-white/10 mt-12">
-        {/* Background Image Container */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop" 
-            alt="Collection Background" 
-            className="w-full h-full object-cover opacity-30 transform scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
-        </div>
+      {/* ── Banner CTA ── */}
+      <section className="py-16 lg:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-white/10">
+            {/* Background Image Container */}
+            <div className="absolute inset-0 z-0">
+              <img 
+                src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop" 
+                alt="Collection Background" 
+                className="w-full h-full object-cover opacity-40 transform scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/20" />
+            </div>
 
-        <div className="container relative z-10 px-6 mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
-            {/* Content Left */}
-            <div className="text-left max-w-xl">
-              <div className="inline-flex items-center gap-3 mb-6">
-                <span className="w-10 h-px bg-amber-500"></span>
-                <span className="text-[0.75rem] tracking-[0.25em] text-amber-500 uppercase font-bold">
-                  {activePromos.length > 0 ? 'Exclusive Campaign' : 'Premium Arrivals'}
-                </span>
-              </div>
+            <div className="relative z-10 px-8 py-16 lg:px-16 lg:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               
-              <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-bold leading-[1.1] mb-6 text-white drop-shadow-lg">
-                {activePromos.length > 0 ? (
-                  <>
-                    Unlock <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">
-                    {activePromos[0].discountType === 'percentage' ? `${activePromos[0].discountValue}%` : `Rs. ${activePromos[0].discountValue}`} Off
-                    </span>
-                  </>
-                ) : (
-                  <>The New <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-100 to-amber-400 animate-pulse">Standard</span></>
-                )}
-              </h2>
-
-              <p className="text-white/70 text-lg mb-10 leading-relaxed max-w-md">
-                {activePromos.length > 0 ? (
-                  `Use code ${activePromos[0].code} at checkout to unlock your savings. Valid on premium collections and new arrivals.`
-                ) : (
-                  "Discover our latest arrivals crafted with uncompromising attention to detail and luxury materials. Upgrade your wardrobe today."
-                )}
-              </p>
-
-              {activePromos.length > 0 ? (
-                <div className="flex flex-wrap gap-4">
-                  <button 
-                    onClick={() => {
-                      navigator.clipboard.writeText(activePromos[0].code);
-                      setCopiedCode(activePromos[0].code);
-                      setTimeout(() => setCopiedCode(null), 2000);
-                    }}
-                    className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base shadow-[0_10px_30px_rgba(201,168,76,0.15)] rounded-full"
-                  >
-                    {copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}
-                  </button>
-                  <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-8 py-4 text-base border-white/20 rounded-full">
-                    Shop Collection
-                  </Link>
+              {/* Content Left */}
+              <div className="text-left max-w-xl">
+                <div className="inline-flex items-center gap-3 mb-6">
+                  <span className="w-10 h-px bg-amber-500"></span>
+                  <span className="text-[0.75rem] tracking-[0.25em] text-amber-500 uppercase font-bold">
+                    {activePromos.length > 0 ? 'Exclusive Campaign' : 'Premium Arrivals'}
+                  </span>
                 </div>
-              ) : (
-                <div className="relative inline-block group mt-2">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-amber-300 to-amber-600 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
-                  <Link href="/shop" className="relative inline-flex items-center gap-4 px-10 py-4 lg:py-5 bg-black rounded-full border border-amber-500/30 overflow-hidden shadow-2xl">
-                    <div className="absolute inset-0 bg-amber-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                    <span className="relative text-amber-400 font-bold tracking-[0.2em] uppercase text-sm">Explore Collection</span>
-                    <Sparkles className="relative text-amber-400 group-hover:rotate-12 transition-transform" size={18} />
-                  </Link>
-                </div>
-              )}
-            </div>
+                
+                <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-bold leading-[1.1] mb-6 text-white drop-shadow-lg">
+                  {activePromos.length > 0 ? (
+                    <>
+                      Unlock <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">
+                      {activePromos[0].discountType === 'percentage' ? `${activePromos[0].discountValue}%` : `Rs. ${activePromos[0].discountValue}`} Off
+                      </span>
+                    </>
+                  ) : (
+                    <>The New <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-100 to-amber-400 animate-pulse">Standard</span></>
+                  )}
+                </h2>
 
-            {/* Content Right (Empty for aesthetic breathing room or can hold a subtle floating element) */}
-            <div className="hidden lg:flex justify-end relative h-full min-h-[300px]">
-              <div className="absolute top-1/2 right-10 -translate-y-1/2 w-72 h-72 border border-white/10 rounded-full flex items-center justify-center animate-[spin_60s_linear_infinite]">
-                <div className="w-48 h-48 border border-amber-500/20 rounded-full flex items-center justify-center">
-                  <div className="w-24 h-24 bg-gradient-to-tr from-amber-500/10 to-transparent rounded-full blur-xl" />
+                <p className="text-white/80 text-lg mb-10 leading-relaxed max-w-md">
+                  {activePromos.length > 0 ? (
+                    `Use code ${activePromos[0].code} at checkout to unlock your savings. Valid on premium collections and new arrivals.`
+                  ) : (
+                    "Discover our latest arrivals crafted with uncompromising attention to detail and luxury materials. Upgrade your wardrobe today."
+                  )}
+                </p>
+
+                {activePromos.length > 0 ? (
+                  <div className="flex flex-wrap gap-4">
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(activePromos[0].code);
+                        setCopiedCode(activePromos[0].code);
+                        setTimeout(() => setCopiedCode(null), 2000);
+                      }}
+                      className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base shadow-[0_10px_30px_rgba(201,168,76,0.15)] rounded-full"
+                    >
+                      {copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}
+                    </button>
+                    <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-8 py-4 text-base border-white/20 rounded-full">
+                      Shop Collection
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="relative inline-block group mt-2">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-amber-300 to-amber-600 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
+                    <Link href="/shop" className="relative inline-flex items-center gap-4 px-10 py-4 lg:py-5 bg-black rounded-full border border-amber-500/30 overflow-hidden shadow-2xl">
+                      <div className="absolute inset-0 bg-amber-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                      <span className="relative text-amber-400 font-bold tracking-[0.2em] uppercase text-sm">Explore Collection</span>
+                      <Sparkles className="relative text-amber-400 group-hover:rotate-12 transition-transform" size={18} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Content Right (Empty for aesthetic breathing room or can hold a subtle floating element) */}
+              <div className="hidden lg:flex justify-end relative h-full min-h-[300px]">
+                <div className="absolute top-1/2 right-10 -translate-y-1/2 w-72 h-72 border border-white/10 rounded-full flex items-center justify-center animate-[spin_60s_linear_infinite]">
+                  <div className="w-48 h-48 border border-amber-500/20 rounded-full flex items-center justify-center">
+                    <div className="w-24 h-24 bg-gradient-to-tr from-amber-500/10 to-transparent rounded-full blur-xl" />
+                  </div>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </section>
