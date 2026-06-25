@@ -506,7 +506,7 @@ export default function HomePage() {
               <div className="inline-flex items-center gap-3 mb-6">
                 <span className="w-10 h-px bg-amber-500"></span>
                 <span className="text-[0.75rem] tracking-[0.25em] text-amber-500 uppercase font-bold">
-                  {activePromos.length > 0 ? 'Exclusive Campaign' : 'Join Our Club'}
+                  {activePromos.length > 0 ? 'Exclusive Campaign' : 'Premium Arrivals'}
                 </span>
               </div>
               
@@ -518,7 +518,7 @@ export default function HomePage() {
                     </span>
                   </>
                 ) : (
-                  <>Elevate Your <br/><span className="italic font-light text-white/90">Everyday Style</span></>
+                  <>The New <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-100 to-amber-400 animate-pulse">Standard</span></>
                 )}
               </h2>
 
@@ -526,7 +526,7 @@ export default function HomePage() {
                 {activePromos.length > 0 ? (
                   `Use code ${activePromos[0].code} at checkout to unlock your savings. Valid on premium collections and new arrivals.`
                 ) : (
-                  "Subscribe to our newsletter to receive early access to new collections, exclusive offers, and expert styling tips straight to your inbox."
+                  "Discover our latest arrivals crafted with uncompromising attention to detail and luxury materials. Upgrade your wardrobe today."
                 )}
               </p>
 
@@ -547,15 +547,13 @@ export default function HomePage() {
                   </Link>
                 </div>
               ) : (
-                <div className="relative max-w-md group">
-                  <input 
-                    type="email" 
-                    placeholder="Enter your email address..." 
-                    className="w-full bg-black/40 backdrop-blur-md border border-white/20 pl-6 pr-[140px] py-4 text-white placeholder-white/40 focus:outline-none focus:border-amber-400 focus:bg-black/60 transition-all duration-300 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
-                  />
-                  <button className="absolute right-1.5 top-1.5 bottom-1.5 bg-amber-500 hover:bg-amber-400 text-black font-bold uppercase tracking-wider px-6 rounded-full transition-all duration-300 text-sm shadow-[0_0_15px_rgba(201,168,76,0.4)] hover:shadow-[0_0_25px_rgba(201,168,76,0.6)]">
-                    Subscribe
-                  </button>
+                <div className="relative inline-block group mt-2">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-amber-300 to-amber-600 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
+                  <Link href="/shop" className="relative inline-flex items-center gap-4 px-10 py-4 lg:py-5 bg-black rounded-full border border-amber-500/30 overflow-hidden shadow-2xl">
+                    <div className="absolute inset-0 bg-amber-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    <span className="relative text-amber-400 font-bold tracking-[0.2em] uppercase text-sm">Explore Collection</span>
+                    <Sparkles className="relative text-amber-400 group-hover:rotate-12 transition-transform" size={18} />
+                  </Link>
                 </div>
               )}
             </div>
