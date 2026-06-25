@@ -36,8 +36,15 @@ api.interceptors.response.use(
     }
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('wearixaUser');
-        window.location.href = '/auth/login';
+        // Only force logout if NOT on a background/polling request
+        const requestUrl = error.config?.url || '';
+        const isBackgroundRequest = requestUrl.includes('/notifications');
+        const isAlreadyOnLogin = window.location.pathname.includes('/auth/');
+        
+        if (!isBackgroundRequest && !isAlreadyOnLogin) {
+          localStorage.removeItem('wearixaUser');
+          window.location.href = '/auth/login';
+        }
       }
     }
     return Promise.reject(error);
