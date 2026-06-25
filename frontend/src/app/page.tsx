@@ -486,88 +486,121 @@ export default function HomePage() {
         onClose={() => setIsQuickViewOpen(false)} 
       />
 
-      {/* ── Premium Ad Banner ── */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 pb-16 lg:pb-20 pt-8">
-        <div className="max-w-[1400px] mx-auto relative rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.6)] border border-white/10 bg-black">
-            {/* Background Image Container */}
-            <div className="absolute inset-0 z-0">
-              <img 
-                src="https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=2071&auto=format&fit=crop" 
-                alt="Collection Background" 
-                className="w-full h-full object-cover opacity-40 transform scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/20" />
-            </div>
+      {/* ── Immersive Promo Section ── */}
+      <section className="relative w-full h-[80vh] min-h-[600px] overflow-hidden bg-black mt-12 mb-12 flex items-center justify-center">
+        {/* Parallax / Animated Background */}
+        <motion.div 
+          className="absolute inset-0 z-0"
+          initial={{ scale: 1.1 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <img 
+            src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" 
+            alt="Fashion Promo" 
+            className="w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/80" />
+        </motion.div>
 
-            <div className="relative z-10 px-8 py-16 lg:px-16 lg:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              
-              {/* Content Left */}
-              <div className="text-left max-w-xl">
-                <div className="inline-flex items-center gap-3 mb-6">
-                  <span className="w-10 h-px bg-amber-500"></span>
-                  <span className="text-[0.75rem] tracking-[0.25em] text-amber-500 uppercase font-bold">
-                    {activePromos.length > 0 ? 'Exclusive Campaign' : 'Premium Arrivals'}
-                  </span>
-                </div>
-                
-                <h2 className="font-heading text-[clamp(2.5rem,5vw,4.5rem)] font-bold leading-[1.1] mb-6 text-white drop-shadow-lg">
-                  {activePromos.length > 0 ? (
-                    <>
-                      Unlock <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-600">
-                      {activePromos[0].discountType === 'percentage' ? `${activePromos[0].discountValue}%` : `Rs. ${activePromos[0].discountValue}`} Off
-                      </span>
-                    </>
-                  ) : (
-                    <>The New <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-100 to-amber-400 animate-pulse">Standard</span></>
-                  )}
-                </h2>
+        {/* Floating Animated Elements */}
+        <motion.div 
+          className="absolute top-1/4 left-10 w-32 h-32 border border-amber-500/20 rounded-full blur-sm"
+          animate={{ y: [0, -30, 0], rotate: [0, 90, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-10 w-48 h-48 border border-white/10 rounded-full blur-md"
+          animate={{ y: [0, 40, 0], rotate: [0, -90, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        />
 
-                <p className="text-white/80 text-lg mb-10 leading-relaxed max-w-md">
-                  {activePromos.length > 0 ? (
-                    `Use code ${activePromos[0].code} at checkout to unlock your savings. Valid on premium collections and new arrivals.`
-                  ) : (
-                    "Discover our latest arrivals crafted with uncompromising attention to detail and luxury materials. Upgrade your wardrobe today."
-                  )}
-                </p>
+        {/* Content */}
+        <div className="relative z-10 text-center max-w-4xl px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <span className="inline-block py-1 px-3 border border-amber-500/30 rounded-full text-amber-500 text-sm tracking-[0.3em] font-bold uppercase mb-6 backdrop-blur-md">
+              {activePromos.length > 0 ? 'Exclusive Campaign' : "Summer Collection '26"}
+            </span>
+          </motion.div>
+          
+          <motion.h2 
+            className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            {activePromos.length > 0 ? (
+              <>
+                Unlock <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 italic">
+                  {activePromos[0].discountType === 'percentage' ? `${activePromos[0].discountValue}% Off` : `Rs. ${activePromos[0].discountValue} Off`}
+                </span>
+              </>
+            ) : (
+              <>
+                Unleash Your <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 italic">
+                  True Style
+                </span>
+              </>
+            )}
+          </motion.h2>
 
-                {activePromos.length > 0 ? (
-                  <div className="flex flex-wrap gap-4">
-                    <button 
-                      onClick={() => {
-                        navigator.clipboard.writeText(activePromos[0].code);
-                        setCopiedCode(activePromos[0].code);
-                        setTimeout(() => setCopiedCode(null), 2000);
-                      }}
-                      className="btn-primary inline-flex items-center gap-3 px-8 py-4 text-base shadow-[0_10px_30px_rgba(201,168,76,0.15)] rounded-full"
-                    >
-                      {copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}
-                    </button>
-                    <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-8 py-4 text-base border-white/20 rounded-full">
-                      Shop Collection
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="relative inline-block group mt-2">
-                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 via-amber-300 to-amber-600 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
-                    <Link href="/shop" className="relative inline-flex items-center gap-4 px-10 py-4 lg:py-5 bg-black rounded-full border border-amber-500/30 overflow-hidden shadow-2xl">
-                      <div className="absolute inset-0 bg-amber-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                      <span className="relative text-amber-400 font-bold tracking-[0.2em] uppercase text-sm">Explore Collection</span>
-                      <Sparkles className="relative text-amber-400 group-hover:rotate-12 transition-transform" size={18} />
-                    </Link>
-                  </div>
-                )}
-              </div>
+          <motion.p 
+            className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light drop-shadow-md"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            {activePromos.length > 0 ? (
+              `Use code ${activePromos[0].code} at checkout to unlock your savings. Valid on premium collections and new arrivals.`
+            ) : (
+              "Dive into our most breathtaking collection yet. Huge discounts, luxurious fabrics, and styles that define the modern era."
+            )}
+          </motion.p>
 
-              {/* Content Right (Empty for aesthetic breathing room or can hold a subtle floating element) */}
-              <div className="hidden lg:flex justify-end relative h-full min-h-[300px]">
-                <div className="absolute top-1/2 right-10 -translate-y-1/2 w-72 h-72 border border-white/10 rounded-full flex items-center justify-center animate-[spin_60s_linear_infinite]">
-                  <div className="w-48 h-48 border border-amber-500/20 rounded-full flex items-center justify-center">
-                    <div className="w-24 h-24 bg-gradient-to-tr from-amber-500/10 to-transparent rounded-full blur-xl" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap justify-center gap-4"
+          >
+            {activePromos.length > 0 ? (
+              <>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(activePromos[0].code);
+                    setCopiedCode(activePromos[0].code);
+                    setTimeout(() => setCopiedCode(null), 2000);
+                  }}
+                  className="group relative inline-flex items-center gap-4 px-12 py-5 bg-amber-500 text-black font-bold uppercase tracking-widest text-sm rounded-full overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.4)] hover:shadow-[0_0_60px_rgba(245,158,11,0.6)] transition-all"
+                >
+                  <span className="relative z-10">{copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}</span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                </button>
+                <Link href="/shop" className="group relative inline-flex items-center gap-4 px-12 py-5 bg-black/40 text-white border border-white/20 font-bold uppercase tracking-widest text-sm rounded-full overflow-hidden backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/40">
+                  <span className="relative z-10">Shop Collection</span>
+                  <ArrowRight className="relative z-10 group-hover:translate-x-1 transition-transform" size={18} />
+                </Link>
+              </>
+            ) : (
+              <Link href="/shop" className="group relative inline-flex items-center gap-4 px-12 py-5 bg-amber-500 text-black font-bold uppercase tracking-widest text-sm rounded-full overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.4)] hover:shadow-[0_0_60px_rgba(245,158,11,0.6)] transition-all">
+                <span className="relative z-10">Shop The Promo</span>
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <Sparkles className="relative z-10 group-hover:rotate-12 transition-transform" size={18} />
+              </Link>
+            )}
+          </motion.div>
+        </div>
       </section>
     </>
   );
