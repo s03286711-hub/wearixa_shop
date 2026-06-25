@@ -5,7 +5,7 @@ import { authService, productService, orderService } from '@/services';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { 
   Users, Package, ShoppingCart, Banknote, TrendingUp, 
-  ArrowUpRight, Cpu, Clock, Activity, ShieldCheck 
+  ArrowUpRight, Cpu, Clock, Activity, ShieldCheck, Eye
 } from 'lucide-react';
 import { SalesTrendMatrix, CategoryDistributionRing, LiveActivityConsole } from '@/components/DigitalCharts';
 
@@ -17,7 +17,7 @@ const getCardColorClass = (color: string) => {
 };
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ users: 0, products: 0, orders: 0, revenue: 0 });
+  const [stats, setStats] = useState({ users: 0, products: 0, orders: 0, revenue: 0, visitors: 0 });
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [utcTime, setUtcTime] = useState('');
@@ -37,13 +37,15 @@ export default function AdminDashboard() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [users, products, orders] = await Promise.all([
+        const [users, products, orders, analyticsRes] = await Promise.all([
           authService.getAllUsers(),
           productService.getAll({ pageSize: 1 }),
           orderService.getAllOrders(),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/analytics/stats`).then(r => r.json()).catch(() => ({ data: { totalVisits: 0 } })),
         ]);
         const revenue = orders.reduce((s: number, o: any) => s + (o.isPaid ? o.totalPrice : 0), 0);
-        setStats({ users: users.length, products: products.total || 0, orders: orders.length, revenue });
+        const visitors = analyticsRes?.data?.totalVisits || 0;
+        setStats({ users: users.length, products: products.total || 0, orders: orders.length, revenue, visitors });
         setRecentOrders(orders.slice(0, 6));
       } catch (e) { console.error(e); }
       finally { setLoading(false); }
@@ -94,6 +96,16 @@ export default function AdminDashboard() {
       bg: 'rgba(74,222,128,0.06)', 
       border: 'rgba(74,222,128,0.2)',
       sparkline: 'M0 25 L20 20 L40 15 L60 12 L80 18 L100 8 L120 5'
+    },
+    { 
+      label: 'Total Website Visitors', 
+      value: stats.visitors, 
+      sub: 'Unique Sessions',
+      Icon: Eye, 
+      color: '#f472b6', 
+      bg: 'rgba(244,114,182,0.06)', 
+      border: 'rgba(244,114,182,0.2)',
+      sparkline: 'M0 30 L20 10 L40 25 L60 5 L80 20 L100 2 L120 15'
     },
   ];
 

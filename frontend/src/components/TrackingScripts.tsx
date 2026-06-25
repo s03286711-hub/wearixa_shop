@@ -1,9 +1,27 @@
 'use client';
 import Script from 'next/script';
+import { useEffect } from 'react';
 
 export default function TrackingScripts() {
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
   const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        if (!sessionStorage.getItem('site_visited')) {
+          await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/analytics/track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          sessionStorage.setItem('site_visited', 'true');
+        }
+      } catch (err) {
+        console.error('Failed to track visit', err);
+      }
+    };
+    trackVisit();
+  }, []);
 
   return (
     <>

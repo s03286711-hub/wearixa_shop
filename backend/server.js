@@ -56,6 +56,7 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const promoRoutes = require('./routes/promoRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const analyticsRoutes = require('./routes/analytics');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -66,6 +67,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/promo', promoRoutes);
 app.use('/api/settings', settingRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
