@@ -114,151 +114,73 @@ export default function HomePage() {
   return (
     <>
       {/* ── Luxury Hero Section ── */}
-      <section className="hero-section-inline" style={{
-        minHeight: '100vh',
-        backgroundImage: `linear-gradient(rgba(13,13,13,0.8), rgba(13,13,13,0.8)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* Decorative elements */}
-        <div style={{
-          position: 'absolute', top: '0', right: '0', width: '40%', height: '100%',
-          background: 'linear-gradient(270deg, rgba(201,168,76,0.05) 0%, transparent 100%)',
-          zIndex: 0
-        }} />
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-black/80">
+        {/* Background Image Container */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `linear-gradient(rgba(13,13,13,0.8), rgba(13,13,13,0.8)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`
+          }}
+        />
 
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="hero-grid-inline">
-            <style dangerouslySetInnerHTML={{__html: `
-              .hero-section-inline {
-                padding-top: 80px;
-                padding-bottom: 40px;
-              }
-              .hero-grid-inline {
-                display: grid;
-                grid-template-columns: 1.2fr 0.8fr;
-                gap: 4rem;
-                align-items: center;
-              }
-              @media (max-width: 960px) {
-                .hero-section-inline {
-                  padding-top: 120px;
-                }
-                .hero-grid-inline {
-                  grid-template-columns: 1fr;
-                  gap: 3rem;
-                }
-                .hero-grid-inline > div:first-child {
-                  text-align: center;
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                }
-                .hero-grid-inline > div:first-child p {
-                  text-align: center;
-                }
-                .hero-grid-inline > div:last-child {
-                  max-width: 350px !important;
-                  margin: 0 auto;
-                  width: 100%;
-                }
-              }
-            `}} />
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-[40%] h-full bg-gradient-to-l from-amber-500/5 to-transparent z-0" />
+
+        <div className="container relative z-10 px-6 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
+            
             {/* Left Content */}
             <motion.div 
               key={slide}
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-left"
             >
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: '10px',
-                background: 'rgba(201,168,76,0.15)', backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(201,168,76,0.3)',
-                borderRadius: '30px', padding: '8px 20px', marginBottom: '2.5rem',
-              }}>
-                <Sparkles size={16} style={{ color: 'var(--color-accent)' }} />
-                <span style={{ fontSize: '0.8rem', letterSpacing: '0.2em', color: 'var(--color-accent)', textTransform: 'uppercase', fontWeight: '700' }}>
+              <div className="inline-flex items-center gap-2.5 bg-amber-500/15 backdrop-blur-md border border-amber-500/30 rounded-full px-5 py-2 mb-10">
+                <Sparkles size={16} className="text-amber-500" />
+                <span className="text-[0.8rem] tracking-[0.2em] text-amber-500 uppercase font-bold">
                   {current.subtitle}
                 </span>
               </div>
+<h1 className="font-heading text-[clamp(3.5rem,8vw,6.5rem)] font-extrabold leading-none mb-8 text-white drop-shadow-xl">
+  <span className="text-gold drop-shadow-[0_0_10px_rgba(201,168,76,0.3)]">
+    {current.title.split('\n')[0]}
+  </span>
+  <br />
+  {current.title.split('\n')[1]}
+</h1>
 
-              <h1 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
-                fontWeight: '800',
-                lineHeight: '1',
-                marginBottom: '2rem',
-                textShadow: '0 10px 30px rgba(0,0,0,0.5)',
-              }}>
-                <span className="text-gold" style={{ filter: 'drop-shadow(0 0 10px rgba(201,168,76,0.3))' }}>
-                  {current.title.split('\n')[0]}
-                </span>
-                <br />
-                <span style={{ color: 'white' }}>{current.title.split('\n')[1]}</span>
-              </h1>
+<p className="text-white/70 text-xl mb-14 max-w-[520px] leading-relaxed tracking-wide">
+  Experience the pinnacle of fashion with our meticulously curated collection of modern essentials.
+</p>
 
-              <p style={{ 
-                color: 'rgba(255,255,255,0.7)', fontSize: '1.2rem', marginBottom: '3.5rem', 
-                maxWidth: '520px', lineHeight: '1.8', letterSpacing: '0.01em' 
-              }}>
-                Experience the pinnacle of fashion with our meticulously curated collection of modern essentials.
-              </p>
+<div className="flex flex-wrap gap-6">
+  <Link href="/shop" className="btn-primary inline-flex items-center gap-3 px-11 py-5 text-base shadow-[0_20px_40px_rgba(201,168,76,0.2)]">
+    {current.cta} <ArrowRight size={20} />
+  </Link>
+  <Link href="/shop" className="btn-outline inline-flex items-center gap-3 px-11 py-5 text-base border-white/20">
+    New Arrivals
+  </Link>
+</div>
+</motion.div>
 
-              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-                <Link href="/shop" className="btn-primary" style={{ 
-                  display: 'inline-flex', alignItems: 'center', gap: '12px',
-                  padding: '1.2rem 2.8rem', fontSize: '1rem', boxShadow: '0 20px 40px rgba(201,168,76,0.2)'
-                }}>
-                  {current.cta} <ArrowRight size={20} />
-                </Link>
-                <Link href="/shop" className="btn-outline" style={{ 
-                  display: 'inline-flex', alignItems: 'center', gap: '12px',
-                  padding: '1.2rem 2.8rem', fontSize: '1rem', borderColor: 'rgba(255,255,255,0.2)'
-                }}>
-                  New Arrivals
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Right Visual Element */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}
-            >
-              <div style={{ 
-                position: 'relative', width: '100%', maxWidth: '450px', aspectRatio: '3/4',
-                borderRadius: '20px', overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
-                border: '1px solid rgba(255,255,255,0.1)'
-              }}>
-                <img 
-                  src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1974&auto=format&fit=crop" 
-                  alt="Fashion Luxury" 
-                  style={{ 
-                    width: '100%', height: '100%', objectFit: 'cover', 
-                    transform: 'scale(1.05)', transition: 'transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)' 
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                />
-                
-                {/* Floating Glass Tag */}
-                <div style={{
-                  position: 'absolute', bottom: '2rem', right: '-2rem',
-                  background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px',
-                  padding: '1.5rem', width: '220px',
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
-                }}>
-                  <p style={{ color: 'var(--color-accent)', fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: '700', marginBottom: '0.5rem' }}>Trending Now</p>
-                  <p style={{ color: 'white', fontSize: '1.1rem', fontWeight: '600', marginBottom: '1rem' }}>Summer Silk Series</p>
+{/* Right Visual Element */}
+<motion.div 
+initial={{ opacity: 0, scale: 0.9 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{ duration: 0.8, delay: 0.2 }}
+className="relative hidden md:block"
+>
+<div className="relative z-10 w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+   <img src="https://images.unsplash.com/photo-1523381294911-8d3cead1b475?q=80&w=1000&auto=format&fit=crop" alt="Hero" className="object-cover w-full h-full" />
+</div>
+{/* Decorative blob */}
+<div className="absolute -bottom-10 -left-10 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl z-0" />
+</motion.div>
+</div>
+</div>
+</section>
                   <Link 
                     href="/shop" 
                     style={{ 
@@ -294,31 +216,21 @@ export default function HomePage() {
         </div>
 
         {/* Slide navigation / Progress indicators */}
-        <div style={{ position: 'absolute', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '12px' }}>
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex gap-3">
           {HERO_SLIDES.map((_, i) => (
-            <button key={i} onClick={() => setSlide(i)} style={{
-              width: i === slide ? '40px' : '10px', height: '4px',
-              borderRadius: '2px', background: i === slide ? 'var(--color-accent)' : 'rgba(255,255,255,0.2)',
-              border: 'none', cursor: 'pointer', transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-            }} />
+            <button 
+              key={i} 
+              onClick={() => setSlide(i)} 
+              className={`transition-all duration-500 ease-out h-1 rounded-full ${i === slide ? 'w-10 bg-amber-500' : 'w-2.5 bg-white/20'}`}
+            />
           ))}
         </div>
 
         {/* Vertical Scroll Label */}
-        <div style={{ position: 'absolute', bottom: '3rem', right: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-          <span style={{ 
-            fontSize: '0.7rem', letterSpacing: '0.4em', color: 'rgba(255,255,255,0.3)', 
-            textTransform: 'uppercase', writingMode: 'vertical-rl', fontWeight: '500' 
-          }}>Discover</span>
-          <div style={{ 
-            width: '1px', height: '80px', 
-            background: 'linear-gradient(to bottom, var(--color-accent), transparent)',
-            position: 'relative'
-          }}>
-            <div style={{
-              position: 'absolute', top: 0, left: 0, width: '100%', height: '40%',
-              background: 'white', animation: 'scrollDown 2s infinite ease-in-out'
-            }} />
+        <div className="absolute bottom-12 right-12 hidden md:flex flex-col items-center gap-4">
+          <span className="text-[0.7rem] tracking-[0.4em] text-white/30 uppercase font-medium [writing-mode:vertical-rl]">Discover</span>
+          <div className="w-px h-20 bg-gradient-to-b from-amber-500 to-transparent relative">
+            <div className="absolute top-0 left-0 w-full h-[40%] bg-white animate-[scrollDown_2s_infinite_ease-in-out]" />
           </div>
         </div>
       </section>
