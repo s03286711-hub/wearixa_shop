@@ -34,7 +34,7 @@ export default function SocialChatWidget() {
     {
       id: 'instagram',
       name: 'Instagram',
-      href: '#',
+      href: 'https://www.instagram.com/wearixa.store?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
       color: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
