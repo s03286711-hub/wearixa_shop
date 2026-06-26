@@ -604,7 +604,7 @@ export default function HomePage() {
                 </Link>
               </>
             ) : (
-              <Link href="/shop" className="group relative inline-flex items-center gap-4 px-14 py-6 bg-amber-500 text-black font-extrabold uppercase tracking-[0.2em] text-[0.95rem] rounded-full overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.5)] hover:shadow-[0_0_70px_rgba(245,158,11,0.7)] transition-all">
+              <Link href="/shop" className="group relative inline-flex items-center gap-4 px-16 py-7 bg-amber-500 text-black font-extrabold uppercase tracking-[0.2em] text-[0.95rem] rounded-full overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.5)] hover:shadow-[0_0_70px_rgba(245,158,11,0.7)] transition-all">
                 <span className="relative z-10">GET UP TO 50% OFF NOW</span>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                 <Sparkles className="relative z-10 group-hover:rotate-12 transition-transform" size={20} />
