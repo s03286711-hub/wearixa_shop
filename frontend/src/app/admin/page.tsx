@@ -35,22 +35,29 @@ export default function AdminDashboard() {
 
   // Fetch db data
   useEffect(() => {
+    let isMounted = true;
     const load = async () => {
       try {
         const [users, products, orders, analyticsRes] = await Promise.all([
           authService.getAllUsers(),
           productService.getAll({ pageSize: 1 }),
           orderService.getAllOrders(),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/analytics/stats`).then(r => r.json()).catch(() => ({ data: { totalVisits: 0 } })),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/analytics/stats`, { cache: 'no-store' }).then(r => r.json()).catch(() => ({ data: { totalVisits: 0 } })),
         ]);
+        if (!isMounted) return;
         const revenue = orders.reduce((s: number, o: any) => s + (o.isPaid ? o.totalPrice : 0), 0);
         const visitors = analyticsRes?.data?.totalVisits || 0;
         setStats({ users: users.length, products: products.total || 0, orders: orders.length, revenue, visitors });
         setRecentOrders(orders.slice(0, 6));
       } catch (e) { console.error(e); }
-      finally { setLoading(false); }
+      finally { if (isMounted) setLoading(false); }
     };
     load();
+    const interval = setInterval(load, 15000); // Real-time polling every 15s
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   if (loading) return <LoadingSpinner />;
