@@ -177,12 +177,12 @@ const addOrderItems = async (req, res) => {
                         <p style="text-align: center; font-size: 0.75rem; color: #aaa;">&copy; 2026 Wearixa Fashion House. All rights reserved.</p>
                     </div>
                 `;
-                await sendEmail({
+                sendEmail({
                     email: user.email,
                     subject: 'Order Confirmation - Wearixa',
                     message: emailMessage,
-                });
-                console.log('Order confirmation email sent successfully!');
+                }).catch(err => console.error('Async email error:', err.message));
+                console.log('Order confirmation email sent asynchronously!');
             } catch (emailErr) {
                 console.error('Failed to send order confirmation email:', emailErr.message);
             }
@@ -209,12 +209,12 @@ const addOrderItems = async (req, res) => {
                         <p style="text-align: center; font-size: 0.75rem; color: #aaa;">&copy; 2026 Wearixa Admin Notification System. All rights reserved.</p>
                     </div>
                 `;
-                await sendEmail({
+                sendEmail({
                     email: adminEmail,
                     subject: '🚨 WEARIXA ALERT: New Order Placed',
                     message: adminEmailMessage,
-                });
-                console.log('Admin order alert email sent successfully!');
+                }).catch(err => console.error('Async admin email error:', err.message));
+                console.log('Admin order alert email sent asynchronously!');
             } catch (adminAlertErr) {
                 console.error('Failed to send admin order alert email:', adminAlertErr.message);
             }
