@@ -24,8 +24,8 @@ export default function Footer() {
             <div style={{ display: 'flex', gap: '1rem' }}>
               {[
                 { Icon: Mail, href: 'mailto:wearixastore@gmail.com' },
-                { Icon: Phone, href: 'tel:+19018331756' },
-                { Icon: MapPin, href: 'https://maps.google.com/?q=Lahore,+Punjab+Pakistan' }
+                { Icon: Phone, href: 'https://wa.me/923494549219' },
+                { Icon: MapPin, href: 'https://maps.google.com/?q=34-g+U.k+center+azam+cloth+market+lahore' }
               ].map(({ Icon, href }, i) => (
                 <motion.a 
                   key={i} 
@@ -95,8 +95,8 @@ export default function Footer() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
                 { Icon: Mail, text: 'wearixastore@gmail.com', href: 'mailto:wearixastore@gmail.com' },
-                { Icon: Phone, text: '+1 901 833 1756', href: 'tel:+19018331756' },
-                { Icon: MapPin, text: 'Lahore, Punjab Pakistan', href: 'https://maps.google.com/?q=Lahore,+Punjab+Pakistan' },
+                { Icon: Phone, text: '+92 349 4549219', href: 'https://wa.me/923494549219' },
+                { Icon: MapPin, text: '34-g U.k center azam cloth market lahore', href: 'https://maps.google.com/?q=34-g+U.k+center+azam+cloth+market+lahore' },
               ].map(({ Icon, text, href }) => (
                 <motion.a 
                   key={text} 

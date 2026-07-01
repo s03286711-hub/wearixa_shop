@@ -32,17 +32,21 @@ export default function ContactPage() {
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginBottom: '1.5rem' }}>Contact Information</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {[
-                { Icon: Mail, title: 'Email Us', text: 'concierge@wearixa.com', desc: 'Typical response within 24 hours.' },
-                { Icon: Phone, title: 'Call Us', text: '+1 (555) 888-9999', desc: 'Mon-Fri from 9am to 6pm EST.' },
-                { Icon: MapPin, title: 'Visit Our Atelier', text: '72 Fifth Avenue, New York, NY', desc: 'By appointment only.' },
-              ].map(({ Icon, title, text, desc }) => (
+                { Icon: Mail, title: 'Email Us', text: 'wearixastore@gmail.com', desc: 'Typical response within 24 hours.', href: 'mailto:wearixastore@gmail.com' },
+                { Icon: Phone, title: 'WhatsApp Us', text: '+92 349 4549219', desc: 'Available 24/7.', href: 'https://wa.me/923494549219' },
+                { Icon: MapPin, title: 'Visit Our Store', text: '34-g U.k center azam cloth market lahore', desc: 'Lahore, Pakistan', href: 'https://maps.google.com/?q=34-g+U.k+center+azam+cloth+market+lahore' },
+              ].map(({ Icon, title, text, desc, href }) => (
                 <div key={title} style={{ display: 'flex', gap: '1.25rem' }}>
                   <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'var(--color-surface)', border: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <Icon size={20} style={{ color: 'var(--color-accent)' }} />
                   </div>
                   <div>
                     <h4 style={{ fontSize: '0.9rem', fontWeight: '600', marginBottom: '0.25rem' }}>{title}</h4>
-                    <p style={{ fontSize: '1rem', color: 'var(--color-text)', marginBottom: '0.25rem' }}>{text}</p>
+                    {href ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '1rem', color: 'var(--color-text)', marginBottom: '0.25rem', textDecoration: 'none' }}>{text}</a>
+                    ) : (
+                      <p style={{ fontSize: '1rem', color: 'var(--color-text)', marginBottom: '0.25rem' }}>{text}</p>
+                    )}
                     <p style={{ fontSize: '0.78rem', color: 'var(--color-muted)' }}>{desc}</p>
                   </div>
                 </div>
