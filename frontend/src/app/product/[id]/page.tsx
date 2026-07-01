@@ -152,16 +152,16 @@ export default function ProductDetailPage() {
           <div style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {product.discountPrice && product.discountPrice > 0 ? (
               <>
-                <span className="text-gold">${product.discountPrice.toFixed(2)}</span>
+                <span className="text-gold">Rs. {product.discountPrice.toFixed(2)}</span>
                 <span style={{ fontSize: '1.25rem', color: 'var(--color-muted)', textDecoration: 'line-through', fontWeight: '500' }}>
-                  ${product.price.toFixed(2)}
+                  Rs. {product.price.toFixed(2)}
                 </span>
                 <span style={{ fontSize: '0.9rem', padding: '4px 10px', background: 'var(--color-accent)', color: '#0d0d0d', borderRadius: '20px', fontWeight: '700', letterSpacing: '0.05em' }}>
                   -{Math.round(((product.price - product.discountPrice) / product.price) * 100)}%
                 </span>
               </>
             ) : (
-              <span className="text-gold">${product.price.toFixed(2)}</span>
+              <span className="text-gold">Rs. {product.price.toFixed(2)}</span>
             )}
           </div>
 
@@ -532,7 +532,7 @@ function YouMayAlsoLike({ currentId, categoryId }: { currentId: string; category
               </div>
               <div style={{ padding: '1rem' }}>
                 <p style={{ fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.3rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.title}</p>
-                <p className="text-gold" style={{ fontWeight: '700', fontSize: '1rem' }}>${(p.discountPrice > 0 ? p.discountPrice : p.price).toFixed(2)}</p>
+                <p className="text-gold" style={{ fontWeight: '700', fontSize: '1rem' }}>Rs. {(p.discountPrice > 0 ? p.discountPrice : p.price).toFixed(2)}</p>
               </div>
             </Link>
             <button onClick={() => { addToCart({ _id: p._id, title: p.title, price: p.discountPrice > 0 ? p.discountPrice : p.price, image: p.images[0], qty: 1, stock: p.stock, shippingCharges: p.shippingCharges || 0, applyShippingCharges: p.applyShippingCharges || false, isCodAvailable: p.isCodAvailable !== undefined ? p.isCodAvailable : true }); showToast(`${p.title} added to cart`, 'success', p.images[0]); }}
