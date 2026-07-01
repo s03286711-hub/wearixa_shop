@@ -117,6 +117,7 @@ export default function CheckoutPage() {
       
       // Handle Stripe Redirect
       if (payment.method === 'stripe' && created.checkoutUrl) {
+        clearCart();
         window.location.href = created.checkoutUrl;
         return; // Stop execution here as we are redirecting
       }

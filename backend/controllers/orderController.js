@@ -73,6 +73,40 @@ const addOrderItems = async (req, res) => {
             ],
         });
 
+        let sessionUrl = null;
+        if (paymentMethod === 'stripe') {
+            if (!stripe) {
+                return res.status(500).json({ message: 'Stripe is not configured on the server.' });
+            }
+            try {
+                const session = await stripe.checkout.sessions.create({
+                    payment_method_types: ['card'],
+                    line_items: orderItems.map(item => ({
+                        price_data: {
+                            currency: 'pkr',
+                            product_data: {
+                                name: item.name,
+                                images: [item.image.startsWith('http') ? item.image : `${process.env.BACKEND_URL || 'http://localhost:5000'}${item.image}`],
+                            },
+                            unit_amount: Math.round(item.price * 100),
+                        },
+                        quantity: item.qty,
+                    })),
+                    mode: 'payment',
+                    success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/orders?status=COMPLETED&orderId=${order._id}`,
+                    cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/checkout?status=CANCELLED`,
+                    metadata: {
+                        orderId: order._id.toString(),
+                        userId: req.user._id.toString()
+                    }
+                });
+                sessionUrl = session.url;
+            } catch (stripeError) {
+                console.error("Stripe Order Session Error:", stripeError);
+                return res.status(500).json({ message: 'Error creating Stripe checkout for order' });
+            }
+        }
+
         const createdOrder = await order.save();
 
         // ─── PERSISTENT NOTIFICATIONS ─────────────────────────────────
@@ -186,42 +220,11 @@ const addOrderItems = async (req, res) => {
             }
         }
 
-        // If Stripe, create a session
         if (paymentMethod === 'stripe') {
-            if (!stripe) {
-                return res.status(500).json({ message: 'Stripe is not configured on the server.' });
-            }
-            try {
-                const session = await stripe.checkout.sessions.create({
-                    payment_method_types: ['card'],
-                    line_items: orderItems.map(item => ({
-                        price_data: {
-                            currency: 'pkr',
-                            product_data: {
-                                name: item.name,
-                                images: [item.image.startsWith('http') ? item.image : `${process.env.BACKEND_URL || 'http://localhost:5000'}${item.image}`],
-                            },
-                            unit_amount: Math.round(item.price * 100),
-                        },
-                        quantity: item.qty,
-                    })),
-                    mode: 'payment',
-                    success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/orders?status=COMPLETED&orderId=${createdOrder._id}`,
-                    cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/checkout?status=CANCELLED`,
-                    metadata: {
-                        orderId: createdOrder._id.toString(),
-                        userId: req.user._id.toString()
-                    }
-                });
-
-                return res.status(201).json({
-                    ...createdOrder.toObject(),
-                    checkoutUrl: session.url
-                });
-            } catch (stripeError) {
-                console.error("Stripe Order Session Error:", stripeError);
-                return res.status(500).json({ message: 'Error creating Stripe checkout for order' });
-            }
+            return res.status(201).json({
+                ...createdOrder.toObject(),
+                checkoutUrl: sessionUrl
+            });
         }
 
         res.status(201).json(createdOrder);
