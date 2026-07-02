@@ -541,7 +541,7 @@ export default function HomePage() {
           </motion.div>
           
           <motion.h2 
-            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl"
+            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight md:leading-tight drop-shadow-2xl"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
