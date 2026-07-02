@@ -32,6 +32,7 @@ export default function CheckoutPage() {
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoApplied, setPromoApplied] = useState<{ code: string; discount: number; message: string } | null>(null);
   const [promoError, setPromoError] = useState('');
+  const [availablePromos, setAvailablePromos] = useState<any[]>([]);
 
   // Global settings state loaded from backend
   const [settings, setSettings] = useState<any>({
@@ -66,6 +67,8 @@ export default function CheckoutPage() {
       }
     };
     fetchSettings();
+    // Load available public promo codes
+    promoService.getActivePromos().then(setAvailablePromos).catch(() => {});
     return () => { active = false; };
   }, []);
 
@@ -380,6 +383,34 @@ export default function CheckoutPage() {
                       </button>
                     </div>
                     {promoError && <p style={{ color: '#f87171', fontSize: '0.75rem', marginTop: '0.4rem' }}>{promoError}</p>}
+                    {availablePromos.length > 0 && (
+                      <div style={{ marginTop: '0.75rem' }}>
+                        <p style={{ fontSize: '0.7rem', color: 'var(--color-muted)', marginBottom: '0.4rem', letterSpacing: '0.05em' }}>AVAILABLE CODES:</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                          {availablePromos.map((p: any) => (
+                            <button
+                              key={p.code}
+                              onClick={() => { setPromoCode(p.code); setPromoError(''); }}
+                              style={{
+                                background: 'rgba(201,168,76,0.1)',
+                                border: '1px dashed var(--color-accent)',
+                                borderRadius: '4px',
+                                padding: '0.2rem 0.55rem',
+                                fontSize: '0.72rem',
+                                fontWeight: '700',
+                                color: 'var(--color-accent)',
+                                cursor: 'pointer',
+                                letterSpacing: '0.05em',
+                                fontFamily: 'monospace',
+                                transition: 'background 0.2s',
+                              }}
+                            >
+                              {p.code} &mdash; {p.discountType === 'percentage' ? `${p.discountValue}% off` : `Rs. ${p.discountValue} off`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
