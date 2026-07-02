@@ -2,6 +2,11 @@ const nodemailer = require('nodemailer');
 
 const sendEmail = async (options) => {
     try {
+        if (!process.env.EMAIL_USER || !process.env.OAUTH_REFRESH_TOKEN || !process.env.OAUTH_CLIENT_ID || !process.env.OAUTH_CLIENT_SECRET) {
+            console.log('⚠️ Email credentials are not fully configured. Skipping email send.');
+            return;
+        }
+
         console.log('--- STARTING NODEMAILER OAUTH2 SEND ---');
         
         let rToken = process.env.OAUTH_REFRESH_TOKEN.trim();
@@ -11,6 +16,9 @@ const sendEmail = async (options) => {
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
+            connectionTimeout: 3000,
+            greetingTimeout: 3000,
+            socketTimeout: 5000,
             auth: {
                 type: 'OAuth2',
                 user: process.env.EMAIL_USER.trim(),
