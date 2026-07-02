@@ -115,7 +115,7 @@ const addOrderItems = async (req, res) => {
             await Notification.create({
                 user: req.user._id,
                 title: '🎉 Order Placed Successfully',
-                message: `Your order #${createdOrder._id} for $${totalPrice.toFixed(2)} has been placed successfully and is now being processed.`,
+                message: `Your order #${createdOrder._id} for Rs. ${totalPrice.toFixed(2)} has been placed successfully and is now being processed.`,
                 type: 'ORDER_PLACED'
             });
 
@@ -142,7 +142,7 @@ const addOrderItems = async (req, res) => {
                 await Notification.create({
                     user: req.user._id,
                     title: '💳 Payment Done via Wallet',
-                    message: `Payment of $${totalPrice.toFixed(2)} has been successfully debited from your Wearixa digital wallet.`,
+                    message: `Payment of Rs. ${totalPrice.toFixed(2)} has been successfully debited from your Wearixa digital wallet.`,
                     type: 'PAYMENT_RECEIVED'
                 });
 
@@ -150,7 +150,7 @@ const addOrderItems = async (req, res) => {
                 await Notification.create({
                     user: req.user._id,
                     title: '💰 Wallet Payment Received',
-                    message: `Successfully received payment of $${totalPrice.toFixed(2)} via Digital Wallet for order #${createdOrder._id}.`,
+                    message: `Successfully received payment of Rs. ${totalPrice.toFixed(2)} via Digital Wallet for order #${createdOrder._id}.`,
                     type: 'PAYMENT_RECEIVED',
                     isAdminNotification: true
                 });
