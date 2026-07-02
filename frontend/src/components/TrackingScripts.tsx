@@ -10,7 +10,8 @@ export default function TrackingScripts() {
     const trackVisit = async () => {
       try {
         if (!sessionStorage.getItem('site_visited')) {
-          await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/analytics/track`, {
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+          await fetch(`${baseUrl}/analytics/track`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
           });
