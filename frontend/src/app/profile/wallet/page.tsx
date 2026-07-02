@@ -152,7 +152,7 @@ function WalletContent() {
             <form onSubmit={handleDeposit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>Amount ($)</label>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>Amount (Rs)</label>
                 <input
                   type="number"
                   min="10"
