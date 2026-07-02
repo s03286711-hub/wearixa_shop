@@ -498,7 +498,7 @@ export default function HomePage() {
       />
 
       {/* ── Immersive Promo Section ── */}
-      <section className="relative w-full h-[80vh] min-h-[600px] overflow-hidden bg-black mt-12 mb-12 flex items-center justify-center">
+      <section className="relative w-full min-h-[520px] md:h-[80vh] overflow-hidden bg-black mt-12 mb-12 flex items-center justify-center">
         {/* Parallax / Animated Background */}
         <motion.div 
           className="absolute inset-0 z-0"
@@ -528,7 +528,7 @@ export default function HomePage() {
         />
 
         {/* Content */}
-        <div className="relative z-10 text-center max-w-4xl px-6">
+        <div className="relative z-10 text-center max-w-3xl px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -541,7 +541,7 @@ export default function HomePage() {
           </motion.div>
           
           <motion.h2 
-            className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 tracking-tight drop-shadow-2xl"
+            className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight drop-shadow-2xl"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -565,7 +565,7 @@ export default function HomePage() {
           </motion.h2>
 
           <motion.p 
-            className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light drop-shadow-md"
+            className="text-white/80 text-base md:text-lg max-w-xl mx-auto mb-8 font-light drop-shadow-md"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -583,7 +583,7 @@ export default function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.8 }}
             viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-6"
+            className="flex flex-wrap justify-center gap-3 md:gap-4"
           >
             {activePromos.length > 0 ? (
               <>
@@ -593,12 +593,12 @@ export default function HomePage() {
                     setCopiedCode(activePromos[0].code);
                     setTimeout(() => setCopiedCode(null), 2000);
                   }}
-                  className="group relative inline-flex items-center gap-4 px-14 py-6 bg-amber-500 text-black font-extrabold uppercase tracking-widest text-[0.95rem] rounded-full overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.4)] hover:shadow-[0_0_60px_rgba(245,158,11,0.6)] transition-all"
+                  className="group relative inline-flex items-center gap-2 px-6 py-3 md:px-10 md:py-4 bg-amber-500 text-black font-extrabold uppercase tracking-widest text-[0.8rem] md:text-[0.9rem] rounded-full overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.4)] hover:shadow-[0_0_60px_rgba(245,158,11,0.6)] transition-all"
                 >
                   <span className="relative z-10">{copiedCode === activePromos[0].code ? 'Code Copied! ✓' : `Copy Code: ${activePromos[0].code}`}</span>
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                 </button>
-                <Link href="/shop" className="group relative inline-flex items-center gap-4 px-14 py-6 bg-black/40 text-white border border-white/20 font-bold uppercase tracking-widest text-[0.95rem] rounded-full overflow-hidden backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/40">
+                <Link href="/shop" className="group relative inline-flex items-center gap-2 px-6 py-3 md:px-10 md:py-4 bg-black/40 text-white border border-white/20 font-bold uppercase tracking-widest text-[0.8rem] md:text-[0.9rem] rounded-full overflow-hidden backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/40">
                   <span className="relative z-10">Shop Collection</span>
                   <ArrowRight className="relative z-10 group-hover:translate-x-1 transition-transform" size={20} />
                 </Link>
