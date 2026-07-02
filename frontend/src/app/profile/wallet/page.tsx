@@ -13,11 +13,11 @@ function WalletContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
-  
+
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [depositAmount, setDepositAmount] = useState('100');
   const [depositMethod, setDepositMethod] = useState('STRIPE'); // 'STRIPE', 'JAZZCASH', 'EASYPAISA'
   const [isDepositing, setIsDepositing] = useState(false);
@@ -99,7 +99,7 @@ function WalletContent() {
         <div>
           <div className="glass" style={{ padding: '2rem', borderRadius: '16px', marginBottom: '2rem' }}>
             <h2 style={{ fontSize: '1.25rem', marginBottom: '1.5rem', color: 'var(--color-text)' }}>Transaction History</h2>
-            
+
             {transactions.length === 0 ? (
               <p style={{ color: 'var(--color-muted)' }}>No transactions found.</p>
             ) : (
@@ -132,7 +132,7 @@ function WalletContent() {
 
         {/* Right Col: Balance & Deposit */}
         <div className="wallet-sidebar" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          
+
           {/* Balance Card */}
           <div className="wallet-balance-card" style={{ background: 'linear-gradient(135deg, #c9a84c, #e8c97a)', padding: '2rem', borderRadius: '16px', color: '#0d0d0d', boxShadow: '0 10px 40px rgba(201,168,76,0.3)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
@@ -140,7 +140,7 @@ function WalletContent() {
               <Wallet size={24} />
             </div>
             <h2 style={{ fontSize: '3rem', margin: 0, fontFamily: 'var(--font-heading)', fontWeight: '400' }}>
-              ${balance.toFixed(2)}
+              Rs.{balance.toFixed(2)}
             </h2>
           </div>
 
@@ -150,12 +150,12 @@ function WalletContent() {
               <Plus size={18} color="var(--color-accent)" /> Add Funds
             </h3>
             <form onSubmit={handleDeposit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              
+
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', color: 'var(--color-muted)', marginBottom: '0.5rem' }}>Amount ($)</label>
-                <input 
-                  type="number" 
-                  min="10" 
+                <input
+                  type="number"
+                  min="10"
                   step="1"
                   required
                   value={depositAmount}
@@ -173,11 +173,11 @@ function WalletContent() {
                     { id: 'JAZZCASH', label: 'JazzCash', icon: Smartphone },
                     { id: 'EASYPAISA', label: 'EasyPaisa', icon: Smartphone },
                   ].map(method => (
-                    <div 
+                    <div
                       key={method.id}
                       onClick={() => setDepositMethod(method.id)}
-                      style={{ 
-                        padding: '1rem', border: `1px solid ${depositMethod === method.id ? 'var(--color-accent)' : 'var(--color-border)'}`, 
+                      style={{
+                        padding: '1rem', border: `1px solid ${depositMethod === method.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
                         borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '1rem',
                         background: depositMethod === method.id ? 'rgba(201,168,76,0.1)' : 'transparent',
                         transition: 'all 0.2s'
@@ -190,9 +190,9 @@ function WalletContent() {
                 </div>
               </div>
 
-              <PaymentForms 
-                method={depositMethod.toLowerCase()} 
-                onChange={(data, valid) => { setPaymentData(data); setIsPaymentValid(valid); }} 
+              <PaymentForms
+                method={depositMethod.toLowerCase()}
+                onChange={(data, valid) => { setPaymentData(data); setIsPaymentValid(valid); }}
               />
 
               <button type="submit" disabled={isDepositing || !isPaymentValid} className="btn-primary" style={{ marginTop: '1rem', padding: '1rem', display: 'flex', justifyContent: 'center' }}>
