@@ -55,8 +55,8 @@ export default function HomePage() {
     const fetchRecommendations = async () => {
       try {
         const cartProductIds = cartItems.map(item => item._id).join(',');
-        const recentlyViewedCategories = typeof window !== 'undefined' 
-          ? localStorage.getItem('wearixaRecentlyViewedCategories') || '' 
+        const recentlyViewedCategories = typeof window !== 'undefined'
+          ? localStorage.getItem('wearixaRecentlyViewedCategories') || ''
           : '';
         const recs = await productService.getRecommendations({
           cartProductIds,
@@ -94,7 +94,7 @@ export default function HomePage() {
         const seasonalResults = await Promise.all(
           seasons.map(s => productService.getAll({ dealType: s, pageSize: 4 }))
         );
-        
+
         const seasonalMap: { [key: string]: any[] } = {};
         seasons.forEach((s, i) => {
           if (seasonalResults[i].products && seasonalResults[i].products.length > 0) {
@@ -126,7 +126,7 @@ export default function HomePage() {
       {/* ── Luxury Hero Section ── */}
       <section className="relative min-h-[100vh] lg:min-h-[115vh] flex items-center overflow-hidden bg-black">
         {/* Background Image Container */}
-        <div 
+        <div
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 scale-105"
           style={{
             backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.6)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop')`
@@ -139,9 +139,9 @@ export default function HomePage() {
 
         <div className="container relative z-10 px-6 mx-auto mt-12 lg:mt-24">
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-12 lg:gap-20 items-center">
-            
+
             {/* Left Content */}
-            <motion.div 
+            <motion.div
               key={slide}
               initial={{ opacity: 0, x: -40, filter: 'blur(10px)' }}
               animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
@@ -177,7 +177,7 @@ export default function HomePage() {
             </motion.div>
 
             {/* Right Visual Element */}
-            <motion.div 
+            <motion.div
               key={slide + "img"}
               initial={{ opacity: 0, scale: 0.85, rotate: -2 }}
               animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -185,13 +185,13 @@ export default function HomePage() {
               className="relative mt-8 lg:mt-0"
             >
               <div className="relative z-10 w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] border border-white/10 group">
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none" />
-                 <img src={current.image} alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 pointer-events-none" />
+                <img src={current.image} alt="Hero Fashion" className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-1000 ease-out" />
               </div>
               {/* Decorative blob */}
               <div className="absolute -bottom-16 -left-16 w-80 h-80 bg-amber-500/30 rounded-full blur-[80px] z-0 animate-pulse" />
               <div className="absolute -top-16 -right-16 w-64 h-64 bg-amber-300/20 rounded-full blur-[60px] z-0" />
-              
+
               {/* Decorative background glow */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-[radial-gradient(circle,rgba(201,168,76,0.2)_0%,transparent_60%)] -z-10" />
             </motion.div>
@@ -201,9 +201,9 @@ export default function HomePage() {
         {/* Slide navigation / Progress indicators */}
         <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-4 z-20">
           {HERO_SLIDES.map((_, i) => (
-            <button 
-              key={i} 
-              onClick={() => setSlide(i)} 
+            <button
+              key={i}
+              onClick={() => setSlide(i)}
               className={`transition-all duration-500 ease-out h-1.5 rounded-full ${i === slide ? 'w-16 bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]' : 'w-4 bg-white/30 hover:bg-white/50'}`}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -240,18 +240,19 @@ export default function HomePage() {
                 Active Offers
               </span>
             </div>
-            
-            <div 
-              style={{ 
-                overflow: 'hidden', 
-                whiteSpace: 'nowrap', 
-                flex: 1, 
+
+            <div
+              style={{
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                flex: 1,
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center'
               }}
             >
-              <style dangerouslySetInnerHTML={{__html: `
+              <style dangerouslySetInnerHTML={{
+                __html: `
                 @keyframes marquee {
                   0% { transform: translateX(0); }
                   100% { transform: translateX(-50%); }
@@ -267,12 +268,12 @@ export default function HomePage() {
                   animation-play-state: paused;
                 }
               `}} />
-              
+
               <div className="marquee-container">
                 {[...activePromos, ...activePromos, ...activePromos].map((promo, idx) => {
                   const isCopied = copiedCode === promo.code;
                   return (
-                    <div 
+                    <div
                       key={`${promo._id}-${idx}`}
                       style={{
                         background: 'rgba(255, 255, 255, 0.02)',
@@ -324,7 +325,7 @@ export default function HomePage() {
       )}
 
       {/* ── Feature Badges ── */}
-      <motion.section 
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -334,7 +335,7 @@ export default function HomePage() {
         <div className="container" style={{ padding: '2rem 1.5rem' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
             {[
-              { Icon: Truck, title: 'Free Shipping', desc: 'On orders over $100' },
+              { Icon: Truck, title: 'Free Shipping', desc: 'On orders over Rs.50000' },
               { Icon: RefreshCw, title: 'Easy Returns', desc: '30-day return policy' },
               { Icon: Shield, title: 'Secure Payment', desc: 'SSL encrypted checkout' },
               { Icon: Sparkles, title: 'Premium Quality', desc: 'Curated collections' },
@@ -358,7 +359,7 @@ export default function HomePage() {
       </motion.section>
 
       {/* ── Categories ── */}
-      <motion.section 
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -381,9 +382,9 @@ export default function HomePage() {
               <div style={{ textAlign: 'center', width: '100%', gridColumn: '1 / -1', color: 'var(--color-muted)' }}>No categories available.</div>
             ) : (
               categories.map((cat: any) => (
-                <Link 
-                  key={cat._id} 
-                  href={`/shop?category=${cat.name.toLowerCase()}`} 
+                <Link
+                  key={cat._id}
+                  href={`/shop?category=${cat.name.toLowerCase()}`}
                   style={{ display: 'block' }}
                   onClick={() => {
                     if (typeof window !== 'undefined') {
@@ -394,7 +395,7 @@ export default function HomePage() {
                     }
                   }}
                 >
-                  <motion.div 
+                  <motion.div
                     whileHover={{ y: -5 }}
                     style={{
                       position: 'relative', aspectRatio: '1/1', borderRadius: '8px', overflow: 'hidden',
@@ -418,14 +419,14 @@ export default function HomePage() {
 
       {/* ── Seasonal Deal Sections ── */}
       {!loading && Object.keys(seasonalData).map((season, idx) => (
-        <motion.section 
-          key={season} 
+        <motion.section
+          key={season}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="section" 
-          style={{ 
+          className="section"
+          style={{
             background: idx % 2 === 0 ? 'rgba(201,168,76,0.02)' : 'transparent',
             borderTop: '1px solid var(--color-border)'
           }}
@@ -454,12 +455,12 @@ export default function HomePage() {
       ))}
 
       {/* ── Featured Products ── */}
-      <motion.section 
+      <motion.section
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="section" 
+        className="section"
         style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}
       >
         <div className="container">
@@ -491,37 +492,37 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      <QuickViewModal 
-        product={quickViewProduct} 
-        isOpen={isQuickViewOpen} 
-        onClose={() => setIsQuickViewOpen(false)} 
+      <QuickViewModal
+        product={quickViewProduct}
+        isOpen={isQuickViewOpen}
+        onClose={() => setIsQuickViewOpen(false)}
       />
 
       {/* ── Immersive Promo Section ── */}
       <section className="relative w-full min-h-[520px] md:h-[80vh] overflow-hidden bg-black mt-12 mb-12 flex items-center justify-center">
         {/* Parallax / Animated Background */}
-        <motion.div 
+        <motion.div
           className="absolute inset-0 z-0"
           initial={{ scale: 1.1 }}
           whileInView={{ scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
           viewport={{ once: true }}
         >
-          <img 
-            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop" 
-            alt="Fashion Promo" 
+          <img
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
+            alt="Fashion Promo"
             className="w-full h-full object-cover opacity-60"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/80" />
         </motion.div>
 
         {/* Floating Animated Elements */}
-        <motion.div 
+        <motion.div
           className="absolute top-1/4 left-10 w-32 h-32 border border-amber-500/20 rounded-full blur-sm"
           animate={{ y: [0, -30, 0], rotate: [0, 90, 0] }}
           transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-1/4 right-10 w-48 h-48 border border-white/10 rounded-full blur-md"
           animate={{ y: [0, 40, 0], rotate: [0, -90, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -539,8 +540,8 @@ export default function HomePage() {
               {activePromos.length > 0 ? 'Exclusive Campaign' : "Summer Collection '26"}
             </span>
           </motion.div>
-          
-          <motion.h2 
+
+          <motion.h2
             className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight md:leading-tight drop-shadow-2xl"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -564,7 +565,7 @@ export default function HomePage() {
             )}
           </motion.h2>
 
-          <motion.p 
+          <motion.p
             className="text-white/80 text-base md:text-lg max-w-xl mx-auto mb-8 font-light drop-shadow-md"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -587,7 +588,7 @@ export default function HomePage() {
           >
             {activePromos.length > 0 ? (
               <>
-                <button 
+                <button
                   onClick={() => {
                     navigator.clipboard.writeText(activePromos[0].code);
                     setCopiedCode(activePromos[0].code);
