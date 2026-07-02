@@ -15,10 +15,14 @@ const sendEmail = async (options) => {
         }
 
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            connectionTimeout: 3000,
-            greetingTimeout: 3000,
-            socketTimeout: 5000,
+            // Use explicit host + port to force IPv4 (Railway doesn't support IPv6 outbound)
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            family: 4, // Force IPv4
+            connectionTimeout: 5000,
+            greetingTimeout: 5000,
+            socketTimeout: 10000,
             auth: {
                 type: 'OAuth2',
                 user: process.env.EMAIL_USER.trim(),
@@ -39,8 +43,8 @@ const sendEmail = async (options) => {
         await transporter.sendMail(mailOptions);
         console.log('EMAIL SENT SUCCESSFULLY VIA NODEMAILER');
     } catch (error) {
-        console.error('NODEMAILER ERROR:', error.message);
-        throw new Error(`Email could not be sent: ${error.message}`);
+        // Log but do NOT throw — email failure must NEVER block or affect order placement
+        console.error('NODEMAILER ERROR (non-critical):', error.message);
     }
 };
 
