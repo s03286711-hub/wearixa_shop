@@ -119,7 +119,7 @@ function WalletContent() {
                     </div>
                     <div className="transaction-amount" style={{ textAlign: 'right' }}>
                       <p style={{ margin: 0, fontWeight: '600', color: txn.type === 'DEPOSIT' ? '#22c55e' : 'var(--color-text)' }}>
-                        {txn.type === 'DEPOSIT' ? '+' : '-'}${txn.amount.toFixed(2)}
+                        {txn.type === 'DEPOSIT' ? '+' : '-'} Rs.{txn.amount.toFixed(2)}
                       </p>
                       <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--color-muted)' }}>{txn.paymentGateway}</p>
                     </div>
