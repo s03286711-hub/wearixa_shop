@@ -550,14 +550,14 @@ export default function HomePage() {
             {activePromos.length > 0 ? (
               <>
                 Unlock <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 italic">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 italic pr-2 md:pr-4">
                   {activePromos[0].discountType === 'percentage' ? `${activePromos[0].discountValue}% Off` : `Rs. ${activePromos[0].discountValue} Off`}
                 </span>
               </>
             ) : (
               <>
                 Unleash Your <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 italic">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 italic pr-2 md:pr-4">
                   True Style
                 </span>
               </>
