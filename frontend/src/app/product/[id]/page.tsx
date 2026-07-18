@@ -13,7 +13,6 @@ import { ShoppingBag, Heart, Star, Truck, Shield, RefreshCw, Image as ImageIcon,
 import { calculateShippingCharge } from '@/utils/shippingUtils';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Head from 'next/head';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -53,6 +52,25 @@ export default function ProductDetailPage() {
         localStorage.setItem('wearixaRecentlyViewedCategories', list.join(','));
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
+
+  // SEO: update page meta tags when product loads
+  useEffect(() => {
+    if (!product) return;
+    document.title = `${product.title} | Wearixa Store`;
+    const setMeta = (name: string, content: string, property = false) => {
+      const attr = property ? 'property' : 'name';
+      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement;
+      if (!el) { el = document.createElement('meta'); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+    setMeta('description', product.description?.slice(0, 160) || '');
+    if (product.seoKeywords?.length) setMeta('keywords', product.seoKeywords.join(', '));
+    setMeta('og:title', `${product.title} | Wearixa Store`, true);
+    setMeta('og:description', product.description?.slice(0, 160) || '', true);
+    if (product.images?.[0]) setMeta('og:image', product.images[0], true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const handleAddToCart = () => {
@@ -125,20 +143,6 @@ export default function ProductDetailPage() {
   if (!product) return <div style={{ textAlign: 'center', padding: '6rem', color: 'var(--color-muted)' }}>Product not found.</div>;
 
   return (
-    <>
-      {/* SEO metadata injected per product */}
-      <Head>
-        <title>{product.title} | Wearixa Store</title>
-        <meta name="description" content={product.description?.slice(0, 160)} />
-        {product.seoKeywords && product.seoKeywords.length > 0 && (
-          <meta name="keywords" content={product.seoKeywords.join(', ')} />
-        )}
-        <meta property="og:title" content={`${product.title} | Wearixa Store`} />
-        <meta property="og:description" content={product.description?.slice(0, 160)} />
-        {product.images && product.images[0] && (
-          <meta property="og:image" content={product.images[0]} />
-        )}
-      </Head>
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
       <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
 
@@ -604,6 +608,5 @@ function YouMayAlsoLike({ currentId, categoryId }: { currentId: string; category
         ))}
       </div>
     </motion.section>
-    </>
   );
 }
