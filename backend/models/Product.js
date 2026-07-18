@@ -101,6 +101,16 @@ const productSchema = mongoose.Schema(
             required: true,
             default: 0,
         },
+        highlights: [
+            {
+                feature: { type: String, required: true },
+                detail: { type: String, required: true },
+            }
+        ],
+        seoKeywords: {
+            type: [String],
+            default: [],
+        },
     },
     {
         timestamps: true,

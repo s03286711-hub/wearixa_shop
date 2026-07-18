@@ -90,7 +90,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType, shippingCharges, applyShippingCharges, isCodAvailable } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, sizes, colors, dealType, shippingCharges, applyShippingCharges, isCodAvailable, highlights, seoKeywords } = req.body;
 
     let imageUrls = [];
 
@@ -127,6 +127,8 @@ const createProduct = asyncHandler(async (req, res) => {
         shippingCharges: shippingCharges ? Number(shippingCharges) : 0,
         applyShippingCharges: applyShippingCharges === 'true' || applyShippingCharges === true,
         isCodAvailable: isCodAvailable !== undefined ? (isCodAvailable === 'true' || isCodAvailable === true) : true,
+        highlights: Array.isArray(highlights) ? highlights : (highlights ? JSON.parse(highlights) : []),
+        seoKeywords: Array.isArray(seoKeywords) ? seoKeywords : (seoKeywords ? seoKeywords.split(',').map(k => k.trim()).filter(Boolean) : []),
         user: req.user._id,
     });
 
@@ -138,7 +140,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
-    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType, shippingCharges, applyShippingCharges, isCodAvailable } = req.body;
+    const { title, description, price, discountPrice, brand, category, stock, images, sizes, colors, dealType, shippingCharges, applyShippingCharges, isCodAvailable, highlights, seoKeywords } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -154,6 +156,14 @@ const updateProduct = asyncHandler(async (req, res) => {
         product.shippingCharges = shippingCharges !== undefined ? Number(shippingCharges) : product.shippingCharges;
         product.applyShippingCharges = applyShippingCharges !== undefined ? (applyShippingCharges === 'true' || applyShippingCharges === true) : product.applyShippingCharges;
         product.isCodAvailable = isCodAvailable !== undefined ? (isCodAvailable === 'true' || isCodAvailable === true) : product.isCodAvailable;
+
+        if (highlights !== undefined) {
+            product.highlights = Array.isArray(highlights) ? highlights : (typeof highlights === 'string' ? JSON.parse(highlights) : product.highlights);
+        }
+
+        if (seoKeywords !== undefined) {
+            product.seoKeywords = Array.isArray(seoKeywords) ? seoKeywords : (typeof seoKeywords === 'string' ? seoKeywords.split(',').map(k => k.trim()).filter(Boolean) : product.seoKeywords);
+        }
 
         if (sizes !== undefined) {
             product.sizes = Array.isArray(sizes) ? sizes : sizes.split(',').map((s) => s.trim()).filter(Boolean);
