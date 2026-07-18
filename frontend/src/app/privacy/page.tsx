@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { ShieldCheck, Lock, Eye, Database, Mail, ChevronRight, RefreshCcw } from 'lucide-react';
 
 const SECTIONS = [
@@ -196,7 +197,7 @@ export default function PrivacyPolicyPage() {
               </ul>
               <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
                 <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)' }}>
-                  To initiate a return, please visit your <a href="/profile" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>Account Profile</a> or contact our support team.
+                  To initiate a return, please visit your <Link href="/profile" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>Account Profile</Link> or contact our support team.
                 </p>
               </div>
             </motion.div>
