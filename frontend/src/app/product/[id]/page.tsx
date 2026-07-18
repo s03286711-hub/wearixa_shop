@@ -9,10 +9,11 @@ import { useToast } from '@/context/ToastContext';
 import { ProductDetailsSkeleton } from '@/components/Skeleton';
 import ZoomGallery from '@/components/ZoomGallery';
 import UploadZone from '@/components/UploadZone';
-import { ShoppingBag, Heart, Star, Truck, Shield, RefreshCw, Image as ImageIcon, X } from 'lucide-react';
+import { ShoppingBag, Heart, Star, Truck, Shield, RefreshCw, Image as ImageIcon, X, Sparkles } from 'lucide-react';
 import { calculateShippingCharge } from '@/utils/shippingUtils';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Head from 'next/head';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -27,7 +28,7 @@ export default function ProductDetailPage() {
   
   const wishlisted = product ? isInWishlist(product._id) : false;
   const [qty, setQty] = useState(1);
-  const [tab, setTab] = useState<'description' | 'reviews'>('description');
+  const [tab, setTab] = useState<'description' | 'highlights' | 'reviews'>('description');
   const [added, setAdded] = useState(false);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
@@ -124,6 +125,20 @@ export default function ProductDetailPage() {
   if (!product) return <div style={{ textAlign: 'center', padding: '6rem', color: 'var(--color-muted)' }}>Product not found.</div>;
 
   return (
+    <>
+      {/* SEO metadata injected per product */}
+      <Head>
+        <title>{product.title} | Wearixa Store</title>
+        <meta name="description" content={product.description?.slice(0, 160)} />
+        {product.seoKeywords && product.seoKeywords.length > 0 && (
+          <meta name="keywords" content={product.seoKeywords.join(', ')} />
+        )}
+        <meta property="og:title" content={`${product.title} | Wearixa Store`} />
+        <meta property="og:description" content={product.description?.slice(0, 160)} />
+        {product.images && product.images[0] && (
+          <meta property="og:image" content={product.images[0]} />
+        )}
+      </Head>
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
       <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start' }}>
 
@@ -341,7 +356,7 @@ export default function ProductDetailPage() {
       {/* ── Tabs: Description / Reviews ── */}
       <div style={{ marginTop: '4rem', borderTop: '1px solid var(--color-border)', paddingTop: '3rem' }}>
         <div style={{ display: 'flex', gap: '0', marginBottom: '2rem', borderBottom: '1px solid var(--color-border)' }}>
-          {(['description', 'reviews'] as const).map((t) => (
+          {(['description', 'highlights', 'reviews'] as const).map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{
               padding: '0.75rem 2rem', background: 'none', border: 'none',
               borderBottom: `2px solid ${tab === t ? 'var(--color-accent)' : 'transparent'}`,
@@ -358,6 +373,52 @@ export default function ProductDetailPage() {
           <div style={{ color: 'var(--color-muted)', lineHeight: '1.8', maxWidth: '680px', fontSize: '0.95rem' }}>
             {product.description}
           </div>
+        )}
+
+        {/* ── Product Highlights Tab ── */}
+        {tab === 'highlights' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            style={{ maxWidth: '680px' }}
+          >
+            {product.highlights && product.highlights.length > 0 ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+                  <Sparkles size={20} style={{ color: 'var(--color-accent)' }} />
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>What's included in this product</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                  {product.highlights.map((h: { feature: string, detail: string }, i: number) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.07 }}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '160px 1fr',
+                        gap: '1rem',
+                        padding: '1rem 1.25rem',
+                        borderRadius: '8px',
+                        background: i % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
+                        border: '1px solid transparent',
+                        borderColor: i % 2 === 0 ? 'var(--color-border)' : 'transparent',
+                        marginBottom: '4px',
+                        alignItems: 'start',
+                      }}
+                    >
+                      <span style={{ fontWeight: '700', color: 'var(--color-accent)', fontSize: '0.875rem', paddingTop: '2px' }}>{h.feature}</span>
+                      <span style={{ color: 'var(--color-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>{h.detail}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p style={{ color: 'var(--color-muted)', fontStyle: 'italic' }}>No highlights added for this product yet.</p>
+            )}
+          </motion.div>
         )}
 
         {tab === 'reviews' && (
@@ -543,5 +604,6 @@ function YouMayAlsoLike({ currentId, categoryId }: { currentId: string; category
         ))}
       </div>
     </motion.section>
+    </>
   );
 }

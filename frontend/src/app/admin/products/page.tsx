@@ -36,6 +36,8 @@ export default function AdminProductsPage() {
     shippingCharges: '',
     applyShippingCharges: false,
     isCodAvailable: true,
+    highlights: [] as { feature: string, detail: string }[],
+    seoKeywords: '',
   });
 
   const fetchProducts = async () => {
@@ -63,7 +65,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setSubmitError('');
     setSuccessMsg('');
-    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '', applyShippingCharges: false, isCodAvailable: true });
+    setForm({ title: '', description: '', price: '', discountPrice: '', brand: '', category: '', stock: '', images: [], sizes: [], colors: [], dealType: '', shippingCharges: '', applyShippingCharges: false, isCodAvailable: true, highlights: [], seoKeywords: '' });
   };
 
   const handleEdit = (p: any) => {
@@ -85,6 +87,8 @@ export default function AdminProductsPage() {
       shippingCharges: p.shippingCharges ? p.shippingCharges.toString() : '0',
       applyShippingCharges: p.applyShippingCharges || false,
       isCodAvailable: p.isCodAvailable !== undefined ? p.isCodAvailable : true,
+      highlights: p.highlights || [],
+      seoKeywords: p.seoKeywords ? p.seoKeywords.join(', ') : '',
     });
     setShowModal(true);
   };
@@ -109,6 +113,8 @@ export default function AdminProductsPage() {
     formData.append('shippingCharges', form.shippingCharges || '0');
     formData.append('applyShippingCharges', form.applyShippingCharges.toString());
     formData.append('isCodAvailable', form.isCodAvailable.toString());
+    formData.append('highlights', JSON.stringify(form.highlights));
+    formData.append('seoKeywords', form.seoKeywords);
 
     if (form.images.length > 0) {
       form.images.forEach(img => formData.append('images', img));
@@ -576,6 +582,31 @@ export default function AdminProductsPage() {
                    </p>
                 )}
               </div>
+              
+              <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase' }}>
+                    Product Highlights (Features)
+                  </label>
+                  <button type="button" disabled={submitting} onClick={() => setForm(f => ({ ...f, highlights: [...f.highlights, { feature: '', detail: '' }] }))} className="btn-primary" style={{ padding: '4px 10px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Plus size={14} /> Add Highlight
+                  </button>
+                </div>
+                {form.highlights.length === 0 && <p style={{ fontSize: '0.85rem', color: 'var(--color-muted)', fontStyle: 'italic' }}>No highlights added. Add key features like "Fabric", "Neckline", etc.</p>}
+                {form.highlights.map((h, i) => (
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: '10px', marginBottom: '10px', alignItems: 'start' }}>
+                    <input className="input-field" placeholder="Feature (e.g. Dupatta)" value={h.feature} onChange={e => { const newH = [...form.highlights]; newH[i].feature = e.target.value; setForm(f => ({ ...f, highlights: newH })); }} required disabled={submitting} />
+                    <input className="input-field" placeholder="Detail (e.g. Digital printed...)" value={h.detail} onChange={e => { const newH = [...form.highlights]; newH[i].detail = e.target.value; setForm(f => ({ ...f, highlights: newH })); }} required disabled={submitting} />
+                    <button type="button" disabled={submitting} onClick={() => { const newH = form.highlights.filter((_, idx) => idx !== i); setForm(f => ({ ...f, highlights: newH })); }} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '10px', borderRadius: '8px', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>SEO Keywords (Comma Separated)</label>
+                <input className="input-field" placeholder="e.g. lawn suit, summer collection, embroidered dupatta" value={form.seoKeywords} onChange={e => setForm(f => ({ ...f, seoKeywords: e.target.value }))} disabled={submitting} />
+              </div>
+
               <div>
                 <label style={{ display: 'block', fontSize: '0.78rem', letterSpacing: '0.1em', color: 'var(--color-accent)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Images</label>
                 <div style={{ border: '2px dashed var(--color-border)', borderRadius: '8px', padding: '2rem', textAlign: 'center', cursor: submitting ? 'not-allowed' : 'pointer', transition: 'border-color 0.3s', opacity: submitting ? 0.6 : 1 }}
