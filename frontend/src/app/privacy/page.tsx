@@ -1,12 +1,13 @@
 'use client';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Lock, Eye, Database, Mail, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Lock, Eye, Database, Mail, ChevronRight, RefreshCcw } from 'lucide-react';
 
 const SECTIONS = [
   { id: 'collection', title: '1. Information We Collect', icon: Database },
   { id: 'usage', title: '2. How We Use Information', icon: Eye },
   { id: 'security', title: '3. Data Security', icon: Lock },
-  { id: 'contact', title: '4. Contact Us', icon: Mail },
+  { id: 'return-policy', title: '4. Return Policy', icon: RefreshCcw },
+  { id: 'contact', title: '5. Contact Us', icon: Mail },
 ];
 
 export default function PrivacyPolicyPage() {
@@ -174,6 +175,33 @@ export default function PrivacyPolicyPage() {
             </motion.div>
 
             <motion.div 
+              id="return-policy" 
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              style={{ marginBottom: '4rem' }}
+            >
+              <h2 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '1.5rem', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <RefreshCcw size={24} style={{ color: 'var(--color-accent)' }} /> 4. Return Policy
+              </h2>
+              <p style={{ color: 'var(--color-muted)', marginBottom: '1.5rem' }}>
+                We want you to be completely satisfied with your Wearixa purchase. If you are not entirely happy, we offer a straightforward return process.
+              </p>
+              <ul style={{ color: 'var(--color-muted)', paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+                <li>Items can be returned within 30 days of the original delivery date.</li>
+                <li>Items must be unworn, unwashed, and have original tags attached.</li>
+                <li>Sale items and custom-tailored pieces are final sale and cannot be returned.</li>
+                <li>Refunds will be issued to the original form of payment within 5-7 business days after we receive the return.</li>
+              </ul>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--color-border)' }}>
+                <p style={{ fontSize: '0.9rem', color: 'var(--color-muted)' }}>
+                  To initiate a return, please visit your <a href="/profile" style={{ color: 'var(--color-accent)', textDecoration: 'underline' }}>Account Profile</a> or contact our support team.
+                </p>
+              </div>
+            </motion.div>
+
+            <motion.div 
               id="contact"
               variants={{
                 hidden: { opacity: 0, y: 20 },
@@ -181,7 +209,7 @@ export default function PrivacyPolicyPage() {
               }}
             >
               <h2 style={{ fontSize: '1.75rem', fontWeight: '600', marginBottom: '1.5rem', color: 'var(--color-text)', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Mail size={24} style={{ color: 'var(--color-accent)' }} /> 4. Contact Us
+                <Mail size={24} style={{ color: 'var(--color-accent)' }} /> 5. Contact Us
               </h2>
               <p style={{ color: 'var(--color-muted)', marginBottom: '1.5rem' }}>
                 If you have any questions or concerns about this Privacy Policy or our data practices, please reach out to our dedicated privacy team.
