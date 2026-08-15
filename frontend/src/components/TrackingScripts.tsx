@@ -1,24 +1,25 @@
 'use client';
+
 import Script from 'next/script';
 import { useEffect } from 'react';
 
 export default function TrackingScripts() {
-  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-MRP01V8N96';
   const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
   useEffect(() => {
     const trackVisit = async () => {
       try {
-        if (!sessionStorage.getItem('site_visited')) {
+        if (typeof window !== 'undefined' && !sessionStorage.getItem('site_visited')) {
           const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
           await fetch(`${baseUrl}/analytics/track`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' },
           });
           sessionStorage.setItem('site_visited', 'true');
         }
       } catch (err) {
-        console.error('Failed to track visit', err);
+        console.error('Failed to track visit:', err);
       }
     };
     trackVisit();
@@ -26,40 +27,48 @@ export default function TrackingScripts() {
 
   return (
     <>
-      {/* Google Analytics */}
+      {/* Google Tag / Analytics */}
       {GA_MEASUREMENT_ID && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
             strategy="afterInteractive"
           />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){window.dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_MEASUREMENT_ID}');
-            `}
-          </Script>
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){window.dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `,
+            }}
+          />
         </>
       )}
 
       {/* Meta Pixel */}
       {META_PIXEL_ID && (
-        <Script id="meta-pixel" strategy="afterInteractive">
-          {`
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${META_PIXEL_ID}');
-            fbq('track', 'PageView');
-          `}
-        </Script>
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${META_PIXEL_ID}');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
       )}
     </>
   );
